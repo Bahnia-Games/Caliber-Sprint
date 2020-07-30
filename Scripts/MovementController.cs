@@ -24,6 +24,8 @@ public class MovementController : MonoBehaviour
     private float slideTimer;
     public float maxSildeTime = 2.0f;
     public float slideCooldown;
+    private bool isSlideCool;
+    private float slideCoolTimer;
 
     #endregion
 
@@ -99,7 +101,7 @@ public class MovementController : MonoBehaviour
 
         #region Sliding
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isSliding && isGrounded) // check to see if the player is grounded, not sliding, and if shift pressed...
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isSliding && isGrounded && isSlideCool) // check to see if the player is grounded, not sliding, and if shift pressed...
         {
             isSliding = true;
             slideTimer = 0.0f;
@@ -111,22 +113,33 @@ public class MovementController : MonoBehaviour
         {
             slideTimer += Time.deltaTime; // ticks off a timer (fuck IENumerators, Time.deltaTime is where its at bby!)
             slideSpeed = slideSpeed - slideDecayRate * Time.deltaTime; // Subtract the speed of the slide by a set rate (slideDecayRate)
-            Mathf.Clamp(slideSpeed, 0f, Mathf.Infinity); // make sure the player doesnt have negative speed...
             controller.Move(move * slideSpeed * Time.deltaTime); // this is what actually moves the player during the slide
-        } if (slideTimer > maxSildeTime) //checks to see if the timer is up
+        }
+        Mathf.Clamp(slideSpeed, 0f, Mathf.Infinity); // make sure the player doesnt have negative speed...
+        if (slideTimer > maxSildeTime) //checks to see if the timer is up
         {
             isSliding = false;
-            //isCrouching = true;
+            isCrouching = true;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift)) // cancel the slide
         {
-            // Nate please add cooldown
+            isSlideCool = false;
+            slideCoolTimer = 0.0f;
+
             isSliding = false;
             controller.height = characterStand;
             slideSpeed = 60f;
         }
 
+        if (!isSlideCool)
+        {
+            slideCoolTimer += Time.deltaTime;
+        } if (slideCoolTimer > slideCooldown)
+        {
+            isSlideCool = true;
+        }
+        Debug.Log(isSlideCool);
         #endregion
 
     }
