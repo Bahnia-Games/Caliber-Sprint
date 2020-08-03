@@ -27,10 +27,13 @@ public class RBMovementController : MonoBehaviour
     public float slideDecayRate;
     public float slideSpeed;
     private float slideVarSpeed;
-    public float slideTime;
-    private float slideTimer;
+    //public float slideTime;
+    //private float slideTimer;
     private bool slideActive = true;
     private bool isSliding;
+    private bool isSlideCool;
+    private float slideCoolTimer;
+    public float slideCooldownRate;
 
 
     // Start is called before the first frame update
@@ -63,23 +66,34 @@ public class RBMovementController : MonoBehaviour
 
         if (!isGrounded)
         {
-            rb.AddForce(Vector3.down * fallSpeed);
+            rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
         }
 
-        
-        if(Input.GetKey(KeyCode.LeftShift) && isGrounded && !isSliding)
+        if(Input.GetKey(KeyCode.LeftShift) && isGrounded && isSlideCool)
         {
             player.transform.localScale = playerCrouch;
             speed -= slideDecayRate * Time.deltaTime;
             speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
             rb.drag = slideDrag;
-        } 
+            isSliding = true;
+        }
+
         if(Input.GetKeyUp(KeyCode.LeftShift))
         {
             player.transform.localScale = playerStand;
             speed = defSpeed;
             rb.drag = drag;
+            isSliding = false;
+            isSlideCool = false;
+            slideCoolTimer -= Time.deltaTime;
         }
+
+        if (slideCoolTimer < 0)
+        {
+            isSlideCool = true;
+            slideCoolTimer = slideCooldownRate;
+        }
+        Debug.Log(slideCoolTimer);
 
     }
 
