@@ -35,7 +35,7 @@ public class PlayerLook : MonoBehaviour
         //transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
         playerBody.Rotate(Vector3.up * dir.x);
 
-        rb.rotation = Quaternion.Euler(dir.x, rb.rotation.y, rb.rotation.z);
+        //rb.rotation = Quaternion.Euler(dir.x, rb.rotation.y, rb.rotation.z);
         
 
         

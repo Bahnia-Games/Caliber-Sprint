@@ -5,6 +5,7 @@ using UnityEngine;
 public class RBMovementController : MonoBehaviour
 {
 
+    public float gravity;
     public float speed = 5f;
     public float defSpeed;
     Rigidbody rb;
@@ -61,10 +62,9 @@ public class RBMovementController : MonoBehaviour
 
         isGrounded = Physics.CheckSphere(groundCheck.position, checkRad, groundMask);
 
-        if (isGrounded)
+        if (isGrounded && !isSliding)
         {
             amtJump = 0;
-            /*
             if (isWalking)
             {
                 move();
@@ -72,7 +72,7 @@ public class RBMovementController : MonoBehaviour
             else
             {
                 rb.velocity *= traction;
-            }*/
+            }
         }
 
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
@@ -92,14 +92,14 @@ public class RBMovementController : MonoBehaviour
 
         if (!isGrounded)
         {
-            rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
+            //rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
         }
 
         if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
             player.transform.localScale = playerCrouch;
-            speed -= slideDecayRate * Time.deltaTime;
-            speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
+            //speed -= slideDecayRate * Time.deltaTime;
+            //speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
             rb.drag = slideDrag;
             isSliding = true;
         }
@@ -120,8 +120,10 @@ public class RBMovementController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        movePlayer(movement);
+        //movePlayer(movement);
         //move();
+
+        rb.AddForce(Physics.gravity * rb.mass * gravity);
     }
 
     void movePlayer(Vector3 direction)
@@ -131,12 +133,15 @@ public class RBMovementController : MonoBehaviour
 
     void move()
     {
-        dir.x = Input.GetAxis("Mouse X") * PlayerLook.mouseSensitivity * Time.deltaTime;
+        //dir.x = Input.GetAxis("Mouse X") * PlayerLook.mouseSensitivity * Time.deltaTime;
         force = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+
         //force = Quaternion.AngleAxis(dir.x, Vector3.up);
         //rb.rotation = Quaternion.Euler(rot, 0.0f, 0.0f);
-        rb.velocity += force - oldForce;
+        //rb.velocity += force - oldForce;
+        rb.AddRelativeForce((force - oldForce) * speed * Time.deltaTime);
         force = oldForce;
+
     }
 
     void jump()
