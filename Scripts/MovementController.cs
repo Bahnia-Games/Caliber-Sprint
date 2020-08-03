@@ -40,7 +40,6 @@ public class MovementController : MonoBehaviour
     Vector3 velocity;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
-    private int amtJump;
 
     #endregion
 
@@ -49,7 +48,13 @@ public class MovementController : MonoBehaviour
     public Transform groundCheck;
     public float checkRad;
     public LayerMask floorMask;
-    private bool isGrounded;
+
+    #endregion
+
+    #region public static vars
+
+    public static bool isGrounded;
+    public static int amtJump;
 
     #endregion
 
