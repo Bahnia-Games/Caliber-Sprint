@@ -35,6 +35,9 @@ public class RBMovementController : MonoBehaviour
     private float slideCoolTimer;
     public float slideCooldownRate;
 
+    private Vector3 force;
+    private Vector3 oldForce;
+
 
     // Start is called before the first frame update
     void Start()
@@ -69,7 +72,7 @@ public class RBMovementController : MonoBehaviour
             rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
         }
 
-        if(Input.GetKey(KeyCode.LeftShift) && isGrounded && isSlideCool)
+        if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
             player.transform.localScale = playerCrouch;
             speed -= slideDecayRate * Time.deltaTime;
@@ -84,28 +87,31 @@ public class RBMovementController : MonoBehaviour
             speed = defSpeed;
             rb.drag = drag;
             isSliding = false;
-            isSlideCool = false;
-            slideCoolTimer -= Time.deltaTime;
+           //isSlideCool = false;
+           //slideCoolTimer -= Time.deltaTime;
+           
         }
-
-        if (slideCoolTimer < 0)
-        {
-            isSlideCool = true;
-            slideCoolTimer = slideCooldownRate;
-        }
-        Debug.Log(slideCoolTimer);
+        
 
     }
 
     private void FixedUpdate()
     {
         movePlayer(movement);
+        //move();
     }
 
     void movePlayer(Vector3 direction)
     {
-        rb.AddRelativeForce(direction * speed * Time.deltaTime);
+        //rb.AddRelativeForce(direction * speed * Time.deltaTime);
     }
+
+    /*void move()
+    {
+        force = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        rb.velocity += force - oldForce;
+        force = oldForce;
+    }*/
 
     void jump()
     {
