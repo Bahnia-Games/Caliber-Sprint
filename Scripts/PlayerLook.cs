@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
-    public float mouseSensitivity = 100f;
+    public static float mouseSensitivity = 100f;
     public float fov = 60;
 
     public Transform playerBody;
+    public Rigidbody rb;
 
     private float xRotation = 0;
 
     public Camera camera;
+
+    public Vector3 dir;
 
     // Start is called before the first frame update
     void Start()
@@ -23,14 +26,17 @@ public class PlayerLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        dir.x = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        //dir.y = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90, 90);
+        //xRotation -= dir.y;
+        //xRotation = Mathf.Clamp(xRotation, -90, 90);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        playerBody.Rotate(Vector3.up * mouseX);
+        //transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+        playerBody.Rotate(Vector3.up * dir.x);
+
+        rb.rotation = Quaternion.Euler(dir.x, rb.rotation.y, rb.rotation.z);
+        
 
         
     }

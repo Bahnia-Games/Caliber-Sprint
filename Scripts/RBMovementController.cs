@@ -37,6 +37,10 @@ public class RBMovementController : MonoBehaviour
 
     private Vector3 force;
     private Vector3 oldForce;
+    [SerializeField]
+    private float traction;
+    private bool isWalking;
+    Vector3 dir;
 
 
     // Start is called before the first frame update
@@ -60,7 +64,26 @@ public class RBMovementController : MonoBehaviour
         if (isGrounded)
         {
             amtJump = 0;
+            /*
+            if (isWalking)
+            {
+                move();
+            }
+            else
+            {
+                rb.velocity *= traction;
+            }*/
         }
+
+        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            isWalking = true;
+        } else
+        {
+            isWalking = false;
+        }
+
+       
 
         if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded) 
         {
@@ -106,12 +129,15 @@ public class RBMovementController : MonoBehaviour
         //rb.AddRelativeForce(direction * speed * Time.deltaTime);
     }
 
-    /*void move()
+    void move()
     {
+        dir.x = Input.GetAxis("Mouse X") * PlayerLook.mouseSensitivity * Time.deltaTime;
         force = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        //force = Quaternion.AngleAxis(dir.x, Vector3.up);
+        //rb.rotation = Quaternion.Euler(rot, 0.0f, 0.0f);
         rb.velocity += force - oldForce;
         force = oldForce;
-    }*/
+    }
 
     void jump()
     {
