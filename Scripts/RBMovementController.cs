@@ -44,6 +44,7 @@ public class RBMovementController : MonoBehaviour
         {
             jump();
         }
+        Debug.Log(amtJump);
 
     }
 
