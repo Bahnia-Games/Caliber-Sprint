@@ -40,7 +40,7 @@ public class RBMovementController : MonoBehaviour
             amtJump = 0;
         }
 
-        if (Input.GetButton("Jump") && isGrounded && amtJump < 2)
+        if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded) 
         {
             jump();
         }
