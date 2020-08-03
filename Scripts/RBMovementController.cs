@@ -6,8 +6,13 @@ public class RBMovementController : MonoBehaviour
 {
 
     public float speed = 5f;
+    public float defSpeed;
     Rigidbody rb;
+    public Transform player;
     public Vector3 movement;
+    public float fallSpeed;
+    public float drag;
+    public float slideDrag;
 
     public LayerMask groundMask;
     public float checkRad;
@@ -15,6 +20,17 @@ public class RBMovementController : MonoBehaviour
     private bool isGrounded;
     public float jumpForce;
     int amtJump = 0;
+
+    public Vector3 playerStand;
+    public Vector3 playerCrouch;
+
+    public float slideDecayRate;
+    public float slideSpeed;
+    private float slideVarSpeed;
+    public float slideTime;
+    private float slideTimer;
+    private bool slideActive = true;
+    private bool isSliding;
 
 
     // Start is called before the first frame update
@@ -44,7 +60,26 @@ public class RBMovementController : MonoBehaviour
         {
             jump();
         }
-        Debug.Log(amtJump);
+
+        if (!isGrounded)
+        {
+            rb.AddForce(Vector3.down * fallSpeed);
+        }
+
+        
+        if(Input.GetKey(KeyCode.LeftShift) && isGrounded && !isSliding)
+        {
+            player.transform.localScale = playerCrouch;
+            speed -= slideDecayRate * Time.deltaTime;
+            speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
+            rb.drag = slideDrag;
+        } 
+        if(Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            player.transform.localScale = playerStand;
+            speed = defSpeed;
+            rb.drag = drag;
+        }
 
     }
 
@@ -63,4 +98,5 @@ public class RBMovementController : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;
     }
+
 }
