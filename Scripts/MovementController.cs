@@ -83,7 +83,7 @@ public class MovementController : MonoBehaviour
 
         if (!isSliding) // Check if the player is sliding... general movement goes in here...
         {
-            controller.Move(move * speed * Time.deltaTime);
+            controller.SimpleMove(Vector3.forward);
             controller.height = characterStand;
         }
 
@@ -99,7 +99,7 @@ public class MovementController : MonoBehaviour
         }
 
         velocity.y += gravity * Time.deltaTime; // calculates velocity
-        controller.Move(velocity * Time.deltaTime); // Time.deltaTime a second time counts as a square (deltaV = 1/2 gravity * Time^2)
+        controller.SimpleMove(velocity * Time.deltaTime); // Time.deltaTime a second time counts as a square (deltaV = 1/2 gravity * Time^2)
                                                     //The jump is actually performed on this line btw ^
 
         #endregion
@@ -118,7 +118,7 @@ public class MovementController : MonoBehaviour
         {
             slideTimer += Time.deltaTime; // ticks off a timer (fuck IENumerators, Time.deltaTime is where its at bby!)
             slideSpeed = slideSpeed - slideDecayRate * Time.deltaTime; // Subtract the speed of the slide by a set rate (slideDecayRate)
-            controller.Move(move * slideSpeed * Time.deltaTime); // this is what actually moves the player during the slide
+            controller.SimpleMove(move * slideSpeed * Time.deltaTime); // this is what actually moves the player during the slide
         }
         slideSpeed = Mathf.Clamp(slideSpeed, 0f, Mathf.Infinity); // make sure the player doesnt have negative speed... ((Yeah this really dont work)))
         if (slideTimer > maxSildeTime) //checks to see if the timer is up
@@ -147,5 +147,14 @@ public class MovementController : MonoBehaviour
         Debug.Log(isSlideCool);
         #endregion
 
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.layer == 9)
+        {
+            controller.velocity.Set(0,0,0);
+        }
     }
 }
