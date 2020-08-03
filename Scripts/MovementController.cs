@@ -106,7 +106,7 @@ public class MovementController : MonoBehaviour
 
         #region Sliding
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isSliding && isGrounded && isSlideCool) // check to see if the player is grounded, not sliding, and if shift pressed...
+        if (Input.GetKey(KeyCode.LeftShift) && !isSliding && isGrounded && isSlideCool) // check to see if the player is grounded, not sliding, and if shift pressed...
         {
             isSliding = true;
             slideTimer = 0.0f;
@@ -120,7 +120,7 @@ public class MovementController : MonoBehaviour
             slideSpeed = slideSpeed - slideDecayRate * Time.deltaTime; // Subtract the speed of the slide by a set rate (slideDecayRate)
             controller.Move(move * slideSpeed * Time.deltaTime); // this is what actually moves the player during the slide
         }
-        Mathf.Clamp(slideSpeed, 0f, Mathf.Infinity); // make sure the player doesnt have negative speed...
+        slideSpeed = Mathf.Clamp(slideSpeed, 0f, Mathf.Infinity); // make sure the player doesnt have negative speed... ((Yeah this really dont work)))
         if (slideTimer > maxSildeTime) //checks to see if the timer is up
         {
             isSliding = false;
