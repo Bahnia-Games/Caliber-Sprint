@@ -139,7 +139,7 @@ public class RBMovementController : MonoBehaviour
         //force = Quaternion.AngleAxis(dir.x, Vector3.up);
         //rb.rotation = Quaternion.Euler(rot, 0.0f, 0.0f);
         //rb.velocity += force - oldForce;
-        rb.AddRelativeForce((force - oldForce) * speed * Time.deltaTime);
+        rb.AddRelativeForce((force - oldForce) * speed * Time.deltaTime, ForceMode.VelocityChange);
         force = oldForce;
 
     }
