@@ -47,7 +47,7 @@ public class RBMovementController : MonoBehaviour
 
     private void Awake()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -62,7 +62,7 @@ public class RBMovementController : MonoBehaviour
             amtJump = 0;
         }
 
-        if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded) 
         {
             jump();
         }
@@ -72,7 +72,7 @@ public class RBMovementController : MonoBehaviour
             rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        if(Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
             player.transform.localScale = playerCrouch;
             speed -= slideDecayRate * Time.deltaTime;
@@ -81,17 +81,17 @@ public class RBMovementController : MonoBehaviour
             isSliding = true;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift))
+        if(Input.GetKeyUp(KeyCode.LeftShift))
         {
             player.transform.localScale = playerStand;
             speed = defSpeed;
             rb.drag = drag;
             isSliding = false;
-            //isSlideCool = false;
-            //slideCoolTimer -= Time.deltaTime;
-
+           //isSlideCool = false;
+           //slideCoolTimer -= Time.deltaTime;
+           
         }
-
+        
 
     }
 
