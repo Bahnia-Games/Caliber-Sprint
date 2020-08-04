@@ -35,9 +35,6 @@ public class RBMovementController : MonoBehaviour
     private float slideCoolTimer;
     public float slideCooldownRate;
 
-    private Vector3 force;
-    private Vector3 oldForce;
-
 
     // Start is called before the first frame update
     void Start()
@@ -87,8 +84,8 @@ public class RBMovementController : MonoBehaviour
             speed = defSpeed;
             rb.drag = drag;
             isSliding = false;
-            //isSlideCool = false;
-            //slideCoolTimer -= Time.deltaTime;
+            isSlideCool = false;
+            slideCoolTimer -= Time.deltaTime;
 
         }
 
@@ -98,20 +95,12 @@ public class RBMovementController : MonoBehaviour
     private void FixedUpdate()
     {
         movePlayer(movement);
-        //move();
     }
 
     void movePlayer(Vector3 direction)
     {
-        //rb.AddRelativeForce(direction * speed * Time.deltaTime);
+        rb.AddRelativeForce(direction * speed * Time.deltaTime);
     }
-
-    /*void move()
-    {
-        force = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-        rb.velocity += force - oldForce;
-        force = oldForce;
-    }*/
 
     void jump()
     {
