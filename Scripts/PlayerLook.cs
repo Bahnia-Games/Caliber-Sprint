@@ -8,6 +8,7 @@ public class PlayerLook : MonoBehaviour
     public float fov = 60;
 
     public Transform playerBody;
+    public Transform arms;
 
     private float xRotation = 0;
 
@@ -30,6 +31,8 @@ public class PlayerLook : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90, 90);
 
         transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+        arms.transform.rotation = camera.transform.rotation;
+
         playerBody.Rotate(Vector3.up * mouseX);
 
 
