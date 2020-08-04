@@ -9,6 +9,7 @@ public class RBMovementController : MonoBehaviour
     public float defSpeed;
     Rigidbody rb;
     public Transform player;
+    public CapsuleCollider collider;
     public Vector3 movement;
     public float fallSpeed;
     public float drag;
@@ -43,6 +44,7 @@ public class RBMovementController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        collider = GetComponent<CapsuleCollider>();
     }
 
     private void Awake()
@@ -63,10 +65,16 @@ public class RBMovementController : MonoBehaviour
         {
             speed = defSpeed;
             rb.drag = drag;
-        } else if (rb.velocity.magnitude > 0)
+        } else if (rb.velocity.x > 0 || rb.velocity.z > 0)
         {
             speed -= notMovingSpeedDecayRate * Time.deltaTime;
             rb.drag = decayDrag;
+        }
+
+
+        if (rb.velocity.y < 0 && !isGrounded)
+        {
+            rb.drag = fallDrag;
         }
 
         if (isGrounded)
@@ -89,7 +97,8 @@ public class RBMovementController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
-            player.transform.localScale = playerCrouch;
+            //rb.transform.localScale = playerCrouch;
+            collider.height = playerCrouch.y;
             speed -= slideDecayRate * Time.deltaTime;
             speed = Mathf.Clamp(speed, 0, Mathf.Infinity);
             rb.drag = slideDrag;
@@ -98,7 +107,8 @@ public class RBMovementController : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            player.transform.localScale = playerStand;
+            //rb.transform.localScale = playerStand;
+            collider.height = playerStand.y;
             speed = defSpeed;
             rb.drag = drag;
             isSliding = false;
@@ -126,7 +136,6 @@ public class RBMovementController : MonoBehaviour
 
     void jump()
     {
-        rb.drag = fallDrag;
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;
     }
