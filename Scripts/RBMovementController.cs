@@ -13,6 +13,8 @@ public class RBMovementController : MonoBehaviour
     public float fallSpeed;
     public float drag;
     public float slideDrag;
+    public float decayDrag = 100f;
+    public float fallDrag = 0.01f;
 
     public LayerMask groundMask;
     public float checkRad;
@@ -34,6 +36,7 @@ public class RBMovementController : MonoBehaviour
     private bool isSlideCool;
     private float slideCoolTimer;
     public float slideCooldownRate;
+    public float notMovingSpeedDecayRate;
 
 
     // Start is called before the first frame update
@@ -54,6 +57,18 @@ public class RBMovementController : MonoBehaviour
 
         isGrounded = Physics.CheckSphere(groundCheck.position, checkRad, groundMask);
 
+
+        speed = Mathf.Clamp(speed, 0.0f , Mathf.Infinity);
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) && !Grapple.isGrapple)
+        {
+            speed = defSpeed;
+            rb.drag = drag;
+        } else if (rb.velocity.magnitude > 0)
+        {
+            speed -= notMovingSpeedDecayRate * Time.deltaTime;
+            rb.drag = decayDrag;
+        }
+
         if (isGrounded)
         {
             amtJump = 0;
@@ -62,6 +77,9 @@ public class RBMovementController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded)
         {
             jump();
+        } else if (Input.GetButtonUp("Jump"))
+        {
+            rb.drag = drag;
         }
 
         if (!isGrounded)
@@ -94,7 +112,11 @@ public class RBMovementController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        movePlayer(movement);
+        if (!isSliding)
+        {
+            movePlayer(movement);
+        }
+        
     }
 
     void movePlayer(Vector3 direction)
@@ -104,6 +126,7 @@ public class RBMovementController : MonoBehaviour
 
     void jump()
     {
+        rb.drag = fallDrag;
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;
     }
