@@ -55,6 +55,8 @@ public class RBMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(amtJump);
+
         movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 
         isGrounded = Physics.CheckSphere(groundCheck.position, checkRad, groundMask);
@@ -82,7 +84,7 @@ public class RBMovementController : MonoBehaviour
             amtJump = 0;
         }
 
-        if (Input.GetButtonDown("Jump") && amtJump < 2 || Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && amtJump < 1 || Input.GetButtonDown("Jump") && isGrounded)
         {
             jump();
         } else if (Input.GetButtonUp("Jump"))
