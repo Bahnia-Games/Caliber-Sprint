@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class nh24 : MonoBehaviour
+public class AutoWeapon : MonoBehaviour
 {
     public float damage;
     public float range;
@@ -16,13 +18,13 @@ public class nh24 : MonoBehaviour
 
     public void Awake()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.Mouse0) && Time.time >= nextTimeToFire)
+        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / firerate;
             shoot();
@@ -34,19 +36,19 @@ public class nh24 : MonoBehaviour
         RaycastHit hit;
 
         muzzleFlash.Play();
-        
+
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
         {
             Debug.Log(hit.transform.name);
 
             target target = hit.transform.GetComponent<target>();
 
-            if(target != null)
+            if (target != null)
             {
                 target.takeDamage(damage);
             }
 
-            if(hit.rigidbody != null)
+            if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
             }
