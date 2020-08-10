@@ -10,6 +10,8 @@ public class AutoWeapon : MonoBehaviour
     private int layerMask = 1 << 8;
     public float firerate = 1f;
     public ParticleSystem muzzleFlash;
+    public ParticleSystem muzzleFlash2;
+    public ParticleSystem muzzleFlash3;
     public GameObject impactEffect;
     public float impactForce = 50f;
 
@@ -36,6 +38,15 @@ public class AutoWeapon : MonoBehaviour
         RaycastHit hit;
 
         muzzleFlash.Play();
+
+        if(muzzleFlash2 != null)
+        {
+            muzzleFlash2.Play();
+        }
+        if(muzzleFlash3 != null)
+        {
+            muzzleFlash3.Play();
+        }
 
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
         {

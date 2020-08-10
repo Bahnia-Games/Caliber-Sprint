@@ -2,7 +2,7 @@
 
 public class WeaponController : MonoBehaviour
 {
-    public int selectedWeapon = 0;
+    public int selectedWeapon = 2;
 
     // Start is called before the first frame update
     void Start()
