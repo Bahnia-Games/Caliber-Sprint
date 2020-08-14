@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +14,7 @@ public class AutoWeapon : MonoBehaviour
     public ParticleSystem muzzleFlash3;
     public GameObject impactEffect;
     public float impactForce = 50f;
+    public bool isShoot;
 
     private float nextTimeToFire = 0f;
 
@@ -30,6 +31,10 @@ public class AutoWeapon : MonoBehaviour
         {
             nextTimeToFire = Time.time + 1f / firerate;
             shoot();
+            isShoot = true;
+        } else
+        {
+            isShoot = false;
         }
     }
 
