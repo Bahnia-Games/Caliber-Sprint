@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,9 +8,16 @@ public class SemiAutoWeapon : MonoBehaviour
     public float range;
     public Camera camera;
     private int layerMask = 1 << 8;
+    public float firerate = 1f;
     public ParticleSystem muzzleFlash;
+    public ParticleSystem muzzleFlash2;
+    public ParticleSystem muzzleFlash3;
     public GameObject impactEffect;
     public float impactForce = 50f;
+    public bool isShoot;
+    public string weaponType;
+    public Animator animator;
+    private float nextTimeToFire = 0f;
 
 
     public void Awake()
@@ -21,10 +28,24 @@ public class SemiAutoWeapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextTimeToFire)
         {
+            nextTimeToFire = Time.time + 1f / firerate;
             shoot();
+            isShoot = true;
+            
+        } else
+        {
+            isShoot = false;
+            
         }
+
+        if (weaponType == "NH9MKII" || weaponType == "NH9" || weaponType == "NH-9")
+        {
+            NH9MKIIFire();
+
+        }
+
     }
 
     void shoot()
@@ -32,6 +53,15 @@ public class SemiAutoWeapon : MonoBehaviour
         RaycastHit hit;
 
         muzzleFlash.Play();
+
+        if (muzzleFlash2 != null)
+        {
+            muzzleFlash2.Play();
+        }
+        if (muzzleFlash3 != null)
+        {
+            muzzleFlash3.Play();
+        }
 
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
         {
@@ -50,8 +80,22 @@ public class SemiAutoWeapon : MonoBehaviour
             }
 
             GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-
+            
             Destroy(impactGameObj, 1f);
+        }
+    }
+
+    void NH9MKIIFire()
+    {
+        if (isShoot)
+        {
+            animator.SetBool("isNH9MKIIFire", true);
+        }
+        
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            animator.SetBool("isNH9MKIIFire", false);
         }
     }
 }
