@@ -34,7 +34,7 @@ public class GunController : MonoBehaviour
 
     private void Awake()
     {
-        
+        animator.SetBool("IsNH9MKIIDeploy", true);
     }
 
     // Start is called before the first frame update
