@@ -23,9 +23,11 @@ public class GunController : MonoBehaviour
     public Light muzzleLight;
     public GameObject impactEffect;
     private int layerMask = 1 << 8;
+    public GameObject crosshair;
 
     private bool isFire;
     private bool isReload;
+    private bool isAds;
 
     private bool isEmpty;
     private bool isTac;
@@ -43,6 +45,8 @@ public class GunController : MonoBehaviour
             fireMode = "SemiAuto";
         }
         currentAmmo = magSize;
+
+        
     }
 
     // Update is called once per frame
@@ -78,25 +82,42 @@ public class GunController : MonoBehaviour
 
         #endregion
 
-        Debug.Log(currentAmmo);
+        #region ads
+
+        if (Input.GetKey(KeyCode.Mouse1)) //ADS
+        {
+            isAds = true;
+            animator.SetBool("isAds", true);
+            crosshair.SetActive(false);
+        } else if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            animator.SetBool("isAds", false);
+            isAds = false;
+            crosshair.SetActive(true);
+        }
+
+        #endregion
     }
 
     IEnumerator Shoot()
     {
         isFire = true;
         currentAmmo--; //subtract 1 bullet
-        animator.SetBool("isFire", true);
+        
+        if (!isAds)
+        {
+            animator.SetBool("isFire", true);
+        }
+        if (isAds)
+        {
+            animator.SetBool("isAdsFire", true);
+        }
 
         #region muzzle flashing
 
         if (muzzleFlash != null)
         {
             muzzleFlash.Play();
-        }
-        
-        if(muzzleLight != null)
-        {
-            muzzleLight.gameObject.SetActive(true);
         }
 
         if(muzzleFlash2 != null)
@@ -109,6 +130,14 @@ public class GunController : MonoBehaviour
             muzzleFlash3.Play();
         }
 
+        if (muzzleLight != null)
+        {
+            muzzleLight.gameObject.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        muzzleLight.gameObject.SetActive(false);
         #endregion
 
         RaycastHit hit;
@@ -134,6 +163,7 @@ public class GunController : MonoBehaviour
 
         muzzleLight.gameObject.SetActive(false);
         animator.SetBool("isFire", false);
+        animator.SetBool("isAdsFire", false);
         isFire = false;
     }
 
@@ -161,4 +191,5 @@ public class GunController : MonoBehaviour
         isTac = false;
         isEmpty = false;
     }
+
 }
