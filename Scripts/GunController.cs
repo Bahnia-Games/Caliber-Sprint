@@ -32,14 +32,22 @@ public class GunController : MonoBehaviour
     private bool isEmpty;
     private bool isTac;
 
+    public static string deployAnimBoolName;
+    public static float undeployTime;
+
+    private bool canFire;
+    private WeaponManager weaponManager;
+
     private void Awake()
     {
-        animator.SetBool("IsNH9MKIIDeploy", true);
+        animator.SetBool(deployAnimBoolName, true);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        weaponManager = GetComponent<WeaponManager>();
+
         if (fireMode == null) //Check if no fire mode is entered. Default is Semi Auto
         {
             fireMode = "SemiAuto";
@@ -52,16 +60,20 @@ public class GunController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        canFire = weaponManager.canFire;
+
         #region firing
 
-        if(Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false) //Fire everytime mouse is clicked (Semi Auto)
+        if(Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false && canFire == true) //Fire everytime mouse is clicked (Semi Auto)
         {
             StartCoroutine(Shoot());
         }
-        if(Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false) //Fire every frame mouse is held (Auto)
+        if(Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false && canFire == true) //Fire every frame mouse is held (Auto)
         {
             StartCoroutine(Shoot());
         }
+
+        
 
         #endregion
 
