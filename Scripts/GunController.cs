@@ -32,9 +32,20 @@ public class GunController : MonoBehaviour
     private bool isEmpty;
     private bool isTac;
 
+    public string weaponDeployBoolName;
+
     private void Awake()
     {
-        animator.SetBool("IsNH9MKIIDeploy", true);
+        if(weaponDeployBoolName != null)
+        {
+            animator.SetBool(weaponDeployBoolName, true);
+        } else
+        {
+            Debug.Log("No Deploy Animation Added!");
+        }
+
+
+        
     }
 
     // Start is called before the first frame update
