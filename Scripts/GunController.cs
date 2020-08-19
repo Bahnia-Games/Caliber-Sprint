@@ -12,7 +12,7 @@ public class GunController : MonoBehaviour
     public float range = 1f;
     public int magSize = 1;
     public float impactForce = 1f;
-    private int currentAmmo;
+    [SerializeField] private int currentAmmo;
     public string fireMode = "SemiAuto";
     public Camera camera;
     public Animator animator;
@@ -33,10 +33,11 @@ public class GunController : MonoBehaviour
     private bool isTac;
 
     public string weaponDeployBoolName;
+    public float weaponDeployTime;
 
     private void Awake()
     {
-        if(weaponDeployBoolName != null)
+        if (weaponDeployBoolName != null)
         {
             animator.SetBool(weaponDeployBoolName, true);
         } else
@@ -44,32 +45,29 @@ public class GunController : MonoBehaviour
             Debug.Log("No Deploy Animation Added!");
         }
 
-
-        
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
         if (fireMode == null) //Check if no fire mode is entered. Default is Semi Auto
         {
             fireMode = "SemiAuto";
         }
         currentAmmo = magSize;
 
-        
     }
 
-    // Update is called once per frame
+    void Start() //unused
+    {
+
+
+    }
+
     void Update()
     {
         #region firing
 
-        if(Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false) //Fire everytime mouse is clicked (Semi Auto)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false && isFire == false) //Fire everytime mouse is clicked (Semi Auto)
         {
             StartCoroutine(Shoot());
         }
-        if(Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false) //Fire every frame mouse is held (Auto)
+        if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false && isFire == false) //Fire every frame mouse is held (Auto)
         {
             StartCoroutine(Shoot());
         }
@@ -80,9 +78,9 @@ public class GunController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R) && isFire == false && currentAmmo >= 1 && currentAmmo != magSize) // if the gun isnt firing and r is pressed, determine reload type
         {
-                // does the magazoine have at least 1 bullet and is less than the max ammo size?
-                isTac = true; // tactical reload
-                StartCoroutine(Reload());
+            // does the magazoine have at least 1 bullet and is less than the max ammo size?
+            isTac = true; // tactical reload
+            StartCoroutine(Reload());
         }
 
         if (currentAmmo <= 0) // is the current ammo 0?
@@ -108,13 +106,22 @@ public class GunController : MonoBehaviour
         }
 
         #endregion
+
+        #region testStuff
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            StartCoroutine(Undeploy());
+        }
+
+        #endregion
     }
 
     IEnumerator Shoot()
     {
         isFire = true;
         currentAmmo--; //subtract 1 bullet
-        
+
         if (!isAds)
         {
             animator.SetBool("isFire", true);
@@ -131,12 +138,12 @@ public class GunController : MonoBehaviour
             muzzleFlash.Play();
         }
 
-        if(muzzleFlash2 != null)
+        if (muzzleFlash2 != null)
         {
             muzzleFlash2.Play();
         }
 
-        if(muzzleFlash3 != null)
+        if (muzzleFlash3 != null)
         {
             muzzleFlash3.Play();
         }
@@ -146,22 +153,22 @@ public class GunController : MonoBehaviour
             muzzleLight.gameObject.SetActive(true);
         }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.001f);
 
         muzzleLight.gameObject.SetActive(false);
         #endregion
 
         RaycastHit hit;
-        if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
         {
             target target = hit.transform.GetComponent<target>();
 
-            if(target != null)
+            if (target != null)
             {
                 target.takeDamage(damage);
             }
 
-            if(hit.rigidbody != null)
+            if (hit.rigidbody != null)
             {
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
             }
@@ -191,7 +198,7 @@ public class GunController : MonoBehaviour
             animator.SetBool("isTacReload", true);
         }
 
-        
+
 
         yield return new WaitForSeconds(reloadDelay); //wait for reload delay
 
@@ -201,6 +208,14 @@ public class GunController : MonoBehaviour
         currentAmmo = magSize; //refil mag
         isTac = false;
         isEmpty = false;
+    }
+
+    IEnumerator Undeploy()
+    {
+        animator.SetBool(weaponDeployBoolName, false);
+
+        yield return new WaitForSeconds(weaponDeployTime);
+        this.gameObject.SetActive(false);
     }
 
 }
