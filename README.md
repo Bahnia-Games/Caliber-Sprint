@@ -8,5 +8,3 @@ if code breaks revert to master k thx bye
 NOTICE 2:
 SemiAutoWeapon.cs and AutoWeapon.cs are now marked for deprication.
 Stay on this branch for new code, otherwise, use Beta-Branch-2.
-
-حقشهسث شممشا
