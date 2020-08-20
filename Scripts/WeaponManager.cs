@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//using System;
+
+/*
+#pragma warning disable
+[CLSCompliant(false)]
+*/
+
 public class WeaponManager : MonoBehaviour
 {
+
     public Animator animator;
     private GunController gunController;
     private float weaponDeployTime;
@@ -17,6 +26,8 @@ public class WeaponManager : MonoBehaviour
     public GameObject thisWeapon2;
     // GunController thisWeapon2GunController;
 
+    public GameObject thisWeapon3;
+
     
 
 
@@ -24,7 +35,7 @@ public class WeaponManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //animator.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -40,9 +51,11 @@ public class WeaponManager : MonoBehaviour
 
             weaponDeployTime = thisWeaponController.weaponDeployTime;
             weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+
+            animator.SetBool(weaponDeployBoolName, true);
         } else
         {
-
+            //i forgot what to put in these *shrug*
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -53,20 +66,32 @@ public class WeaponManager : MonoBehaviour
 
             weaponDeployTime = thisWeaponController.weaponDeployTime;
             weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+
+            animator.SetBool(weaponDeployBoolName, true);
         } else
         {
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            thisWeaponController = thisWeapon3.GetComponent<GunController>();
+            selectedWeapon = 2;
+            thisWeapon3.SetActive(true);
+
+            weaponDeployTime = thisWeaponController.weaponDeployTime;
+            weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+            animator.SetBool(weaponDeployBoolName, true);
+        }
+
         
-        StartCoroutine(Deploy(weaponDeployTime, weaponDeployBoolName));
+        //StartCoroutine(Deploy(weaponDeployTime, weaponDeployBoolName));
     }
 
-
-    IEnumerator Deploy(float deployTime, string weaponDeployBoolName)
+    //change this to a regular fucntion whenever... its cleaner that way but idrc
+    IEnumerator Deploy(float deployTime, string weaponDeployBoolName) 
     {
-        
-        animator.SetBool(weaponDeployBoolName, true);
+        //animator.SetBool(weaponDeployBoolName, true);
 
         yield return new WaitForSeconds(0.0001f);
 

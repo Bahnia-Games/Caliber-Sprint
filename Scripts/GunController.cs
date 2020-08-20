@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable CS0108
+
 public class GunController : MonoBehaviour
 {
-
     //public string currentWeapon;
     public float reloadDelay = 1.0f;
+    public float emptyReloadDelay = 1.0f;
+    public float ADSReloadDelay = 1.0f;
+    public float emptyADSRelaodDelay = 1.0f;
     public float fireDelay = 0.1f;
     public float damage = 1f;
     public float range = 1f;
     public int magSize = 1;
     public float impactForce = 1f;
-    [SerializeField] private int currentAmmo;
+    private int currentAmmo;
     public string fireMode = "SemiAuto";
     public Camera camera;
     public Animator animator;
@@ -49,13 +53,13 @@ public class GunController : MonoBehaviour
         {
             fireMode = "SemiAuto";
         }
-        currentAmmo = magSize;
+        
 
     }
 
-    void Start() //unused
+    void Start() //sex
     {
-
+        currentAmmo = magSize;
 
     }
 
@@ -189,18 +193,31 @@ public class GunController : MonoBehaviour
     {
         isReload = true;
 
-        if (isEmpty)
+        if (isEmpty && !isAds)
         {
             animator.SetBool("isReload", true);
+            yield return new WaitForSeconds(emptyReloadDelay);
         }
-        if (isTac)
+        if (isTac && !isAds)
         {
             animator.SetBool("isTacReload", true);
+            yield return new WaitForSeconds(reloadDelay);
+        }
+
+        if(isEmpty && isAds)
+        {
+            animator.SetBool("isReload", true);
+            yield return new WaitForSeconds(emptyADSRelaodDelay);
+        }
+        if (isTac && isAds)
+        {
+            animator.SetBool("isTacReload", true);
+            yield return new WaitForSeconds(ADSReloadDelay);
         }
 
 
 
-        yield return new WaitForSeconds(reloadDelay); //wait for reload delay
+         //wait for reload delay
 
         animator.SetBool("isReload", false);
         animator.SetBool("isTacReload", false);
