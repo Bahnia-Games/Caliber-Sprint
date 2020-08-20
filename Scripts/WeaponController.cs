@@ -1,7 +1,11 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class WeaponController : MonoBehaviour
 {
+    [Header("Depricated")]
+
     public int selectedWeapon = 0;
     public Animator animator;
 

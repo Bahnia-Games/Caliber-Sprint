@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AutoWeapon : MonoBehaviour
 {
+    [Header("Depricated")]
+
     public float damage;
     public float range;
     public Camera camera;

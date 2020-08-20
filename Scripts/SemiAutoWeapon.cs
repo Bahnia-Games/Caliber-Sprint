@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //most broken piece of shit code on the fucking planet
+//^fax
 public class SemiAutoWeapon : MonoBehaviour
 {
+    [Header("Depricated")]
+
     public float damage;
     public float range;
     public Camera camera;
