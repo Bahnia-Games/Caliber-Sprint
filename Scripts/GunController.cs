@@ -217,7 +217,7 @@ public class GunController : MonoBehaviour
 
 
 
-         //wait for reload delay
+         //wait for reload delay Hi Nate! -Gabe
 
         animator.SetBool("isReload", false);
         animator.SetBool("isTacReload", false);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
-[Header("Depricated")]
+//[Header("Depricated")]
     // Start is called before the first frame update
     void Start()
     {
