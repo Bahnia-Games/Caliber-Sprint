@@ -1,14 +1,6 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-//using System;
-
-/*
-#pragma warning disable
-[CLSCompliant(false)]
-*/
 
 public class WeaponManager : MonoBehaviour
 {
@@ -35,7 +27,7 @@ public class WeaponManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //animator.GetComponent<Animator>();
+       
     }
 
     // Update is called once per frame
@@ -85,16 +77,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         
-        //StartCoroutine(Deploy(weaponDeployTime, weaponDeployBoolName));
     }
 
-    //change this to a regular fucntion whenever... its cleaner that way but idrc
-    IEnumerator Deploy(float deployTime, string weaponDeployBoolName) 
-    {
-        //animator.SetBool(weaponDeployBoolName, true);
-
-        yield return new WaitForSeconds(0.0001f);
-
-    }
 
 }
