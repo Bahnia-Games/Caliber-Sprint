@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Grapple : MonoBehaviour
 {
+
+    [Header("Depricated")]
+
     public static bool isGrapple;
 
     // Start is called before the first frame update
