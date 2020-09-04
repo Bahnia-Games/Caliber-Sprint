@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,6 +38,15 @@ public class GunController : MonoBehaviour
 
     public string weaponDeployBoolName;
     public float weaponDeployTime;
+		
+		private bool bulletFired;
+		private GameObject projectileGameObj;
+		
+		[Header("Do not use if Ballistic isnt your fire mode type!")]
+		public float bulletForce;
+		public string projectileType;
+		public GameObject projectilePrefab;
+		public Transform muzzleTransform;
 
     private void Awake()
     {
@@ -51,8 +60,19 @@ public class GunController : MonoBehaviour
 
         if (fireMode == null) //Check if no fire mode is entered. Default is Semi Auto
         {
+					debug.Log("No firemode set (is it named peoperly? Defaulting to SemiAuto");
             fireMode = "SemiAuto";
         }
+				
+				if (fireMode == "Ballistic" && bulletForce == null) {
+					debug.Log("No bullet force set (did you add it in the inspector?), defaulting to 100")
+						bulletForce = 100;
+				}
+				
+				if (fireMode == "Ballistic" && projectileType == null){
+					debug.Log("No projectile type entered (did you misspell it or forget to add it?) Defaulting to Bullet");
+					peojectileType = "Bullet";
+				}
         
 
     }
@@ -62,19 +82,33 @@ public class GunController : MonoBehaviour
         currentAmmo = magSize;
 
     }
+		
+		// like update but for physics
+		private void FixedUpdate(){
+			if(bulletFired) {
+				CheckBallisticState();
+			}
+		}
+		
 
     void Update()
     {
         #region firing
-
-        if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false && isFire == false) //Fire everytime mouse is clicked (Semi Auto)
+        // SA Hitscan
+        if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
         {
             StartCoroutine(Shoot());
         }
-        if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false && isFire == false) //Fire every frame mouse is held (Auto)
+				// A Hitscan
+        if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && !isReload && !isFire) //Fire every frame mouse is held (Auto)
         {
             StartCoroutine(Shoot());
         }
+				// projectile based firing
+				if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Ballistic" && !isReload && !isFire) //Fire Ballistic (Semi Auto only, this was intended for heavy rifles)
+				{
+					StartCoroutine(BallisticFire(projectileType));
+				}
 
         #endregion
 
@@ -234,5 +268,26 @@ public class GunController : MonoBehaviour
         yield return new WaitForSeconds(weaponDeployTime);
         this.gameObject.SetActive(false);
     }
+		
+		IENumerator BallisticFire(string projectileType){
+			isFire = true;
+			animator.SetBool("isFire", true);
+			
+			projectileGameObj = Instantiate(projectilePrefab, muzzleTransform.position, muzzleTransform.position.forward);
+			bulletFired = true;
+			
+			Collider projectileCollider =  projectileGameObj.GetComponent<Collider>();
+			
+			if(projectileType == "Bullet" && projectileCollider.isCollided){
+				bulletFired = false;
+			}
+			
+			yield return new WaitForSeconds(fireDelay);
+			
+		}
+		
+		void CheckBallisticState(){
+			Collider projectileCollider = ProjectileGameObj.getComponent<Collider>();
+		}
 
 }
