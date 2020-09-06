@@ -11,3 +11,5 @@ Stay on this branch for new code, otherwise, use Beta-Branch-2.
 
 NOTICE 3: 
 Scripts marked for deprication will be deleted during the next pull to master. These scripts will have "Depricated" in the inspector and [Header("Depricated")] in the script.
+
+NOTICE 4: helo this is blind branch i dont have pc k thx bye
