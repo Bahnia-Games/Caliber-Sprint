@@ -66,9 +66,9 @@ public class GunController : MonoBehaviour
 
     }
 		
-		void FixedUpdate(){
+	void FixedUpdate(){
 			
-		}
+	}
 
     void Update()
     {
