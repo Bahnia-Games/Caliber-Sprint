@@ -79,5 +79,10 @@ public class WeaponManager : MonoBehaviour
         
     }
 
+    void pickup()
+    {
+
+    }
+
 
 }

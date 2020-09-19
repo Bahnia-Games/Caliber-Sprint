@@ -16,7 +16,7 @@ public class GunController : MonoBehaviour
     public float range = 1f;
     public int magSize = 1;
     public float impactForce = 1f;
-    private int currentAmmo;
+    [SerializeField] private int currentAmmo;
     public string fireMode = "SemiAuto";
     public Camera camera;
     public Animator animator;
@@ -67,11 +67,11 @@ public class GunController : MonoBehaviour
     {
         #region firing
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && isReload == false && isFire == false) //Fire everytime mouse is clicked (Semi Auto)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
         {
             StartCoroutine(Shoot());
         }
-        if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && isReload == false && isFire == false) //Fire every frame mouse is held (Auto)
+        if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && !isReload && !isFire) //Fire every frame mouse is held (Auto)
         {
             StartCoroutine(Shoot());
         }
@@ -80,7 +80,7 @@ public class GunController : MonoBehaviour
 
         #region reloading
 
-        if (Input.GetKeyDown(KeyCode.R) && isFire == false && currentAmmo >= 1 && currentAmmo != magSize) // if the gun isnt firing and r is pressed, determine reload type
+        if (Input.GetKeyDown(KeyCode.R) && !isFire && currentAmmo >= 1 && currentAmmo != magSize) // if the gun isnt firing and r is pressed, determine reload type
         {
             // does the magazoine have at least 1 bullet and is less than the max ammo size?
             isTac = true; // tactical reload
