@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#pragma warning disable CS0108, CS0104
+
 public class RBMovementController : MonoBehaviour
 {
     //disable warnings
-
+    #pragma warning disable CS0108, CS0104
 
     public float speed = 5f;
     public float defSpeed;
