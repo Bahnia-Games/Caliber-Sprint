@@ -50,10 +50,10 @@ public class GrenadeController : MonoBehaviour
         if (!isExploding && Input.GetKeyDown(KeyCode.G))
         {
             StartCoroutine(HoldGrenade(true));
-        } else if (Input.GetKeyUp(KeyCode.G))
+        } /*else if (Input.GetKeyUp(KeyCode.G))
         {
             StartCoroutine(HoldGrenade(false));
-        }
+        }*/
 
         if(isGrenadeHeld && Input.GetMouseButtonDown(1))
         {
@@ -79,6 +79,7 @@ public class GrenadeController : MonoBehaviour
 
     IEnumerator Flash()
     {
+        Debug.Log("fired");
         isExploding = true;
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
         Instantiate(thrownGrenade, camera.transform.position, rot);
