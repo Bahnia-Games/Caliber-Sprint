@@ -29,7 +29,7 @@ public class GunController : MonoBehaviour
     private int layerMask = 1 << 8;
     public GameObject crosshair;
 
-    private bool isFire;
+    [HideInInspector] public bool isFire;
     private bool isReload;
     private bool isAds;
 
@@ -38,6 +38,8 @@ public class GunController : MonoBehaviour
 
     public string weaponDeployBoolName;
     public float weaponDeployTime;
+    [HideInInspector] public bool isEquip;
+
 
     private void Awake()
     {
@@ -59,6 +61,7 @@ public class GunController : MonoBehaviour
 
     void Start() //sex
     {
+        isEquip = true;
         currentAmmo = magSize;
 
     }
@@ -229,9 +232,11 @@ public class GunController : MonoBehaviour
 
     IEnumerator Undeploy()
     {
+
         animator.SetBool(weaponDeployBoolName, false);
 
         yield return new WaitForSeconds(weaponDeployTime);
+        isEquip = false;
         this.gameObject.SetActive(false);
     }
 
