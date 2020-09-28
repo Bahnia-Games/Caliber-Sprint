@@ -116,8 +116,9 @@ public class GrenadeController : MonoBehaviour
 
         }
 
+        animator.SetBool("isThrown", false);
+        isExploding = false;
 
-        
     }
 
     IEnumerator Frag()
