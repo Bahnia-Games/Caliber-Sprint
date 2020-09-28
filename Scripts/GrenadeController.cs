@@ -80,7 +80,10 @@ public class GrenadeController : MonoBehaviour
         Debug.Log("fired");
         isExploding = true;
         animator.SetBool("isThrown", true);
+
         yield return new WaitForSeconds(throwAnimationTime);
+
+        animator.SetBool("isThrown", false);
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
         Instantiate(thrownGrenade, transform.position, rot);
         Instantiate(thrownGrenadeHandle, transform.position, rot);
@@ -89,13 +92,17 @@ public class GrenadeController : MonoBehaviour
         Light thrownGrenadeL = thrownGrenadeGO.GetComponentInChildren<Light>();
         ParticleSystem thrownGrenadePS = thrownGrenadeGO.GetComponentInChildren<ParticleSystem>();
         thrownGrenadeRB.AddForce(camera.transform.forward * throwForce);
+
         yield return new WaitForSeconds(fuzeTime);
+
         bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad, playerLayer);
         bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad, playerLayer);
         thrownGrenadePS.Play();
         Debug.Log(lo);
         Debug.Log(hi);
+
         yield return new WaitForSeconds(flashTime);
+
         thrownGrenadeGO.tag = "spent_grenade";
         thrownGrenadePS.Stop();
         if (lo)
@@ -116,7 +123,6 @@ public class GrenadeController : MonoBehaviour
 
         }
 
-        animator.SetBool("isThrown", false);
         isExploding = false;
 
     }
