@@ -11,6 +11,8 @@ public class GrenadeController : MonoBehaviour
     public Camera camera;
     public Animator animator;
     public GameObject thrownGrenade;
+    public GameObject kinematicHandle;
+    public GameObject thrownGrenadeHandle;
     private GameObject thrownGrenadeGO;
     public string grenadeType;
     public bool isImpact;
@@ -31,6 +33,8 @@ public class GrenadeController : MonoBehaviour
     private bool hasGrenade;
     private bool isExploding;
     private bool isGrenadeHeld;
+
+    public float destroyTime;
 
     //public GunController gunController;
 
@@ -82,18 +86,24 @@ public class GrenadeController : MonoBehaviour
         Debug.Log("fired");
         isExploding = true;
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
-        Instantiate(thrownGrenade, camera.transform.position, rot);
+        Instantiate(thrownGrenade, transform.position, rot);
+        Instantiate(thrownGrenadeHandle, transform.position, rot);
+        //Rigidbody kinematicHandleRB = kinematicHandle.GetComponent<Rigidbody>();
+        //kinematicHandleRB.isKinematic = false;
         thrownGrenadeGO = GameObject.FindGameObjectWithTag("thrown_flash");
         Rigidbody thrownGrenadeRB = thrownGrenadeGO.GetComponent<Rigidbody>();
-        //Light thrownGrenadeL = thrownGrenadeGO.GetComponent<Light>();
-        ParticleSystem thrownGrenadePS = thrownGrenadeGO.GetComponent<ParticleSystem>();
+        Light thrownGrenadeL = thrownGrenadeGO.GetComponentInChildren<Light>();
+        ParticleSystem thrownGrenadePS = thrownGrenadeGO.GetComponentInChildren<ParticleSystem>();
         thrownGrenadeRB.AddForce(Vector3.forward * throwForce);
         yield return new WaitForSeconds(fuzeTime);
-        bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad);
-        bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad);
+        bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad, playerLayer);
+        bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad, playerLayer);
         //thrownGrenadeL.enabled = true;
         thrownGrenadePS.Play();
+        Debug.Log(lo);
+        Debug.Log(hi);
         yield return new WaitForSeconds(flashTime);
+        thrownGrenadePS.Stop();
         //thrownGrenadeL.enabled = false;
         if (lo)
         {
@@ -107,6 +117,17 @@ public class GrenadeController : MonoBehaviour
             yield return new WaitForSeconds(highBlindTime);
             flashOverlay.SetActive(false);
         }
+
+        thrownGrenadeGO.tag = "lol";
+        if (destroyTime != 0)
+        {
+            //DestroyImmediate(thrownGrenadeGO, true);
+            //DestroyImmediate(thrownGrenadeHandle, true);
+            //Destroy(thrownGrenadeGO, destroyTime);
+            //Destroy(thrownGrenadeHandle, destroyTime);
+        }
+
+
         
     }
 
