@@ -22,6 +22,7 @@ public class GrenadeController : MonoBehaviour
     public float loBlindTime;
     public float grenadeEquipTime;
     public float throwForce;
+    public float throwAnimationTime;
     //public ParticleSystem particle;
     //public Light explosionLight;
     public LayerMask playerLayer;
@@ -35,6 +36,8 @@ public class GrenadeController : MonoBehaviour
     private bool isGrenadeHeld;
 
     public float destroyTime;
+    //public string tossDirectionModifier;
+   // private Vector3 tossDir;
 
     //public GunController gunController;
 
@@ -46,6 +49,23 @@ public class GrenadeController : MonoBehaviour
             Debug.Log("No grenade type selected, defaulting to frag...");
             grenadeType = "frag";
         }
+        /*
+        if (tossDirectionModifier == null || (tossDirectionModifier != "back" || tossDirectionModifier != "backward" || tossDirectionModifier != "forward" || tossDirectionModifier != "left" || tossDirectionModifier != "right"))
+        {
+            Debug.Log("No grenade toss direction modifier selected, defaulting to forward...");
+            tossDirectionModifier = "forward";
+        }
+
+        if (tossDirectionModifier == "forward")
+            tossDir = camera.transform.forward;
+        if (tossDirectionModifier == "backward" || tossDirectionModifier == "back")
+            tossDir = camera.transform.forward;
+        if (tossDirectionModifier == "left")
+            tossDir = Vector3.left;
+        if (tossDirectionModifier == "right")
+            tossDir = Vector3.right;*/
+        // Depricated
+
     }
 
     // Update is called once per frame
@@ -85,6 +105,8 @@ public class GrenadeController : MonoBehaviour
     {
         Debug.Log("fired");
         isExploding = true;
+        animator.SetBool("isThrown", true);
+        yield return new WaitForSeconds(throwAnimationTime);
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
         Instantiate(thrownGrenade, transform.position, rot);
         Instantiate(thrownGrenadeHandle, transform.position, rot);
@@ -94,7 +116,7 @@ public class GrenadeController : MonoBehaviour
         Rigidbody thrownGrenadeRB = thrownGrenadeGO.GetComponent<Rigidbody>();
         Light thrownGrenadeL = thrownGrenadeGO.GetComponentInChildren<Light>();
         ParticleSystem thrownGrenadePS = thrownGrenadeGO.GetComponentInChildren<ParticleSystem>();
-        thrownGrenadeRB.AddForce(Vector3.forward * throwForce);
+        thrownGrenadeRB.AddForce(camera.transform.forward * throwForce);
         yield return new WaitForSeconds(fuzeTime);
         bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad, playerLayer);
         bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad, playerLayer);
@@ -103,6 +125,7 @@ public class GrenadeController : MonoBehaviour
         Debug.Log(lo);
         Debug.Log(hi);
         yield return new WaitForSeconds(flashTime);
+        thrownGrenadeGO.tag = "spent_grenade";
         thrownGrenadePS.Stop();
         //thrownGrenadeL.enabled = false;
         if (lo)
@@ -118,7 +141,6 @@ public class GrenadeController : MonoBehaviour
             flashOverlay.SetActive(false);
         }
 
-        thrownGrenadeGO.tag = "lol";
         if (destroyTime != 0)
         {
             //DestroyImmediate(thrownGrenadeGO, true);
