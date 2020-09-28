@@ -79,7 +79,7 @@ public class GrenadeController : MonoBehaviour
             StartCoroutine(HoldGrenade(false));
         }*/
 
-        if(isGrenadeHeld && Input.GetMouseButtonDown(1))
+        if(isGrenadeHeld && Input.GetMouseButtonDown(0))
         {
             StartCoroutine(Flash());
         }
