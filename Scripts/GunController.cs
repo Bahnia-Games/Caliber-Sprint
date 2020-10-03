@@ -45,7 +45,7 @@ public class GunController : MonoBehaviour
     {
         if (weaponDeployBoolName != null)
         {
-            animator.SetBool(weaponDeployBoolName, true);
+            //animator.SetBool(weaponDeployBoolName, true);
         } else
         {
             Debug.Log("No Deploy Animation Added!");
@@ -118,7 +118,7 @@ public class GunController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(Undeploy());
+            StartCoroutine(Deploy(false));
         }
 
         #endregion
@@ -230,14 +230,24 @@ public class GunController : MonoBehaviour
         isEmpty = false;
     }
 
-    public IEnumerator Undeploy()
+    public IEnumerator Deploy(bool deploy)
     {
+        if (deploy)
+        {
+            animator.SetBool(weaponDeployBoolName, true);
+            yield return new WaitForSeconds(weaponDeployTime);
+            isEquip = true;
+        }
 
-        animator.SetBool(weaponDeployBoolName, false);
+        if (!deploy)
+        {
+            animator.SetBool(weaponDeployBoolName, false);
 
-        yield return new WaitForSeconds(weaponDeployTime);
-        isEquip = false;
-        this.gameObject.SetActive(false);
+            yield return new WaitForSeconds(weaponDeployTime);
+            isEquip = false;
+            this.gameObject.SetActive(false);
+        }
+
     }
 
 }

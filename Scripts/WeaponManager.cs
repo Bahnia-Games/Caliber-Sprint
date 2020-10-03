@@ -111,7 +111,7 @@ public class WeaponManager : MonoBehaviour
     {
         if (!check)
         {
-            StartCoroutine(thisWeaponController.Undeploy());
+            StartCoroutine(thisWeaponController.Deploy(false));
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
         }
         StartCoroutine(thisGrenadeController.HoldGrenade(true));
@@ -122,7 +122,7 @@ public class WeaponManager : MonoBehaviour
         {
             StartCoroutine(thisGrenadeController.HoldGrenade(false));
             yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
-            //SelectWeaponZero();
+            StartCoroutine(thisWeaponController.Deploy(false));
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
         }
         
