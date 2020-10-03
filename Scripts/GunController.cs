@@ -230,7 +230,7 @@ public class GunController : MonoBehaviour
         isEmpty = false;
     }
 
-    IEnumerator Undeploy()
+    public IEnumerator Undeploy()
     {
 
         animator.SetBool(weaponDeployBoolName, false);

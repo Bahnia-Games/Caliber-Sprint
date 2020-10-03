@@ -35,6 +35,8 @@ public class GrenadeController : MonoBehaviour
 
     public float destroyTime;
 
+    private bool check;
+
     void Start()
     {
         if (grenadeType == null)
@@ -45,13 +47,24 @@ public class GrenadeController : MonoBehaviour
 
     }
 
+    private void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
+        /*
         if (!isExploding && Input.GetKeyDown(KeyCode.G))
         {
             StartCoroutine(HoldGrenade(true));
-        } 
+        } */
+
+        /*if (Input.GetKeyDown(KeyCode.G) && check)
+        {
+            isGrenadeHeld = false;
+        }*/
 
         if(isGrenadeHeld && Input.GetMouseButtonDown(0))
         {
@@ -59,13 +72,14 @@ public class GrenadeController : MonoBehaviour
         }
     }
 
-    IEnumerator HoldGrenade(bool equip)
+    public IEnumerator HoldGrenade(bool equip)
     {
         if (equip)
         {
             animator.SetBool("isGrenadeHeld", true);
             yield return new WaitForSeconds(grenadeEquipTime);
             isGrenadeHeld = true;
+            check = true;
         } if (!equip)
         {
             animator.SetBool("isGrenadeHeld", false);

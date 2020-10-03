@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class WeaponManager : MonoBehaviour
 {
-
+    private bool check;
+    private bool switchBack;
     public Animator animator;
     private GunController gunController;
     private float weaponDeployTime;
@@ -12,8 +14,14 @@ public class WeaponManager : MonoBehaviour
 
     private int selectedWeapon;
 
+    private GunController thisWeaponController;
+    private GrenadeController thisGrenadeController;
+
+    public GameObject thisGrenade;
+    [HideInInspector] public bool thisGrenadeEquip;
+
     public GameObject thisWeapon; //testing
-    private GunController thisWeaponController; //testing
+    [HideInInspector] public bool thisWeaponEquip;
 
     public GameObject thisWeapon2;
     // GunController thisWeapon2GunController;
@@ -27,24 +35,27 @@ public class WeaponManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        thisGrenadeEquip = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         
+        if (Input.GetKeyDown(KeyCode.G) && thisGrenadeEquip && !check)
+        {
+            StartCoroutine(SwitchGAndBack());
+        }
+
+        if (check && Input.GetKeyDown(KeyCode.G))
+        {
+            switchBack = true;
+            check = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            thisWeaponController = thisWeapon.GetComponent<GunController>();
-            selectedWeapon = 0;
-            thisWeapon.SetActive(true);
-
-            weaponDeployTime = thisWeaponController.weaponDeployTime;
-            weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
-
-            animator.SetBool(weaponDeployBoolName, true);
+            SelectWeaponZero();
         } else
         {
             //i forgot what to put in these *shrug*
@@ -84,5 +95,39 @@ public class WeaponManager : MonoBehaviour
 
     }
 
+    void SelectWeaponZero()
+    {
+        thisWeaponController = thisWeapon.GetComponent<GunController>();
+        selectedWeapon = 0;
+        thisWeapon.SetActive(true);
+
+        weaponDeployTime = thisWeaponController.weaponDeployTime;
+        weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+
+        animator.SetBool(weaponDeployBoolName, true);
+    }
+
+    IEnumerator SwitchGAndBack()
+    {
+        if (!check)
+        {
+            StartCoroutine(thisWeaponController.Undeploy());
+            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+        }
+        StartCoroutine(thisGrenadeController.HoldGrenade(true));
+        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
+        check = true;
+
+        if (switchBack)
+        {
+            StartCoroutine(thisGrenadeController.HoldGrenade(false));
+            yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
+            //SelectWeaponZero();
+            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+        }
+        
+
+    }
+        
 
 }
