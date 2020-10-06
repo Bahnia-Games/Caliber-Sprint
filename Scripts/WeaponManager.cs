@@ -30,23 +30,34 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject thisWeapon3;
 
-    
 
+    private bool stop;
+    
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        //mainly for testing purposes
+
+        thisWeaponController = thisWeapon.GetComponent<GunController>();
+
         thisGrenadeEquip = true;
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
 
+        Debug.Log(check);
+
         #region flash (q)
         if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip && !check)
         {
+            stop = false;
             thisGrenade.SetActive(true);
             thisGrenadeController = thisGrenade.GetComponent<GrenadeController>();
             StartCoroutine(SwitchGAndBack());
@@ -120,11 +131,16 @@ public class WeaponManager : MonoBehaviour
 
     IEnumerator SwitchGAndBack()
     {
-        if (!check)
+        
+
+        if (!check && !stop)
         {
             StartCoroutine(thisWeaponController.Deploy(false));
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+            stop = true;
+            
         }
+
         StartCoroutine(thisGrenadeController.HoldGrenade(true));
         yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
         check = true;
