@@ -20,6 +20,8 @@ public class WeaponManager : MonoBehaviour
     public GameObject thisGrenade;
     [HideInInspector] public bool thisGrenadeEquip;
 
+    //public GameObject thisGrenade2;
+
     public GameObject thisWeapon; //testing
     [HideInInspector] public bool thisWeaponEquip;
 
@@ -41,25 +43,33 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if (Input.GetKeyDown(KeyCode.G) && thisGrenadeEquip && !check)
+
+        #region flash (q)
+        if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip && !check)
         {
+            thisGrenadeController = thisGrenade.GetComponent<GrenadeController>();
             StartCoroutine(SwitchGAndBack());
         }
 
-        if (check && Input.GetKeyDown(KeyCode.G))
+        if (check && Input.GetKeyDown(KeyCode.Q))
         {
             switchBack = true;
             check = false;
         }
 
+        #endregion
+
+        #region weapon 1 (1, ID 0)
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SelectWeaponZero();
+            SelectWeapon(0);
         } else
         {
             //i forgot what to put in these *shrug*
         }
+
+        #endregion
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -95,10 +105,10 @@ public class WeaponManager : MonoBehaviour
 
     }
 
-    void SelectWeaponZero()
+    void SelectWeapon(int weaponID)
     {
         thisWeaponController = thisWeapon.GetComponent<GunController>();
-        selectedWeapon = 0;
+        selectedWeapon = weaponID;
         thisWeapon.SetActive(true);
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
