@@ -47,6 +47,7 @@ public class WeaponManager : MonoBehaviour
         #region flash (q)
         if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip && !check)
         {
+            thisGrenade.SetActive(true);
             thisGrenadeController = thisGrenade.GetComponent<GrenadeController>();
             StartCoroutine(SwitchGAndBack());
         }
@@ -132,6 +133,7 @@ public class WeaponManager : MonoBehaviour
         {
             StartCoroutine(thisGrenadeController.HoldGrenade(false));
             yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
+            thisGrenade.SetActive(false);
             StartCoroutine(thisWeaponController.Deploy(false));
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
         }
