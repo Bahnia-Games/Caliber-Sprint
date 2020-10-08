@@ -5,8 +5,6 @@ using UnityEngine.Timeline;
 
 public class WeaponManager : MonoBehaviour
 {
-    private bool check;
-    private bool switchBack;
     public Animator animator;
     private GunController gunController;
     private float weaponDeployTime;
@@ -52,10 +50,10 @@ public class WeaponManager : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(check);
+
 
         #region flash (q)
-        if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip && !check)
+        if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip)
         {
             stop = false;
             thisGrenade.SetActive(true);
@@ -63,10 +61,9 @@ public class WeaponManager : MonoBehaviour
             StartCoroutine(SwitchGAndBack());
         }
 
-        if (check && Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            switchBack = true;
-            check = false;
+
         }
 
         #endregion
@@ -131,30 +128,7 @@ public class WeaponManager : MonoBehaviour
 
     IEnumerator SwitchGAndBack()
     {
-        
-
-        if (!check && !stop)
-        {
-            StartCoroutine(thisWeaponController.Deploy(false));
-            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
-            stop = true;
-            
-        }
-
-        StartCoroutine(thisGrenadeController.HoldGrenade(true));
-        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
-        check = true;
-
-        if (switchBack)
-        {
-            StartCoroutine(thisGrenadeController.HoldGrenade(false));
-            yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
-            thisGrenade.SetActive(false);
-            StartCoroutine(thisWeaponController.Deploy(false));
-            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
-        }
-        
-
+        yield return new WaitForSeconds(1);
     }
         
 
