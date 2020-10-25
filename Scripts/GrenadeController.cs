@@ -45,7 +45,7 @@ public class GrenadeController : MonoBehaviour
             grenadeType = "frag";
         }
 
-    }
+    } 
 
     private void Awake()
     {
