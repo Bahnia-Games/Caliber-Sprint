@@ -11,6 +11,7 @@ public class WeaponManager : MonoBehaviour
     private string weaponDeployBoolName;
 
     private int selectedWeapon;
+    private bool isAnyEquip;
 
     private GunController thisWeaponController;
     private GrenadeController thisGrenadeController;
@@ -43,13 +44,12 @@ public class WeaponManager : MonoBehaviour
 
         thisGrenadeEquip = true;
 
-        
+        isAnyEquip = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
 
 
         #region flash (q)
@@ -106,7 +106,13 @@ public class WeaponManager : MonoBehaviour
             animator.SetBool(weaponDeployBoolName, true);
         }
 
-        
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isAnyEquip = false;
+            StartCoroutine(thisWeaponController.Deploy(false));
+        }
+
     }
 
     void pickup()
@@ -116,6 +122,7 @@ public class WeaponManager : MonoBehaviour
 
     void SelectWeapon(int weaponID)
     {
+        isAnyEquip = true;
         thisWeaponController = thisWeapon.GetComponent<GunController>();
         selectedWeapon = weaponID;
         thisWeapon.SetActive(true);
@@ -128,7 +135,29 @@ public class WeaponManager : MonoBehaviour
 
     IEnumerator SwitchGAndBack()
     {
-        yield return new WaitForSeconds(1);
+        bool hasWeapon;
+        if (isAnyEquip)
+        {
+            hasWeapon = true;
+            StartCoroutine(thisWeaponController.Deploy(false));
+            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+        }
+        else
+            hasWeapon = false;
+        StartCoroutine(thisGrenadeController.HoldGrenade(true));
+        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime + 0.25f);
+        StartCoroutine(thisGrenadeController.Flash());
+        yield return new WaitForSeconds(thisGrenadeController.throwAnimationTime + thisGrenadeController.fuzeTime + thisGrenadeController.flashTime);
+
+        if (hasWeapon)
+        {
+            StartCoroutine(thisWeaponController.Deploy(true)); // may or may not work idfk if it doesnt activate it the other way (see above)
+            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+        }
+
+        StartCoroutine(thisGrenadeController.HoldGrenade(false));
+        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
+        thisGrenade.SetActive(false);
     }
         
 

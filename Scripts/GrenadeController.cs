@@ -35,7 +35,7 @@ public class GrenadeController : MonoBehaviour
 
     public float destroyTime;
 
-    private bool check;
+    private bool check; //delete this later
 
     void Start()
     {
@@ -89,7 +89,7 @@ public class GrenadeController : MonoBehaviour
         
     }
 
-    IEnumerator Flash()
+    public IEnumerator Flash()
     {
         Debug.Log("fired");
         isExploding = true;
