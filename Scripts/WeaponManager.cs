@@ -42,7 +42,6 @@ public class WeaponManager : MonoBehaviour
 
         //mainly for testing purposes
 
-        thisWeaponController = thisWeapon.GetComponent<GunController>();
 
         thisGrenadeEquip = true;
 
@@ -72,8 +71,9 @@ public class WeaponManager : MonoBehaviour
 
         #region weapon 1 (1, ID 0)
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha1))
         {
+            thisWeaponController = thisWeapon.GetComponent<GunController>();
             SelectWeapon(0);
         } else
         {
@@ -82,32 +82,28 @@ public class WeaponManager : MonoBehaviour
 
         #endregion
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        #region weapon 2 (2, ID 1)
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha2))
         {
             thisWeaponController = thisWeapon2.GetComponent<GunController>();
-            selectedWeapon = 1;
-            thisWeapon2.SetActive(true);
-
-            weaponDeployTime = thisWeaponController.weaponDeployTime;
-            weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
-
-            animator.SetBool(weaponDeployBoolName, true);
+            SelectWeapon(1);
         } else
         {
 
         }
+        #endregion
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        #region weapon 3 (3, ID 2)
+
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha3))
         {
             thisWeaponController = thisWeapon3.GetComponent<GunController>();
-            selectedWeapon = 2;
-            thisWeapon3.SetActive(true);
-
-            weaponDeployTime = thisWeaponController.weaponDeployTime;
-            weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
-            animator.SetBool(weaponDeployBoolName, true);
+            SelectWeapon(2);
         }
 
+        #endregion
+
+        #region undeploy
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -115,19 +111,29 @@ public class WeaponManager : MonoBehaviour
             StartCoroutine(thisWeaponController.Deploy(false));
         }
 
+        #endregion
+
     }
 
     void pickup()
     {
-
+        // to be added in version 3 or whenever i get not lazy
     }
 
     void SelectWeapon(int weaponID)
     {
         isAnyEquip = true;
-        thisWeaponController = thisWeapon.GetComponent<GunController>();
-        selectedWeapon = weaponID;
-        thisWeapon.SetActive(true);
+        //thisWeaponController = thisWeapon.GetComponent<GunController>();
+        selectedWeapon = weaponID; // I ALMOST DELETED THIS!!! FUTURE SELF DO NOT DELETE!
+        
+        // *sigh*
+        if(weaponID == 0)
+            thisWeapon.SetActive(true);
+        if(weaponID == 1)
+            thisWeapon2.SetActive(true);
+        if(weaponID == 2)
+            thisWeapon3.SetActive(true);
+        // and so on, continue support
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
         weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
