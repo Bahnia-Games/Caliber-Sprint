@@ -94,18 +94,13 @@ public class GrenadeController : MonoBehaviour
 
     public IEnumerator Flash()
     {
-        //Debug.Log("fired");
+        //piece of shit code but this is the only way i got this to work
         isExploding = true;
-        animator.SetBool("isThrown", true); // depricated
-
-        //yield return new WaitForSeconds(throwAnimationTime);
-
-        animator.SetBool("isThrown", false); //depricated
         animator.SetBool("letGo", true);
         
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
         Instantiate(thrownGrenade, transform.position, rot);
-        Instantiate(thrownGrenadeHandle, transform.position, rot);
+        Instantiate(thrownGrenadeHandle, transform.position, rot * Quaternion.Euler(-30, 0, 0));
         thrownGrenadeGO = GameObject.FindGameObjectWithTag("thrown_flash");
         Rigidbody thrownGrenadeRB = thrownGrenadeGO.GetComponent<Rigidbody>();
         Light thrownGrenadeL = thrownGrenadeGO.GetComponentInChildren<Light>();
@@ -117,8 +112,6 @@ public class GrenadeController : MonoBehaviour
         bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad, playerLayer);
         bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad, playerLayer);
         thrownGrenadePS.Play();
-        //Debug.Log(lo);
-        //Debug.Log(hi);
 
         yield return new WaitForSeconds(flashTime);
 
