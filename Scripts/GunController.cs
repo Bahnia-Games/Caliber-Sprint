@@ -40,6 +40,12 @@ public class GunController : MonoBehaviour
     public float weaponDeployTime;
     [HideInInspector] public bool isEquip;
 
+    public GameObject shellCasingPrefab; // as GO to add cool shit later
+    public Transform shellCasingInstantiationPoint;
+    public float shellEjectionForce;
+    public float ejectionTuneTime;
+    public float spentShellLifetime;
+
 
     private void Awake()
     {
@@ -165,6 +171,12 @@ public class GunController : MonoBehaviour
         muzzleLight.gameObject.SetActive(false);
         #endregion
 
+        #region shell ejection
+
+        StartCoroutine(ShellEject());
+
+        #endregion
+
         RaycastHit hit;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
         {
@@ -190,6 +202,18 @@ public class GunController : MonoBehaviour
         animator.SetBool("isFire", false);
         animator.SetBool("isAdsFire", false);
         isFire = false;
+    }
+
+    IEnumerator ShellEject()
+    {
+        yield return new WaitForSeconds(ejectionTuneTime);
+        Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(shellCasingInstantiationPoint.up));
+        GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
+        Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
+        thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
+        Destroy(thisShellCaseGO, spentShellLifetime);
+        thisShellCaseGO.tag = "spent_shell";
+
     }
 
     IEnumerator Reload()
