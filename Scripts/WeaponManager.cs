@@ -149,12 +149,13 @@ public class WeaponManager : MonoBehaviour
         StartCoroutine(thisGrenadeController.HoldGrenade(true)); //very slow, optimize HoldGrenade()
         yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime + 0.05f);
         StartCoroutine(thisGrenadeController.Flash()); // coroutine animation doesnt play, optimize times, reduce animation time, and debug this
-        yield return new WaitForSeconds(thisGrenadeController.throwAnimationTime + thisGrenadeController.fuzeTime + thisGrenadeController.flashTime);
+        yield return new WaitForSeconds(thisGrenadeController.throwAnimationTime);
 
         if (hasWeapon)
         {
-            #warning this dont work v
-            StartCoroutine(thisWeaponController.Deploy(true)); // as expected this doesnt work, see above method
+            //#warning this dont work v
+            //StartCoroutine(thisWeaponController.Deploy(true)); // as expected this doesnt work, see above method
+            SelectWeapon(selectedWeapon);
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
         }
 

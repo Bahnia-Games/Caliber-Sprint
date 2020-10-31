@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -76,8 +77,10 @@ public class GrenadeController : MonoBehaviour
     {
         if (equip)
         {
+            Debug.Log("fired equip");
             animator.SetBool("isGrenadeHeld", true);
             yield return new WaitForSeconds(grenadeEquipTime);
+            animator.SetBool("isGrenadeHeld", false);
             isGrenadeHeld = true;
             check = true;
         } if (!equip)
@@ -91,13 +94,15 @@ public class GrenadeController : MonoBehaviour
 
     public IEnumerator Flash()
     {
-        Debug.Log("fired");
+        //Debug.Log("fired");
         isExploding = true;
-        animator.SetBool("isThrown", true);
+        animator.SetBool("isThrown", true); // depricated
 
-        yield return new WaitForSeconds(throwAnimationTime);
+        //yield return new WaitForSeconds(throwAnimationTime);
 
-        animator.SetBool("isThrown", false);
+        animator.SetBool("isThrown", false); //depricated
+        animator.SetBool("letGo", true);
+        
         Quaternion rot = Quaternion.Euler(camera.transform.forward);
         Instantiate(thrownGrenade, transform.position, rot);
         Instantiate(thrownGrenadeHandle, transform.position, rot);
@@ -112,8 +117,8 @@ public class GrenadeController : MonoBehaviour
         bool lo = Physics.CheckSphere(thrownGrenadeGO.transform.position, loCheckRad, playerLayer);
         bool hi = Physics.CheckSphere(thrownGrenadeGO.transform.position, highCheckRad, playerLayer);
         thrownGrenadePS.Play();
-        Debug.Log(lo);
-        Debug.Log(hi);
+        //Debug.Log(lo);
+        //Debug.Log(hi);
 
         yield return new WaitForSeconds(flashTime);
 
@@ -138,7 +143,7 @@ public class GrenadeController : MonoBehaviour
         }
 
         isExploding = false;
-
+        animator.SetBool("letGo", false);
     }
 
     IEnumerator Frag()

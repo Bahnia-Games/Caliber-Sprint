@@ -21,6 +21,15 @@ public class target : MonoBehaviour
     public Transform leftAnkle;
     public Transform leftFoot;
 
+    public void Start()
+    {
+        if(deathMethod == null)
+        {
+            Debug.Log("no death method selected for" + this.tag + "defaulting to destroy");
+            deathMethod = "destroy";
+        }
+    }
+
     public void takeDamage(float amount)
     {
         health -= amount;
