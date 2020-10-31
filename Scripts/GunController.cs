@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -211,6 +212,8 @@ public class GunController : MonoBehaviour
         GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
         Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
         thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
+        Vector3 randomRot = new Vector3(UnityEngine.Random.Range(30, -30), UnityEngine.Random.Range(30, -30), UnityEngine.Random.Range(30,-30));
+        thisShellCaseRB.AddTorque(randomRot);
         Destroy(thisShellCaseGO, spentShellLifetime);
         thisShellCaseGO.tag = "spent_shell";
 
