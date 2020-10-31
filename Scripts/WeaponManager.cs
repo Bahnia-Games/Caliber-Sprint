@@ -5,6 +5,8 @@ using UnityEngine.Timeline;
 
 public class WeaponManager : MonoBehaviour
 {
+#pragma warning disable CS1030
+
     public Animator animator;
     private GunController gunController;
     private float weaponDeployTime;
@@ -144,14 +146,15 @@ public class WeaponManager : MonoBehaviour
         }
         else
             hasWeapon = false;
-        StartCoroutine(thisGrenadeController.HoldGrenade(true));
-        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime + 0.25f);
-        StartCoroutine(thisGrenadeController.Flash());
+        StartCoroutine(thisGrenadeController.HoldGrenade(true)); //very slow, optimize HoldGrenade()
+        yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime + 0.05f);
+        StartCoroutine(thisGrenadeController.Flash()); // coroutine animation doesnt play, optimize times, reduce animation time, and debug this
         yield return new WaitForSeconds(thisGrenadeController.throwAnimationTime + thisGrenadeController.fuzeTime + thisGrenadeController.flashTime);
 
         if (hasWeapon)
         {
-            StartCoroutine(thisWeaponController.Deploy(true)); // may or may not work idfk if it doesnt activate it the other way (see above)
+            #warning this dont work v
+            StartCoroutine(thisWeaponController.Deploy(true)); // as expected this doesnt work, see above method
             yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
         }
 

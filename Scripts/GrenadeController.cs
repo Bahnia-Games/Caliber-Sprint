@@ -65,11 +65,11 @@ public class GrenadeController : MonoBehaviour
         {
             isGrenadeHeld = false;
         }*/
-
+        /*
         if(isGrenadeHeld && Input.GetMouseButtonDown(0))
         {
             StartCoroutine(Flash());
-        }
+        }*/
     }
 
     public IEnumerator HoldGrenade(bool equip)
