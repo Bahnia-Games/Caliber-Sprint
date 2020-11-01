@@ -17,6 +17,8 @@ public class GunController : MonoBehaviour
     public float range = 1f;
     public int magSize = 1;
     public float impactForce = 1f;
+    public float maxRandSpread = 1f;
+    public float minRandSpread = 1f;
     [SerializeField] private int currentAmmo;
     public string fireMode = "SemiAuto";
     public Camera camera;
@@ -44,6 +46,8 @@ public class GunController : MonoBehaviour
     public GameObject shellCasingPrefab; // as GO to add cool shit later
     public Transform shellCasingInstantiationPoint;
     public float shellEjectionForce;
+    public Vector3 ejectRotationTune;
+    public Vector2 ejectShellTorque;
     public float ejectionTuneTime;
     public float spentShellLifetime;
 
@@ -208,11 +212,11 @@ public class GunController : MonoBehaviour
     IEnumerator ShellEject()
     {
         yield return new WaitForSeconds(ejectionTuneTime);
-        Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(shellCasingInstantiationPoint.up));
+        Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(ejectRotationTune));
         GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
         Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
         thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
-        Vector3 randomRot = new Vector3(UnityEngine.Random.Range(30, -30), UnityEngine.Random.Range(30, -30), UnityEngine.Random.Range(30,-30));
+        Vector3 randomRot = new Vector3(UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y)); // leave as is
         thisShellCaseRB.AddTorque(randomRot);
         Destroy(thisShellCaseGO, spentShellLifetime);
         thisShellCaseGO.tag = "spent_shell";
