@@ -182,8 +182,13 @@ public class GunController : MonoBehaviour
 
         #endregion
 
+        float randX = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+        float randY = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+        float randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+        Vector3 rand = new Vector3(randX, randY, randZ);
+
         RaycastHit hit;
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range, layerMask))
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
         {
             target target = hit.transform.GetComponent<target>();
 
