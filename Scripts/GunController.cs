@@ -139,6 +139,7 @@ public class GunController : MonoBehaviour
     {
         isFire = true;
         currentAmmo--; //subtract 1 bullet
+        Debug.Log("Fired");
 
         if (!isAds)
         {
@@ -260,10 +261,10 @@ public class GunController : MonoBehaviour
 
         animator.SetBool("isReload", false);
         animator.SetBool("isTacReload", false);
-        isReload = false;
         currentAmmo = magSize; //refil mag
         isTac = false;
         isEmpty = false;
+        isReload = false;
     }
 
     public IEnumerator Deploy(bool deploy)
