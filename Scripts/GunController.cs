@@ -30,10 +30,11 @@ public class GunController : MonoBehaviour
     public GameObject muzzleFlashSpriteGO;
     public float muzzleFlashLifetime;
 
-    public Texture fleshBulletImpact;
-    public Texture glassBulletImpact;
-    public Texture defaultBulletImapct;
+    public Sprite fleshBulletImpact;
+    public Sprite glassBulletImpact;
+    public Sprite defaultBulletImapct;
 
+    public float muzzleLightFlashTime;
     public Light muzzleLight;
     public GameObject impactEffect;
     private int layerMask = 1 << 8;
@@ -56,8 +57,10 @@ public class GunController : MonoBehaviour
     public Vector3 ejectRotationTune;
     public Vector2 ejectShellTorque;
     public float ejectionTuneTime;
-    public float spentShellLifetime;
+    public float instantiatedObjectLifetime;
 
+    private GameObject hitObject;
+    private RaycastHit hit;
 
     private void Awake()
     {
@@ -181,7 +184,7 @@ public class GunController : MonoBehaviour
             muzzleLight.gameObject.SetActive(true);
         }
 
-        yield return new WaitForSeconds(0.001f);
+        yield return new WaitForSeconds(muzzleLightFlashTime);
 
         muzzleLight.gameObject.SetActive(false);
         #endregion
@@ -197,7 +200,7 @@ public class GunController : MonoBehaviour
         float randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
         Vector3 rand = new Vector3(randX, randY, randZ);
 
-        RaycastHit hit;
+        //RaycastHit hit;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
         {
             target target = hit.transform.GetComponent<target>();
@@ -214,6 +217,24 @@ public class GunController : MonoBehaviour
 
             GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGameObj, 1f);
+
+            #region impact effects
+
+            hitObject = hit.transform.GetComponent<GameObject>();
+            if (hitObject.tag == "glass" && glassBulletImpact != null)
+            {
+                InstantiateImpact("glass");
+            }
+            if (hitObject.tag == "enemy" && fleshBulletImpact != null)
+            {
+                InstantiateImpact("enemy");
+            }
+            if (hit.point != null && defaultBulletImapct != null)
+            {
+                InstantiateImpact("default");
+            }
+
+            #endregion
         }
 
         yield return new WaitForSeconds(fireDelay); //wait for fire delay
@@ -224,6 +245,27 @@ public class GunController : MonoBehaviour
         isFire = false;
     }
 
+    private void InstantiateImpact(string type)
+    {
+        if (type == "glass")
+        {
+            Sprite impact = Instantiate(glassBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impact, instantiatedObjectLifetime);
+        }
+        if (type == "enemy"){
+            Sprite impact = Instantiate(fleshBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impact, instantiatedObjectLifetime);
+        }
+        if (type == "default")
+        {
+            Sprite impact = Instantiate(defaultBulletImapct, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impact, instantiatedObjectLifetime);
+        }
+        if (type != "glass" && type != "enemy" && type != "default")
+            Debug.LogWarning("Cannot instantiate Impact Effect, invalid type @GunController.cs InstantiateImpact()");
+
+
+    }
     private IEnumerator SpriteMuzzleFlash()
     {
         if (muzzleFlashSpriteGO != null)
@@ -243,7 +285,7 @@ public class GunController : MonoBehaviour
         thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
         Vector3 randomRot = new Vector3(UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y)); // leave as is
         thisShellCaseRB.AddTorque(randomRot);
-        Destroy(thisShellCaseGO, spentShellLifetime);
+        Destroy(thisShellCaseGO, instantiatedObjectLifetime);
         thisShellCaseGO.tag = "spent_shell";
 
     }
