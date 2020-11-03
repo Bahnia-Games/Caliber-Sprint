@@ -27,6 +27,13 @@ public class GunController : MonoBehaviour
     public ParticleSystem muzzleFlash;
     public ParticleSystem muzzleFlash2;
     public ParticleSystem muzzleFlash3;
+    public GameObject muzzleFlashSpriteGO;
+    public float muzzleFlashLifetime;
+
+    public Texture fleshBulletImpact;
+    public Texture glassBulletImpact;
+    public Texture defaultBulletImapct;
+
     public Light muzzleLight;
     public GameObject impactEffect;
     private int layerMask = 1 << 8;
@@ -152,6 +159,8 @@ public class GunController : MonoBehaviour
 
         #region muzzle flashing
 
+        StartCoroutine(SpriteMuzzleFlash()); //da
+
         if (muzzleFlash != null)
         {
             muzzleFlash.Play();
@@ -213,6 +222,16 @@ public class GunController : MonoBehaviour
         animator.SetBool("isFire", false);
         animator.SetBool("isAdsFire", false);
         isFire = false;
+    }
+
+    private IEnumerator SpriteMuzzleFlash()
+    {
+        if (muzzleFlashSpriteGO != null)
+        {
+            muzzleFlashSpriteGO.SetActive(true);
+            yield return new WaitForSeconds(muzzleFlashLifetime);
+            muzzleFlashSpriteGO.SetActive(false);
+        }
     }
 
     IEnumerator ShellEject()
