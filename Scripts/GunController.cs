@@ -36,9 +36,10 @@ public class GunController : MonoBehaviour
     public GameObject muzzleFlashSpriteGO;
     public float muzzleFlashLifetime;
 
-    public Sprite fleshBulletImpact;
-    public Sprite glassBulletImpact;
-    public Sprite defaultBulletImapct;
+    public GameObject fleshBulletImpact;
+    public GameObject glassBulletImpact;
+    public GameObject metalBulletImpact;
+    public GameObject defaultBulletImapct;
 
     public float muzzleLightFlashTime;
     public Light muzzleLight;
@@ -265,6 +266,11 @@ public class GunController : MonoBehaviour
             {
                 InstantiateImpact("enemy");
             }
+            if (hit.transform.tag == "metal" && metalBulletImpact != null)
+            {
+                InstantiateImpact("metal");
+            }
+
             if (hit.point != null && defaultBulletImapct != null)
             {
                 InstantiateImpact("default");
@@ -285,19 +291,24 @@ public class GunController : MonoBehaviour
     {
         if (type == "glass")
         {
-            Sprite impact = Instantiate(glassBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(glassBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "enemy"){
-            Sprite impact = Instantiate(fleshBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(fleshBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impact, instantiatedObjectLifetime);
+        }
+        if (type == "metal")
+        {
+            GameObject impact = Instantiate(metalBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "default")
         {
-            Sprite impact = Instantiate(defaultBulletImapct, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(defaultBulletImapct, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impact, instantiatedObjectLifetime);
         }
-        if (type != "glass" && type != "enemy" && type != "default")
+        if (type != "glass" && type != "enemy" && type != "metal" && type != "default")
             Debug.LogWarning("Cannot instantiate Impact Effect, invalid type @GunController.cs InstantiateImpact()");
 
 
