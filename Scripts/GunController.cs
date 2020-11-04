@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 
 #pragma warning disable CS0108
 
 public class GunController : MonoBehaviour
 {
+
+    #region global variables (weapon parameters and other stuff i guess)
+
     //public string currentWeapon;
     public float reloadDelay = 1.0f;
     public float emptyReloadDelay = 1.0f;
@@ -17,8 +21,10 @@ public class GunController : MonoBehaviour
     public float range = 1f;
     public int magSize = 1;
     public float impactForce = 1f;
-    public float maxRandSpread = 1f;
-    public float minRandSpread = 1f;
+    public float maxRandSpread = 0.1f;
+    public float minRandSpread = -0.1f;
+    public float maxRandADSSpread = 0.1f;
+    public float minRandADSSpread = -0.1f;
     [SerializeField] private int currentAmmo;
     public string fireMode = "SemiAuto";
     public Camera camera;
@@ -61,6 +67,18 @@ public class GunController : MonoBehaviour
 
     private GameObject hitObject;
     private RaycastHit hit;
+
+    #endregion
+
+    #region global local variables
+
+    private float randX;
+    private float randY;
+    private float randZ;
+
+    #endregion
+
+
 
     private void Awake()
     {
@@ -135,7 +153,7 @@ public class GunController : MonoBehaviour
 
         #endregion
 
-        #region testStuff
+        #region undeploy
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -195,10 +213,26 @@ public class GunController : MonoBehaviour
 
         #endregion
 
-        float randX = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
-        float randY = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
-        float randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+        #region bullet spread
+
+        if (!isAds) // I swear if people suggest dynamic bullet spread im gonna cry, ffs this isnt csgo
+        {
+            randX = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+            randY = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+            randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+        } 
+        if (isAds)
+        {
+            randX = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+            randY = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+            randZ = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+        }
+
         Vector3 rand = new Vector3(randX, randY, randZ);
+
+        #endregion
+
+        #region hitscan
 
         //RaycastHit hit;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
@@ -218,14 +252,16 @@ public class GunController : MonoBehaviour
             GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGameObj, 1f);
 
+            #endregion
+
             #region impact effects
 
-            hitObject = hit.transform.GetComponent<GameObject>();
-            if (hitObject.tag == "glass" && glassBulletImpact != null)
+            // hitObject = hit.transform.GetComponent<GameObject>();
+            if (hit.transform.tag == "glass" && glassBulletImpact != null)
             {
                 InstantiateImpact("glass");
             }
-            if (hitObject.tag == "enemy" && fleshBulletImpact != null)
+            if (hit.transform.tag == "enemy" && fleshBulletImpact != null)
             {
                 InstantiateImpact("enemy");
             }
@@ -327,7 +363,6 @@ public class GunController : MonoBehaviour
         isEmpty = false;
         isReload = false;
     }
-
     public IEnumerator Deploy(bool deploy)
     {
         if (deploy)
