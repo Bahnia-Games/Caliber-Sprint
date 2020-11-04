@@ -289,23 +289,25 @@ public class GunController : MonoBehaviour
 
     private void InstantiateImpact(string type)
     {
+        Vector3 rotMod = new Vector3(90, 0, 0);
+        Vector3 posMod = new Vector3(0, 0.01f, 0);
         if (type == "glass")
         {
-            GameObject impact = Instantiate(glassBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "enemy"){
-            GameObject impact = Instantiate(fleshBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(fleshBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "metal")
         {
-            GameObject impact = Instantiate(metalBulletImpact, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(metalBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "default")
         {
-            GameObject impact = Instantiate(defaultBulletImapct, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(defaultBulletImapct, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type != "glass" && type != "enemy" && type != "metal" && type != "default")
