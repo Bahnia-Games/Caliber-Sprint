@@ -292,9 +292,11 @@ public class GunController : MonoBehaviour
         float _randZ = UnityEngine.Random.Range(360, -360);
         Vector3 posMod = hit.normal * 0.01f;
         Vector3 rotMod = new Vector3(90, 0, 0);
+        Transform hitObject = hit.transform;
         if (type == "glass")
         {
             GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
+            impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "enemy"){
@@ -309,6 +311,7 @@ public class GunController : MonoBehaviour
         if (type == "default")
         {
             GameObject impact = Instantiate(defaultBulletImapct, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
+            impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type != "glass" && type != "enemy" && type != "metal" && type != "default")
