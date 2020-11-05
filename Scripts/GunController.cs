@@ -169,7 +169,7 @@ public class GunController : MonoBehaviour
     {
         isFire = true;
         currentAmmo--; //subtract 1 bullet
-        Debug.Log("Fired");
+        //Debug.Log("Fired");
 
         if (!isAds)
         {
@@ -279,7 +279,6 @@ public class GunController : MonoBehaviour
             {
                 InstantiateImpact("default");
             }
-
             #endregion
         }
 
@@ -305,11 +304,13 @@ public class GunController : MonoBehaviour
         }
         if (type == "enemy"){
             GameObject impact = Instantiate(fleshBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
+            impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "metal")
         {
             GameObject impact = Instantiate(metalBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
+            impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "default")
