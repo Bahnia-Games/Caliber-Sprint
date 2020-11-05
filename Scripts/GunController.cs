@@ -289,8 +289,9 @@ public class GunController : MonoBehaviour
 
     private void InstantiateImpact(string type)
     {
+        float _randZ = UnityEngine.Random.Range(360, -360);
+        Vector3 posMod = hit.normal * 0.01f;
         Vector3 rotMod = new Vector3(90, 0, 0);
-        Vector3 posMod = new Vector3(0, 0.01f, 0);
         if (type == "glass")
         {
             GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(rotMod));
