@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
+using UnityEditorInternal;
 using UnityEngine;
 
 #pragma warning disable CS0108
@@ -256,22 +257,25 @@ public class GunController : MonoBehaviour
             #endregion
 
             #region impact effects
-
+            bool isOtherType = false;
             // hitObject = hit.transform.GetComponent<GameObject>();
             if (hit.transform.tag == "glass" && glassBulletImpact != null)
             {
                 InstantiateImpact("glass");
+                isOtherType = true;
             }
             if (hit.transform.tag == "enemy" && fleshBulletImpact != null)
             {
                 InstantiateImpact("enemy");
+                isOtherType = true;
             }
             if (hit.transform.tag == "metal" && metalBulletImpact != null)
             {
                 InstantiateImpact("metal");
+                isOtherType = true;
             }
 
-            if (hit.point != null && defaultBulletImapct != null)
+            if (hit.point != null && defaultBulletImapct != null && !isOtherType)
             {
                 InstantiateImpact("default");
             }
