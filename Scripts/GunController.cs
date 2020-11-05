@@ -293,7 +293,7 @@ public class GunController : MonoBehaviour
     private void InstantiateImpact(string type)
     {
         float _randZ = UnityEngine.Random.Range(360, -360);
-        Vector3 posMod = hit.normal * 0.01f;
+        Vector3 posMod = hit.normal * 0.001f;
         Vector3 rotMod = new Vector3(90, 0, 0);
         Transform hitObject = hit.transform;
         if (type == "glass")
