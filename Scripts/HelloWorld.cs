@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HelloWorld : MonoBehaviour
 {
+    //[Header("Depricated")]
+
     // Start is called before the first frame update
     void Start()
     {

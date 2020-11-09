@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
+    [Header("Depricated")]
+
     //haha yes
     #region character controller and general stuff
 

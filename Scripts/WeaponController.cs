@@ -1,18 +1,28 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class WeaponController : MonoBehaviour
 {
+    [Header("Depricated")]
+
     public int selectedWeapon = 0;
+    public Animator animator;
+
+    //private bool isNH9MKIIDeploy;
+    //private GameObject currentWeapon;
 
     // Start is called before the first frame update
     void Start()
     {
         SelectWeapon();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+
         int previousSelectedWeapon = selectedWeapon;
 
         if(Input.GetAxis("Mouse ScrollWheel") > 0f)
@@ -93,11 +103,22 @@ public class WeaponController : MonoBehaviour
 
         #endregion
 
+        //NH-9MKII stuff
+        if (selectedWeapon == 0)
+        {
+            animator.SetBool("isNH9MKIIDeploy", true);
+
+        } else
+        {
+            animator.SetBool("isNH9MKIIDeploy", false);
+        }
 
         if (previousSelectedWeapon != selectedWeapon)
         {
             SelectWeapon();
         }
+
+
     }
 
     void SelectWeapon()
