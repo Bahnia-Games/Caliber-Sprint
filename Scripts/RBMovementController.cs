@@ -41,12 +41,15 @@ public class RBMovementController : MonoBehaviour
     public float slideCooldownRate;
     public float notMovingSpeedDecayRate;
 
+    [HideInInspector] public bool isMobilityEquip;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
+        isMobilityEquip = true;
     }
 
     private void Awake()
@@ -141,6 +144,11 @@ public class RBMovementController : MonoBehaviour
     {
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;
+
+        if (!isMobilityEquip) // Worksround for now
+        {
+            amtJump++;
+        }
     }
 
 }
