@@ -105,7 +105,7 @@ public class WeaponManager : MonoBehaviour
 
         #region undeploy
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && isAnyEquip)
         {
             isAnyEquip = false;
             StartCoroutine(thisWeaponController.Deploy(false));
