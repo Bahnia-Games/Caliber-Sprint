@@ -17,7 +17,7 @@ public class target : MonoBehaviour
     public Transform rightThigh;
     public Transform rightAnkle;
     public Transform rightFoot;
-    public Transform leftThigh;
+    public Transform leftThigh; // hot
     public Transform leftAnkle;
     public Transform leftFoot;
 

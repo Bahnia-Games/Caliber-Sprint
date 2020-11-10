@@ -64,7 +64,7 @@ public class RBMovementController : MonoBehaviour
 
 
         speed = Mathf.Clamp(speed, 0.0f , Mathf.Infinity);
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) && !Grapple.isGrapple)
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) /* && Grapple.isGrapple */)
         {
             speed = defSpeed;
             rb.drag = drag;
