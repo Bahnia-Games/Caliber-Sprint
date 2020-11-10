@@ -294,28 +294,28 @@ public class GunController : MonoBehaviour
     {
         float _randZ = UnityEngine.Random.Range(360, -360);
         Vector3 posMod = hit.normal * 0.001f;
-        Vector3 rotMod = new Vector3(90, 0, 0) + hit.normal;
+        Quaternion rotMod = Quaternion.LookRotation(hit.normal) * Quaternion.Euler(new Vector3(90, 0, 0)) * Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(360, -360), 0));
         Transform hitObject = hit.transform;
         if (type == "glass")
         {
-            GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, Quaternion.LookRotation(rotMod));
+            GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "enemy"){
-            GameObject impact = Instantiate(fleshBulletImpact, hit.point + posMod, Quaternion.LookRotation(rotMod));
+            GameObject impact = Instantiate(fleshBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "metal")
         {
-            GameObject impact = Instantiate(metalBulletImpact, hit.point + posMod, Quaternion.LookRotation(rotMod));
+            GameObject impact = Instantiate(metalBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
         if (type == "default")
         {
-            GameObject impact = Instantiate(defaultBulletImapct, hit.point + posMod, Quaternion.LookRotation(rotMod));
+            GameObject impact = Instantiate(defaultBulletImapct, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
