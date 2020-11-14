@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
-using UnityEditorInternal;
+//using System.Security.Policy; < cause errors
+//using UnityEditorInternal;
 using UnityEngine;
 
 #pragma warning disable CS0108
