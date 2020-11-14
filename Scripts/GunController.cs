@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-//using System.Security.Policy; < cause errors
+//using System.Security.Policy; < cause errors, idfk why this is here anyway
 //using UnityEditorInternal;
 using UnityEngine;
 
