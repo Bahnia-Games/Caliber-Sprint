@@ -49,7 +49,7 @@ public class RBMovementController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
-        isMobilityEquip = true;
+        isMobilityEquip = false; // placeholder
     }
 
     private void Awake()
@@ -90,7 +90,7 @@ public class RBMovementController : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && amtJump < 1 || Input.GetButtonDown("Jump") && isGrounded)
         {
-            jump();
+            Jump();
         } else if (Input.GetButtonUp("Jump"))
         {
             rb.drag = drag;
@@ -130,17 +130,17 @@ public class RBMovementController : MonoBehaviour
     {
         if (!isSliding)
         {
-            movePlayer(movement);
+            MovePlayer(movement);
         }
         
     }
 
-    void movePlayer(Vector3 direction)
+    void MovePlayer(Vector3 direction)
     {
         rb.AddRelativeForce(direction * speed * Time.deltaTime);
     }
 
-    void jump()
+    void Jump()
     {
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;

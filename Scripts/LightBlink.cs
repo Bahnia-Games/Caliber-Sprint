@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class lightblink : MonoBehaviour
 {
+    #pragma warning disable CS0108
+
     // yes i made a script to flash a light... no im not stupid... i didnt want to make a shader for it shut the fuck up
     public GameObject lightGameObject;
     [HideInInspector] public Light light;

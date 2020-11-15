@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class grapple : MonoBehaviour
+class Grapple : MonoBehaviour
 {
     public GameObject grappleHook;
     private Rigidbody grappleHookRB;
@@ -29,7 +29,7 @@ class grapple : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.Mouse2))
         {
-            StartCoroutine(Grapple());
+            StartCoroutine(Grapplee());
         }
     }
 
@@ -38,7 +38,7 @@ class grapple : MonoBehaviour
         
     }
 
-    private IEnumerator Grapple()
+    private IEnumerator Grapplee()
     {
         isGrapple = true;
         yield return new WaitForSeconds(0.001f); // placeholder
