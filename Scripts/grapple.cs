@@ -107,4 +107,9 @@ class Grapple : MonoBehaviour
             if(grapplePuff)
                 grapplePuff.gameObject.SetActive(false);
     }
+
+    public void Collided(Collider collider)
+    {
+
+    }
 }
