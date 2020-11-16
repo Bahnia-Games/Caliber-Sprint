@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class Grapple : MonoBehaviour
+public class Grapple : MonoBehaviour
 {
     public Camera playerCam;
     public GameObject grappleHook;
@@ -22,7 +22,7 @@ class Grapple : MonoBehaviour
 
     public ParticleSystem grapplePuff;
 
-    private GameObject grapplePoint;
+    public GameObject grapplePoint;
 
     void Start()
     {
@@ -83,6 +83,7 @@ class Grapple : MonoBehaviour
         isReturning = true;
         grappleHookRB.isKinematic = true;
         grappleHook.transform.parent = this.transform;
+        Destroy(grapplePoint);
         yield return new WaitForSeconds(grappleCool);
         isGrapple = false;
         waitForReturn = false;
@@ -112,7 +113,10 @@ class Grapple : MonoBehaviour
 
     public void Collided(Collider collider, ContactPoint contact)
     {
-        grapplePoint = new GameObject();
+        Debug.Log("Fired");
+        //grapplePoint = new GameObject();
+        Instantiate(grapplePoint, collider.transform);
+        grapplePoint.name = "grapplePoint";
         grapplePoint.transform.position = contact.point;
     }
 }
