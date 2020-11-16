@@ -9,7 +9,7 @@ class Grapple : MonoBehaviour
     public Vector3 firingRotation;
     //private GameObject launchedGrappleHook;
     public Rigidbody grappleHookRB; //pub bc unity kept screaming at me
-    public CapsuleCollider grappleHookCC;
+    public CapsuleCollider grappleHookTriggerCC;
     public Rigidbody playerRb;
     public float grappleForce;
     private float grappleMagnitude;
@@ -20,19 +20,25 @@ class Grapple : MonoBehaviour
     public float grappleCool;
     private bool isReturning;
 
+    public ParticleSystem grapplePuff;
+
     void Start()
     {
         playerRb = this.GetComponent<Rigidbody>();
         grappleHookRB = grappleHook.GetComponent<Rigidbody>();
-        grappleHookCC = grappleHook.GetComponent<CapsuleCollider>();
+        grappleHookTriggerCC = grappleHook.GetComponent<CapsuleCollider>();
     }
 
     void Awake()
     {
         if (grappleHookRB == null)
             Debug.LogError("Error! Could not find grappling hook rigidbody @Grapple.cs L???");
-        if (grappleHookCC == null)
-            Debug.LogError("Error! Could not find grappling hook collider @Grapple.cs L???");
+        if (grappleHookTriggerCC == null)
+            Debug.LogError("Error! Could not find grappling hook trigger collider @Grapple.cs L???");
+
+        //equip shit for debug idfk just cal it in the manager later
+        EquipGrapple(true);
+
     }
 
     void Update()
@@ -40,6 +46,7 @@ class Grapple : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.Mouse2) && !isGrapple)
         {
             StartCoroutine(Grapplee());
+            grapplePuff.Play();
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse2) && waitForReturn)
@@ -91,4 +98,13 @@ class Grapple : MonoBehaviour
         //grappleHook.transform.rotation.SetFromToRotation(orRot, reRot);
     }
 
+    public void EquipGrapple(bool equip)
+    {
+        if(equip)
+            if(grapplePuff != null)
+                grapplePuff.gameObject.SetActive(true);
+        if(!equip)
+            if(grapplePuff)
+                grapplePuff.gameObject.SetActive(false);
+    }
 }
