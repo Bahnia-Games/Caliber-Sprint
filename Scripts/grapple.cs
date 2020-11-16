@@ -22,6 +22,8 @@ class Grapple : MonoBehaviour
 
     public ParticleSystem grapplePuff;
 
+    private GameObject grapplePoint;
+
     void Start()
     {
         playerRb = this.GetComponent<Rigidbody>();
@@ -108,8 +110,9 @@ class Grapple : MonoBehaviour
                 grapplePuff.gameObject.SetActive(false);
     }
 
-    public void Collided(Collider collider)
+    public void Collided(Collider collider, ContactPoint contact)
     {
-
+        grapplePoint = new GameObject();
+        grapplePoint.transform.position = contact.point;
     }
 }

@@ -11,12 +11,12 @@ public class Projectile : MonoBehaviour
         if (projectileType != "grapling hook")
             Debug.LogError("Invalid projectile type on" + this.gameObject.name + "@Projectile.cs L12");
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision, ContactPoint contact)
     {
         if (projectileType == "grapple")
         {
             Grapple grapple = this.GetComponentInParent<Grapple>();
-            grapple.Collided(collision.collider);
+            grapple.Collided(collision.collider, contact);
         }
     }
 
