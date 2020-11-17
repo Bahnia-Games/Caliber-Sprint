@@ -83,7 +83,7 @@ public class Grapple : MonoBehaviour
         isReturning = true;
         grappleHookRB.isKinematic = true;
         grappleHook.transform.parent = this.transform;
-        DestroyImmediate(grapplePoint, true);
+        //DestroyImmediate(grapplePoint, true);
         yield return new WaitForSeconds(grappleCool);
         isGrapple = false;
         waitForReturn = false;
@@ -122,7 +122,9 @@ public class Grapple : MonoBehaviour
             _grapplePoint.tag = "activeGrapple";
             _grapplePoint.transform.position = contact.point;
             _grapplePoint.transform.parent = collider.transform;
-            Debug.DrawLine(this.transform.position, _grapplePoint.transform.position, Color.black);
+            grappleHook.transform.parent = collider.transform;
+            grappleHookRB.isKinematic = true;
+            Debug.DrawLine(this.transform.position, _grapplePoint.transform.position, Color.black, 15f);
             _grapplePoint.tag = "inactiveGrapple";
             Destroy(_grapplePoint, 60);
         }
