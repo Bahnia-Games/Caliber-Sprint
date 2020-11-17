@@ -122,7 +122,7 @@ public class Grapple : MonoBehaviour
             _grapplePoint.tag = "activeGrapple";
             _grapplePoint.transform.position = contact.point;
             _grapplePoint.transform.parent = collider.transform;
-            Debug.DrawRay(this.transform.position, _grapplePoint.transform.position - this.transform.position, Color.black);
+            Debug.DrawLine(this.transform.position, _grapplePoint.transform.position, Color.black);
             _grapplePoint.tag = "inactiveGrapple";
             Destroy(_grapplePoint, 60);
         }
