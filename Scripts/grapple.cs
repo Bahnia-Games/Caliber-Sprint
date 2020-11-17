@@ -83,7 +83,7 @@ public class Grapple : MonoBehaviour
         isReturning = true;
         grappleHookRB.isKinematic = true;
         grappleHook.transform.parent = this.transform;
-        Destroy(grapplePoint);
+        DestroyImmediate(grapplePoint, true);
         yield return new WaitForSeconds(grappleCool);
         isGrapple = false;
         waitForReturn = false;
@@ -115,8 +115,17 @@ public class Grapple : MonoBehaviour
     {
         Debug.Log("Fired");
         //grapplePoint = new GameObject();
-        Instantiate(grapplePoint, collider.transform);
-        grapplePoint.name = "grapplePoint";
-        grapplePoint.transform.position = contact.point;
+        if(collider.gameObject.layer != 11)
+        {
+            GameObject _grapplePoint = Instantiate(grapplePoint);
+            _grapplePoint.name = "newGrapplePoint";
+            _grapplePoint.tag = "activeGrapple";
+            _grapplePoint.transform.position = contact.point;
+            _grapplePoint.transform.parent = collider.transform;
+            Debug.DrawRay(this.transform.position, _grapplePoint.transform.position - this.transform.position, Color.black);
+            _grapplePoint.tag = "inactiveGrapple";
+            Destroy(_grapplePoint, 60);
+        }
+        
     }
 }
