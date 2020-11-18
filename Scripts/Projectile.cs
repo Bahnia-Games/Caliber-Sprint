@@ -17,6 +17,7 @@ public class Projectile : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("fired collision");
         if (projectileType == "grappling hook")
         {
             ContactPoint contact = collision.contacts[0]; // congrats the first array in the entirety of caliber sprint and the first one in any of my games
