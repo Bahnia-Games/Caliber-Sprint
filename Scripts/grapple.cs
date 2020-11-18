@@ -29,7 +29,6 @@ public class Grapple : MonoBehaviour
         playerRb = this.GetComponent<Rigidbody>();
         grappleHookRB = grappleHook.GetComponent<Rigidbody>();
         grappleHookTriggerCC = grappleHook.GetComponent<CapsuleCollider>();
-        grappleMesh = grappleHook.GetComponent<MeshRenderer>();
     }
 
     void Awake()
