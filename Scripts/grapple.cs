@@ -108,7 +108,6 @@ public class Grapple : MonoBehaviour
     public void Collided(Collider collider, ContactPoint contact)
     {
         Debug.Log("Fired");
-        //grapplePoint = new GameObject();
         if(collider.gameObject.layer != 11) // if the layer is not ungrapplable
         {
             _grapplePoint = Instantiate(grapplePoint); // spawn a news grappling POI at the first contact point (see Projectile.cs)
