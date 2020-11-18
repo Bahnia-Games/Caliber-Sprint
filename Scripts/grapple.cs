@@ -69,12 +69,12 @@ public class Grapple : MonoBehaviour
     private void FireGrapple()
     {
         Debug.Log("FireGrapple() fired");
-        returnGO.transform.position = grappleHook.transform.position;
-        isGrapple = true;
-        grappleHook.transform.parent = null;
-        grappleHookRB.isKinematic = false;
-        grappleHookRB.AddForce(grappleHook.transform.forward * grappleForce);
-        waitForReturn = true;
+        returnGO.transform.position = grappleHook.transform.position; // set the grapple return position to the current grapplinghook position (local space)
+        isGrapple = true; // tell the code the player is grappling
+        grappleHook.transform.parent = null; // set the grappling hook parent to the scene
+        grappleHookRB.isKinematic = false; // set the grapplinghook to not be animated
+        grappleHookRB.AddForce(grappleHook.transform.forward * grappleForce); // add force to the grappling hook
+        waitForReturn = true; // tell the code to wait for the hook to return
     }
 
     IEnumerator GrappleReturnWait() // set the grappling hook to return and wait for cooldown
