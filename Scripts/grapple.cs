@@ -24,11 +24,14 @@ public class Grapple : MonoBehaviour
 
     public GameObject grapplePoint;
 
+    private MeshRenderer /* i hope this works*/ grappleMesh;
+
     void Start()
     {
         playerRb = this.GetComponent<Rigidbody>();
         grappleHookRB = grappleHook.GetComponent<Rigidbody>();
         grappleHookTriggerCC = grappleHook.GetComponent<CapsuleCollider>();
+        grappleMesh = grappleHook.GetComponent<MeshRenderer>();
     }
 
     void Awake()
@@ -82,6 +85,7 @@ public class Grapple : MonoBehaviour
     {
         isReturning = true;
         grappleHookRB.isKinematic = true;
+        grappleMesh.enabled = true;
         grappleHook.transform.parent = this.transform;
         //DestroyImmediate(grapplePoint, true);
         yield return new WaitForSeconds(grappleCool);
@@ -123,7 +127,8 @@ public class Grapple : MonoBehaviour
             _grapplePoint.transform.position = contact.point;
             _grapplePoint.transform.parent = collider.transform;
             grappleHook.transform.parent = collider.transform;
-            grappleHookRB.isKinematic = true;
+            grappleHookRB.isKinematic = false;
+            grappleMesh.enabled = false;
             Debug.DrawLine(this.transform.position, _grapplePoint.transform.position, Color.black, 15f);
             _grapplePoint.tag = "inactiveGrapple";
             Destroy(_grapplePoint, 60);
