@@ -68,7 +68,6 @@ public class Grapple : MonoBehaviour
 
     private void FireGrapple()
     {
-        Debug.Log("FireGrapple() fired");
         returnGO.transform.position = grappleHook.transform.position; // set the grapple return position to the current grapplinghook position (local space)
         isGrapple = true; // tell the code the player is grappling
         grappleHook.transform.parent = null; // set the grappling hook parent to the scene
@@ -79,7 +78,6 @@ public class Grapple : MonoBehaviour
 
     IEnumerator GrappleReturnWait() // set the grappling hook to return and wait for cooldown
     {
-        Debug.Log("GrappleReturnWait() fired");
         waitForReturn = false; // tell code to stop waiting for the return because the return is already playing
         isReturning = true; // tell the code that the grappling hook is returning
         grappleHook.transform.parent = this.transform; // set the transform of the grappling hook as a child of the wrist
@@ -92,7 +90,6 @@ public class Grapple : MonoBehaviour
     void Return() // fix after everytjing else is fixed
     {
         // plays on every physics update
-        Debug.Log("Return() fired");
         grappleHook.transform.position = Vector3.Lerp(grappleHook.transform.position, returnGO.transform.position, grappleCool); // lerp the grappling hook back to the wrist
         grappleHook.transform.rotation = returnGO.transform.rotation; // set the rotation to the rotation of the wrist
     }
@@ -109,7 +106,6 @@ public class Grapple : MonoBehaviour
 
     public void Collided(Collider collider, ContactPoint contact)
     {
-        Debug.Log("Collided() fired");
         if(collider.gameObject.layer != 11) // if the layer is not ungrapplable
         {
             _grapplePoint = Instantiate(grapplePoint); // spawn a news grappling POI at the first contact point (see Projectile.cs)
