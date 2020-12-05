@@ -11,6 +11,7 @@ public class Grapple : MonoBehaviour
     public CapsuleCollider grappleHookTriggerCC;
     public Rigidbody playerRb;
     public float grappleForce;
+    public float grapplePullForce;
     private float grappleMagnitude;
     private Vector3 grappleVelocity;
     [HideInInspector] public bool isGrapple;
@@ -18,6 +19,11 @@ public class Grapple : MonoBehaviour
     private bool waitForReturn;
     public float grappleCool;
     private bool isReturning;
+
+    public float maxGrappleTime;
+    private bool movingWithGrapple;
+    public GameObject pointToTarget;
+    private bool grappleCollided;
 
     public ParticleSystem grapplePuff;
 
@@ -27,7 +33,7 @@ public class Grapple : MonoBehaviour
 
     void Start()
     {
-        playerRb = this.GetComponent<Rigidbody>();
+        playerRb = playerRb.GetComponent<Rigidbody>();
         grappleHookRB = grappleHook.GetComponent<Rigidbody>();
         grappleHookTriggerCC = grappleHook.GetComponent<CapsuleCollider>();
     }
@@ -64,8 +70,28 @@ public class Grapple : MonoBehaviour
         {
             Return(); // plays every physics update
         }
+
+        if (grappleCollided)
+        {
+            StartCoroutine(MoveToGrapplePointEnabled());
+            if (movingWithGrapple && isGrapple)
+            {
+                pointToTarget.transform.LookAt(_grapplePoint.transform.position);
+                playerRb.AddForce(pointToTarget.transform.forward * grapplePullForce, ForceMode.Force);
+            }
+            
+            
+        }
+
     }
 
+    private IEnumerator MoveToGrapplePointEnabled()
+    {
+        movingWithGrapple = true;
+        yield return new WaitForSeconds(maxGrappleTime);
+        pointToTarget.transform.rotation = Quaternion.Euler(Vector3.zero);
+        movingWithGrapple = false;
+    }
     private void FireGrapple()
     {
         returnGO.transform.position = grappleHook.transform.position; // set the grapple return position to the current grapplinghook position (local space)
@@ -78,6 +104,7 @@ public class Grapple : MonoBehaviour
 
     IEnumerator GrappleReturnWait() // set the grappling hook to return and wait for cooldown
     {
+        grappleCollided = false;
         waitForReturn = false; // tell code to stop waiting for the return because the return is already playing
         isReturning = true; // tell the code that the grappling hook is returning
         grappleHook.transform.parent = this.transform; // set the transform of the grappling hook as a child of the wrist
@@ -108,6 +135,7 @@ public class Grapple : MonoBehaviour
     {
         if(collider.gameObject.layer != 11) // if the layer is not ungrapplable
         {
+            grappleCollided = true;
             _grapplePoint = Instantiate(grapplePoint); // spawn a news grappling POI at the first contact point (see Projectile.cs)
             _grapplePoint.name = "newGrapplePoint"; // set grapple POI name
             _grapplePoint.tag = "activeGrapple"; // set grapple POI to active
