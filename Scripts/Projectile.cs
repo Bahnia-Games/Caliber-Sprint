@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
         if (projectileType != "grappling hook")
             Debug.LogError("Invalid projectile type on" + this.gameObject.name + " @Projectile.cs L13");
         if (projectileType == "grappling hook" && grappleScript == null)
-            Debug.LogError("Grapple Script component unnasigned! " + this.gameObject.name + " @projectile.cs L16");
+            Debug.LogError("Grapple Script component unnasigned! " + gameObject.name + " @projectile.cs L16");
     }
     private void OnCollisionEnter(Collision collision)
     {

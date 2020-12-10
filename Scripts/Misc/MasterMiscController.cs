@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ForceConsole : MonoBehaviour
+public class MasterMiscController : MonoBehaviour
 {
+    public static bool drpEnabled;
     private void Start()
     {
         Debug.developerConsoleVisible = true;

@@ -337,38 +337,51 @@ public class GunController : MonoBehaviour
     IEnumerator ShellEject()
     {
         yield return new WaitForSeconds(ejectionTuneTime);
-        Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(ejectRotationTune));
-        GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
-        Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
-        thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
-        Vector3 randomRot = new Vector3(UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y)); // leave as is
-        thisShellCaseRB.AddTorque(randomRot);
-        Destroy(thisShellCaseGO, instantiatedObjectLifetime);
-        thisShellCaseGO.tag = "spent_shell";
+        if (fireMode != "derringer")
+        {
+            Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(ejectRotationTune));
+            GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
+            Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
+            thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
+            Vector3 randomRot = new Vector3(UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y)); // leave as is
+            thisShellCaseRB.AddTorque(randomRot);
+            Destroy(thisShellCaseGO, instantiatedObjectLifetime);
+            thisShellCaseGO.tag = "spent_shell";
+        } else if (fireMode == "derringer")
+        {
+            //uh
+        }
+
 
     }
+    private enum SpecialState
+    {
+        SFSNull,
+        derringerTac,
+        derringerEmpty
+    }
 
-    IEnumerator Reload()
+    IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
         isReload = true;
 
-        if (isEmpty && !isAds)
+        if (isEmpty && !isAds) // empty reload
         {
             animator.SetBool("isReload", true);
             yield return new WaitForSeconds(emptyReloadDelay);
         }
-        if (isTac && !isAds)
+        if (isTac && !isAds) // tac reload
         {
             animator.SetBool("isTacReload", true);
             yield return new WaitForSeconds(reloadDelay);
         }
 
-        if(isEmpty && isAds)
+        if(isEmpty && isAds) // ads empty reload
         {
             animator.SetBool("isReload", true);
             yield return new WaitForSeconds(emptyADSRelaodDelay);
         }
-        if (isTac && isAds)
+        if (isTac && isAds) // ads tac reload
         {
             animator.SetBool("isTacReload", true);
             yield return new WaitForSeconds(ADSReloadDelay);
