@@ -16,15 +16,10 @@ public class DRP : MonoBehaviour
         elapsedTime = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
         PresenceManager.UpdatePresence(detail, state, elapsedTime);
     }
-    public void UpdateState(string _state, string _detail = null)
+    public static void UpdateState(string _detail)
     {
-        if (_detail == null)
-        {
-            PresenceManager.UpdatePresence(detail, _state);
-        } else if (_detail != null)
-        {
-            PresenceManager.UpdatePresence(_detail, _state, elapsedTime);
-        }
+        Debug.Log("Updating DRP");
+        PresenceManager.UpdatePresence(_detail);
     }
 
 }
