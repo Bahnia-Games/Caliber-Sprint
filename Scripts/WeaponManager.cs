@@ -17,6 +17,7 @@ public class WeaponManager : MonoBehaviour
 
     private GunController thisWeaponController;
     private GrenadeController thisGrenadeController;
+    private Grapplev2 thisGrappleController;
 
     public GameObject thisGrenade;
     [HideInInspector] public bool thisGrenadeEquip;
@@ -51,7 +52,12 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        #region grapple (g)
+        if (Input.GetKeyDown(KeyCode.G) && thisGrappleController.grappleEquipped == false)
+        {
+            thisGrappleController.EquipGrapple(true);
+        }
+        #endregion
 
         #region flash (q)
         if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip)
