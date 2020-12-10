@@ -334,7 +334,7 @@ public class GunController : MonoBehaviour
         }
     }
 
-    IEnumerator ShellEject()
+    IEnumerator ShellEject(SpecialState specialState = SpecialState.SFSNull)
     {
         yield return new WaitForSeconds(ejectionTuneTime);
         if (fireMode != "derringer")
@@ -347,9 +347,15 @@ public class GunController : MonoBehaviour
             thisShellCaseRB.AddTorque(randomRot);
             Destroy(thisShellCaseGO, instantiatedObjectLifetime);
             thisShellCaseGO.tag = "spent_shell";
-        } else if (fireMode == "derringer")
+        } else if (fireMode == "derringer") // note this only happens during reload
         {
-            //uh
+            if (specialState == SpecialState.derringerTac)
+            {
+
+            } if (specialState == SpecialState.derringerEmpty)
+            {
+
+            }
         }
 
 
@@ -364,30 +370,41 @@ public class GunController : MonoBehaviour
     IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
         isReload = true;
-
-        if (isEmpty && !isAds) // empty reload
+        if (fireMode != "derringer")
         {
-            animator.SetBool("isReload", true);
-            yield return new WaitForSeconds(emptyReloadDelay);
-        }
-        if (isTac && !isAds) // tac reload
-        {
-            animator.SetBool("isTacReload", true);
-            yield return new WaitForSeconds(reloadDelay);
-        }
+            if (isEmpty && !isAds) // empty reload
+            {
+                animator.SetBool("isReload", true);
+                yield return new WaitForSeconds(emptyReloadDelay);
+            }
+            if (isTac && !isAds) // tac reload
+            {
+                animator.SetBool("isTacReload", true);
+                yield return new WaitForSeconds(reloadDelay);
+            }
 
-        if(isEmpty && isAds) // ads empty reload
-        {
-            animator.SetBool("isReload", true);
-            yield return new WaitForSeconds(emptyADSRelaodDelay);
+            if (isEmpty && isAds) // ads empty reload
+            {
+                animator.SetBool("isReload", true);
+                yield return new WaitForSeconds(emptyADSRelaodDelay);
+            }
+            if (isTac && isAds) // ads tac reload
+            {
+                animator.SetBool("isTacReload", true);
+                yield return new WaitForSeconds(ADSReloadDelay);
+            }
         }
-        if (isTac && isAds) // ads tac reload
-        {
-            animator.SetBool("isTacReload", true);
-            yield return new WaitForSeconds(ADSReloadDelay);
+        else if (fireMode == "derringer"){
+            // reload stuff
+            if (currentAmmo == 1)
+            {
+                StartCoroutine(ShellEject(SpecialState.derringerTac));
+            }
+            if (currentAmmo == 0)
+            {
+                StartCoroutine(ShellEject(SpecialState.derringerEmpty));
+            }
         }
-
-
 
          //wait for reload delay Hi Nate! -Gabe
 
@@ -413,7 +430,7 @@ public class GunController : MonoBehaviour
 
             yield return new WaitForSeconds(weaponDeployTime);
             isEquip = false;
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
     }
