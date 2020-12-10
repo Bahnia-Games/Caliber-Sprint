@@ -19,7 +19,8 @@ public class Grapplev2 : MonoBehaviour
     [HideInInspector] public bool isGrapple;
     public GameObject returnGO;
     private bool waitForReturn;
-    public float grappleCool;
+    public float grappleCoolTime;
+    private bool isGrappleCool;
     private bool isReturning;
 
     public float grappleEquipTime;
@@ -33,7 +34,7 @@ public class Grapplev2 : MonoBehaviour
 
     public GameObject grapplePoint;
 
-    private GameObject _grapplePoint; // grapple POI
+    private GameObject grapplePoi; // grapple POI
     public static Grapplev2 Instance;
 
 
@@ -49,7 +50,10 @@ public class Grapplev2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (grappleEquipped && isGrappleCool && Input.GetKeyDown(KeyCode.Mouse2) && !isGrapple) // mouse key pressed and grapple isnt grappling, is equipped, and has cooled down
+        {
+            StartCoroutine(FireGrapple());
+        }
     }
 
     public void EquipGrapple(bool equip) // called in manager
@@ -71,5 +75,28 @@ public class Grapplev2 : MonoBehaviour
             yield return new WaitForSeconds(grappleEquipTime);
             grappleEquipped = false;
         }
+    }
+
+    private IEnumerator FireGrapple()
+    {
+        // fire the grappling hook and tell the code to start waiting for a response from collider
+        // play particles and animation
+        yield return new WaitForSeconds(1f); // placeholder
+    }
+
+    private void WaitForImpact()
+    {
+        // this waits for the grapple to collide and sets the grapple POI to,
+        // this also sets AddGrappleForce active
+    }
+
+    private void AddGrappleForce()
+    {
+        // physically adds the force
+    }
+
+    private IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(grappleCoolTime);
     }
 }
