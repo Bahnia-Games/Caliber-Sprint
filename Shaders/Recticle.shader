@@ -1,4 +1,4 @@
-﻿Shader "PCustom/Recticle"
+﻿Shader "Custom/Recticle"
 {
     Properties
     {
