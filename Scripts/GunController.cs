@@ -12,12 +12,6 @@ public class GunController : MonoBehaviour
 
     #region global variables (weapon parameters and other stuff i guess)
 
-    //public string currentWeapon;
-    public float reloadDelay = 1.0f;
-    public float emptyReloadDelay = 1.0f;
-    public float ADSReloadDelay = 1.0f;
-    public float emptyADSRelaodDelay = 1.0f;
-    public float fireDelay = 0.1f;
     public float damage = 1f;
     public float range = 1f;
     public int magSize = 1;
@@ -51,6 +45,7 @@ public class GunController : MonoBehaviour
     [HideInInspector] public bool isFire;
     private bool isReload;
     private bool isAds;
+    private bool isAltAds;
 
     private bool isEmpty;
     private bool isTac;
@@ -80,11 +75,29 @@ public class GunController : MonoBehaviour
 
     #endregion
 
+    #region animation states
 
+    // THESE ARE ANIMATOR STATE NAMES!!! NOT ANIMATION CLIP NAMES!!!!!!
+    public string DEPLOY;
+    public string UN_DEPLOY;
+    public string IDLE;
+    public string ADS;
+    public string UN_ADS;
+    public string ADS_IDLE;
+    public string ADS_SWITCH_SIGHT;
+    public string ADS_UN_SWITCH_SIGHT;
+    public string ADS_ALT_IDLE;
+    public string FIRE;
+    public string ADS_FIRE;
+    public string RELOAD;
+    public string TAC_RELOAD;
+
+
+    #endregion
 
     private void Awake()
     {
-        if (weaponDeployBoolName != null)
+        if (DEPLOY != null)
         {
             //animator.SetBool(weaponDeployBoolName, true);
         } else
@@ -141,16 +154,28 @@ public class GunController : MonoBehaviour
 
         #region ads
 
-        if (Input.GetKey(KeyCode.Mouse1)) //ADS
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds) //ADS
         {
             isAds = true;
-            animator.SetBool("isAds", true);
+            animator.Play(ADS);
             crosshair.SetActive(false);
-        } else if (Input.GetKeyUp(KeyCode.Mouse1))
+            HandleIdle(IdleState.ads);
+        } if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds)
         {
-            animator.SetBool("isAds", false);
+            animator.Play(ADS_SWITCH_SIGHT);
+            HandleIdle(IdleState.secondaryAds);
+            isAltAds = true;
+        } else if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null)
+        {
+            animator.Play(ADS_UN_SWITCH_SIGHT);
+            HandleIdle(IdleState.ads);
+            isAltAds = false;
+        } if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            animator.Play(ADS);
             isAds = false;
             crosshair.SetActive(true);
+            HandleIdle(IdleState.hip);
         }
 
         #endregion
@@ -173,11 +198,11 @@ public class GunController : MonoBehaviour
 
         if (!isAds)
         {
-            animator.SetBool("isFire", true);
+            animator.Play(FIRE);
         }
         if (isAds)
         {
-            animator.SetBool("isAdsFire", true);
+            animator.Play(ADS_FIRE);
         }
 
         #region muzzle flashing
@@ -281,15 +306,12 @@ public class GunController : MonoBehaviour
             }
             #endregion
         }
-
-        yield return new WaitForSeconds(fireDelay); //wait for fire delay
+        float del = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(del); //wait for fire delay
 
         muzzleLight.gameObject.SetActive(false);
-        animator.SetBool("isFire", false);
-        animator.SetBool("isAdsFire", false);
         isFire = false;
     }
-
     private void InstantiateImpact(string type)
     {
         float _randZ = UnityEngine.Random.Range(360, -360);
@@ -333,7 +355,6 @@ public class GunController : MonoBehaviour
             muzzleFlashSpriteGO.SetActive(false);
         }
     }
-
     IEnumerator ShellEject(SpecialState specialState = SpecialState.SFSNull)
     {
         yield return new WaitForSeconds(ejectionTuneTime);
@@ -366,7 +387,6 @@ public class GunController : MonoBehaviour
         derringerTac,
         derringerEmpty
     }
-
     IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
         isReload = true;
@@ -374,24 +394,44 @@ public class GunController : MonoBehaviour
         {
             if (isEmpty && !isAds) // empty reload
             {
-                animator.SetBool("isReload", true);
-                yield return new WaitForSeconds(emptyReloadDelay);
+                animator.Play(RELOAD);
+                float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del);
+                HandleIdle(IdleState.hip);
             }
             if (isTac && !isAds) // tac reload
             {
-                animator.SetBool("isTacReload", true);
-                yield return new WaitForSeconds(reloadDelay);
+                animator.Play(TAC_RELOAD);
+                float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del);
+                HandleIdle(IdleState.hip);
             }
 
             if (isEmpty && isAds) // ads empty reload
             {
-                animator.SetBool("isReload", true);
-                yield return new WaitForSeconds(emptyADSRelaodDelay);
+                animator.Play(UN_ADS);
+                float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del);
+                animator.Play(RELOAD);
+                float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del1);
+                animator.Play(ADS);
+                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del2);
+                HandleIdle(IdleState.ads);
             }
             if (isTac && isAds) // ads tac reload
             {
-                animator.SetBool("isTacReload", true);
-                yield return new WaitForSeconds(ADSReloadDelay);
+                animator.Play(UN_ADS);
+                float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del);
+                animator.Play(TAC_RELOAD);
+                float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del1);
+                animator.Play(ADS);
+                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del2);
+                HandleIdle(IdleState.ads);
             }
         }
         else if (fireMode == "derringer"){
@@ -407,9 +447,6 @@ public class GunController : MonoBehaviour
         }
 
          //wait for reload delay Hi Nate! -Gabe
-
-        animator.SetBool("isReload", false);
-        animator.SetBool("isTacReload", false);
         currentAmmo = magSize; //refil mag
         isTac = false;
         isEmpty = false;
@@ -419,20 +456,36 @@ public class GunController : MonoBehaviour
     {
         if (deploy)
         {
-            animator.SetBool(weaponDeployBoolName, true);
-            yield return new WaitForSeconds(weaponDeployTime);
+            animator.Play(DEPLOY);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
             isEquip = true;
         }
 
         if (!deploy)
         {
-            animator.SetBool(weaponDeployBoolName, false);
-
-            yield return new WaitForSeconds(weaponDeployTime);
+            animator.Play(UN_DEPLOY);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
             isEquip = false;
             gameObject.SetActive(false);
         }
 
+    }
+    private enum IdleState
+    {
+        hip,
+        ads,
+        secondaryAds
+    }
+    private void HandleIdle(IdleState state)
+    {
+        if (state == IdleState.hip)
+            animator.Play(IDLE);
+        if (state == IdleState.ads)
+            animator.Play(ADS_IDLE);
+        if (state == IdleState.secondaryAds)
+            animator.Play(ADS_ALT_IDLE);
     }
 
 }
