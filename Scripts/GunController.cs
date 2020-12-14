@@ -50,7 +50,6 @@ public class GunController : MonoBehaviour
     private bool isEmpty;
     private bool isTac;
 
-    public string weaponDeployBoolName;
     public float weaponDeployTime;
     [HideInInspector] public bool isEquip;
 
@@ -101,15 +100,11 @@ public class GunController : MonoBehaviour
         {
             //animator.SetBool(weaponDeployBoolName, true);
         } else
-        {
             Debug.Log("No Deploy Animation Added!");
-        }
 
         if (fireMode == null) //Check if no fire mode is entered. Default is Semi Auto
-        {
             fireMode = "SemiAuto";
-        }
-        
+
 
     }
 
@@ -125,13 +120,9 @@ public class GunController : MonoBehaviour
         #region firing
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
-        {
             StartCoroutine(Shoot());
-        }
         if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && !isReload && !isFire) //Fire every frame mouse is held (Auto)
-        {
             StartCoroutine(Shoot());
-        }
 
         #endregion
 
@@ -183,9 +174,7 @@ public class GunController : MonoBehaviour
         #region undeploy
 
         if (Input.GetKeyDown(KeyCode.E))
-        {
             StartCoroutine(Deploy(false));
-        }
 
         #endregion
     }
@@ -197,37 +186,26 @@ public class GunController : MonoBehaviour
         //Debug.Log("Fired");
 
         if (!isAds)
-        {
             animator.Play(FIRE);
-        }
+
         if (isAds)
-        {
             animator.Play(ADS_FIRE);
-        }
 
         #region muzzle flashing
 
         StartCoroutine(SpriteMuzzleFlash()); //da
 
         if (muzzleFlash != null)
-        {
             muzzleFlash.Play();
-        }
 
         if (muzzleFlash2 != null)
-        {
             muzzleFlash2.Play();
-        }
 
         if (muzzleFlash3 != null)
-        {
             muzzleFlash3.Play();
-        }
 
         if (muzzleLight != null)
-        {
             muzzleLight.gameObject.SetActive(true);
-        }
 
         yield return new WaitForSeconds(muzzleLightFlashTime);
 
@@ -267,14 +245,10 @@ public class GunController : MonoBehaviour
             target target = hit.transform.GetComponent<target>();
 
             if (target != null)
-            {
                 target.takeDamage(damage);
-            }
 
             if (hit.rigidbody != null)
-            {
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
-            }
 
             GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGameObj, 1f);
@@ -286,24 +260,22 @@ public class GunController : MonoBehaviour
             // hitObject = hit.transform.GetComponent<GameObject>();
             if (hit.transform.tag == "glass" && glassBulletImpact != null)
             {
-                InstantiateImpact("glass");
+                InstantiateImpact(ImpactType.glass);
                 isOtherType = true;
             }
             if (hit.transform.tag == "enemy" && fleshBulletImpact != null)
             {
-                InstantiateImpact("enemy");
+                InstantiateImpact(ImpactType.enemy);
                 isOtherType = true;
             }
             if (hit.transform.tag == "metal" && metalBulletImpact != null)
             {
-                InstantiateImpact("metal");
+                InstantiateImpact(ImpactType.metal);
                 isOtherType = true;
             }
 
             if (hit.point != null && defaultBulletImapct != null && !isOtherType)
-            {
-                InstantiateImpact("default");
-            }
+                InstantiateImpact(ImpactType.defaultt);
             #endregion
         }
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
@@ -312,36 +284,36 @@ public class GunController : MonoBehaviour
         muzzleLight.gameObject.SetActive(false);
         isFire = false;
     }
-    private void InstantiateImpact(string type)
+    private void InstantiateImpact(ImpactType type)
     {
         float _randZ = UnityEngine.Random.Range(360, -360);
         Vector3 posMod = hit.normal * 0.001f;
         Quaternion rotMod = Quaternion.LookRotation(hit.normal) * Quaternion.Euler(new Vector3(90, 0, 0)) * Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(360, -360), 0));
         Transform hitObject = hit.transform;
-        if (type == "glass")
+        if (type == ImpactType.glass)
         {
             GameObject impact = Instantiate(glassBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
-        if (type == "enemy"){
+        if (type == ImpactType.enemy){
             GameObject impact = Instantiate(fleshBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
-        if (type == "metal")
+        if (type == ImpactType.metal)
         {
             GameObject impact = Instantiate(metalBulletImpact, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
-        if (type == "default")
+        if (type == ImpactType.defaultt)
         {
             GameObject impact = Instantiate(defaultBulletImapct, hit.point + posMod, rotMod);
             impact.transform.parent = hitObject;
             Destroy(impact, instantiatedObjectLifetime);
         }
-        if (type != "glass" && type != "enemy" && type != "metal" && type != "default")
+        if (type != ImpactType.glass && type != ImpactType.enemy && type != ImpactType.metal && type != ImpactType.defaultt)
             Debug.LogWarning("Cannot instantiate Impact Effect, invalid type @GunController.cs InstantiateImpact()");
 
 
@@ -477,6 +449,13 @@ public class GunController : MonoBehaviour
         hip,
         ads,
         secondaryAds
+    }
+    private enum ImpactType
+    {
+        glass,
+        enemy,
+        metal,
+        defaultt
     }
     private void HandleIdle(IdleState state)
     {

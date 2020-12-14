@@ -8,9 +8,10 @@ public class WeaponManager : MonoBehaviour
 #pragma warning disable CS1030
 
     public Animator animator;
+    public PlayerAnimationController playerAnimationController;
     private GunController gunController;
     private float weaponDeployTime;
-    private string weaponDeployBoolName;
+    private string weaponEquipClipName;
 
     private int selectedWeapon;
     private bool isAnyEquip;
@@ -142,9 +143,9 @@ public class WeaponManager : MonoBehaviour
         // and so on, continue support
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
-        weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+        weaponEquipClipName = thisWeaponController.DEPLOY;
 
-        animator.SetBool(weaponDeployBoolName, true);
+        playerAnimationController.PlayAnim(weaponEquipClipName);
     }
 
     IEnumerator SwitchGAndBack()
