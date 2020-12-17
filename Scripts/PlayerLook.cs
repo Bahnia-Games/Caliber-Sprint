@@ -17,6 +17,8 @@ public class PlayerLook : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        camera.renderingPath = RenderingPath.DeferredLighting;
+        
         Cursor.lockState = CursorLockMode.Locked;
         camera.fieldOfView = fov;
     }
