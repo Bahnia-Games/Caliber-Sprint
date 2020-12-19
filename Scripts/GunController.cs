@@ -409,9 +409,9 @@ public class GunController : MonoBehaviour
         isEmpty = false;
         isReload = false;
     }
-    IEnumerator AimDownSight(SightState sightState)
+    IEnumerator AimDownSight(SightState _sightState)
     {
-       if (sightState == SightState.ADS) // call aim down sight
+       if (_sightState == SightState.ADS) // call aim down sight
         {
             isAds = true;
             playerAnimationController.PlayAnim(ADS);
@@ -420,7 +420,7 @@ public class GunController : MonoBehaviour
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
             HandleIdle(IdleState.ads);
         }
-       if (sightState == SightState.UnADS) // call go back to hip
+       if (_sightState == SightState.UnADS) // call go back to hip
         {
             isAds = false;
             playerAnimationController.PlayAnim(ADS);
@@ -429,7 +429,7 @@ public class GunController : MonoBehaviour
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
             HandleIdle(IdleState.hip);
         }
-       if (sightState == SightState.SightToggleOn && isAds) // if aiming, call secondary sight
+       if (_sightState == SightState.SightToggleOn && isAds) // if aiming, call secondary sight
         {
             isAltAds = true;
             playerAnimationController.PlayAnim(ADS_SWITCH_SIGHT);
@@ -437,7 +437,7 @@ public class GunController : MonoBehaviour
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
             HandleIdle(IdleState.secondaryAds);
         }
-       if (sightState == SightState.SightToggleOff && isAds) // if aiming, call primary sight
+       if (_sightState == SightState.SightToggleOff && isAds) // if aiming, call primary sight
         {
             isAltAds = false;
             playerAnimationController.PlayAnim(ADS_UN_SWITCH_SIGHT);
