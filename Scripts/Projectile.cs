@@ -6,14 +6,21 @@ public class Projectile : MonoBehaviour
 {
     public string projectileType;
     public Grapple grappleScript;
+    public Rigidbody projectileRb;
+    
     //GunController gunScript;
 
     private void Awake()
     {
         if (projectileType != "grappling hook")
-            Debug.LogError("Invalid projectile type on" + this.gameObject.name + " @Projectile.cs L13");
+            Debug.LogError("Invalid projectile type on" + gameObject.name + " @Projectile.cs L15");
         if (projectileType == "grappling hook" && grappleScript == null)
-            Debug.LogError("Grapple Script component unnasigned! " + gameObject.name + " @projectile.cs L16");
+            Debug.LogError("Grapple Script component unnasigned! " + gameObject.name + " @projectile.cs L17");
+        projectileRb = GetComponent<Rigidbody>();
+        if (projectileRb == null)
+            Debug.LogError("Projectile rigidbody not found! " + gameObject.name + " @projectile.cs L19");
+        if (projectileRb != null)
+            Physics.IgnoreLayerCollision(9,9); // ignore player
     }
     private void OnCollisionEnter(Collision collision)
     {
