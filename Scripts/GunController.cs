@@ -338,12 +338,6 @@ public class GunController : MonoBehaviour
 
 
     }
-    private enum SpecialState
-    {
-        SFSNull,
-        derringerTac,
-        derringerEmpty
-    }
     IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
         isReload = true;
@@ -413,6 +407,7 @@ public class GunController : MonoBehaviour
     {
        if (_sightState == SightState.ADS) // call aim down sight
         {
+            Debug.Log("Aiming down...");
             isAds = true;
             playerAnimationController.PlayAnim(ADS);
             crosshair.SetActive(false);
@@ -486,12 +481,18 @@ public class GunController : MonoBehaviour
         SightToggleOn,
         SightToggleOff
     }
+    private enum SpecialState
+    {
+        SFSNull,
+        derringerTac,
+        derringerEmpty
+    }
     private void HandleIdle(IdleState state)
     {
         if (state == IdleState.hip)
-            playerAnimationController.PlayAnim(IDLE);
+            playerAnimationController.PlayAnim(IDLE); 
         if (state == IdleState.ads)
-            playerAnimationController.PlayAnim(ADS_IDLE);
+            playerAnimationController.PlayAnim(ADS_IDLE); Debug.Log("idle ads");
         if (state == IdleState.secondaryAds)
             playerAnimationController.PlayAnim(ADS_ALT_IDLE);
     }
