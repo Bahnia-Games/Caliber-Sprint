@@ -167,7 +167,7 @@ public class GunController : MonoBehaviour
         #endregion
     }
 
-    IEnumerator Shoot()
+    private IEnumerator Shoot()
     {
         isFire = true;
         currentAmmo--; //subtract 1 bullet
@@ -312,7 +312,7 @@ public class GunController : MonoBehaviour
             muzzleFlashSpriteGO.SetActive(false);
         }
     }
-    IEnumerator ShellEject(SpecialState specialState = SpecialState.SFSNull)
+    private IEnumerator ShellEject(SpecialState specialState = SpecialState.SFSNull)
     {
         yield return new WaitForSeconds(ejectionTuneTime);
         if (fireMode != "derringer")
@@ -338,7 +338,7 @@ public class GunController : MonoBehaviour
 
 
     }
-    IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
+    private IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
         isReload = true;
         if (fireMode != "derringer")
@@ -403,7 +403,7 @@ public class GunController : MonoBehaviour
         isEmpty = false;
         isReload = false;
     }
-    IEnumerator AimDownSight(SightState _sightState)
+    private IEnumerator AimDownSight(SightState _sightState)
     {
        if (_sightState == SightState.ADS) // call aim down sight
         {
