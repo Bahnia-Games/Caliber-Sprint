@@ -148,13 +148,14 @@ public class GunController : MonoBehaviour
 
         #region ads
 
-        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds) // ads
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds && !isFire && !isReload) // ads
             StartCoroutine(AimDownSight(SightState.ADS));
-        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds)
+        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isFire && !isReload)
             StartCoroutine(AimDownSight(SightState.SightToggleOn));
-        else if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null)
+        else if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null && !isFire && !isReload)
             StartCoroutine(AimDownSight(SightState.SightToggleOff));
-        if (Input.GetKeyUp(KeyCode.Mouse1)) // leave ads
+        #warning might cause issues with transitions, switch to !getkey and nest if else v ^
+        if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && !isFire && !isReload) 
             StartCoroutine(AimDownSight(SightState.UnADS));
 
         #endregion
@@ -348,14 +349,14 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(RELOAD);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
-                HandleIdle(IdleState.hip);
+                //HandleIdle(IdleState.hip);
             }
             if (isTac && !isAds) // tac reload
             {
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
-                HandleIdle(IdleState.hip);
+                //HandleIdle(IdleState.hip);
             }
 
             if (isEmpty && isAds) // ads empty reload
@@ -369,9 +370,9 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(ADS);
                 float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del2);
-                HandleIdle(IdleState.ads);
+                //HandleIdle(IdleState.ads);
             }
-            if (isTac && isAds) // ads tac reload
+            if (isTac && isAds) // ads tac reload ((borked atm))
             {
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
@@ -382,10 +383,10 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(ADS);
                 float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del2);
-                HandleIdle(IdleState.ads);
+                //HandleIdle(IdleState.ads);
             }
         }
-        else if (fireMode == "derringer"){
+        else if (fireMode == "derringer"){ // implimented later
             // reload stuff
             if (currentAmmo == 1)
             {
@@ -413,16 +414,16 @@ public class GunController : MonoBehaviour
             crosshair.SetActive(false);
             sightState = SightState.ADS;
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            HandleIdle(IdleState.ads);
+            //HandleIdle(IdleState.ads);
         }
        if (_sightState == SightState.UnADS) // call go back to hip
         {
             isAds = false;
-            playerAnimationController.PlayAnim(ADS);
+            playerAnimationController.PlayAnim(UN_ADS);
             crosshair.SetActive(true);
             sightState = SightState.UnADS;
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            HandleIdle(IdleState.hip);
+            //HandleIdle(IdleState.hip);
         }
        if (_sightState == SightState.SightToggleOn && isAds) // if aiming, call secondary sight
         {
@@ -430,7 +431,7 @@ public class GunController : MonoBehaviour
             playerAnimationController.PlayAnim(ADS_SWITCH_SIGHT);
             sightState = SightState.SightToggleOn;
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            HandleIdle(IdleState.secondaryAds);
+            //HandleIdle(IdleState.secondaryAds);
         }
        if (_sightState == SightState.SightToggleOff && isAds) // if aiming, call primary sight
         {
@@ -438,7 +439,7 @@ public class GunController : MonoBehaviour
             playerAnimationController.PlayAnim(ADS_UN_SWITCH_SIGHT);
             sightState = SightState.SightToggleOff;
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            HandleIdle(IdleState.ads);
+            //HandleIdle(IdleState.ads);
         }
     }
     public IEnumerator Deploy(bool deploy)
@@ -487,7 +488,7 @@ public class GunController : MonoBehaviour
         derringerTac,
         derringerEmpty
     }
-    private void HandleIdle(IdleState state)
+    private void HandleIdle(IdleState state) // depricated
     {
         if (state == IdleState.hip)
             playerAnimationController.PlayAnim(IDLE); 
