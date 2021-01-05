@@ -161,6 +161,10 @@ public class GunController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && !isFire && !isReload) 
             StartCoroutine(AimDownSight(SightState.UnADS));
 
+        if (Input.GetKeyUp(KeyCode.Mouse1) && isReload) // check for ads changes while reloading
+            isAds = false;
+        if (Input.GetKeyDown(KeyCode.Mouse1) && isReload)
+            isAds = true;
         #endregion
 
         #region undeploy
@@ -418,7 +422,7 @@ public class GunController : MonoBehaviour
             }
         }
 
-        if (isAds)
+        if (isAds) // is the player still ads?
         {
             playerAnimationController.PlayAnim(ADS);
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
