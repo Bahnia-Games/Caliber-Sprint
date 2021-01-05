@@ -157,7 +157,7 @@ public class GunController : MonoBehaviour
             StartCoroutine(AimDownSight(SightState.SightToggleOn));
         else if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null && !isFire && !isReload)
             StartCoroutine(AimDownSight(SightState.SightToggleOff));
-        #warning might cause issues with transitions, switch to !getkey and nest if else v ^
+        //#warning might cause issues with transitions, switch to !getkey and nest if else v ^
         if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && !isFire && !isReload) 
             StartCoroutine(AimDownSight(SightState.UnADS));
 
@@ -489,6 +489,7 @@ public class GunController : MonoBehaviour
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(del);
             isEquip = false;
+            playerAnimationController.PlayAnim("default");
             gameObject.SetActive(false);
         }
 

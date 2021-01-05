@@ -33,6 +33,8 @@ public class WeaponManager : MonoBehaviour
 
     public GameObject thisWeapon3;
 
+    public GameObject thisWeapon4;
+
 
     private bool stop;
     
@@ -110,6 +112,16 @@ public class WeaponManager : MonoBehaviour
 
         #endregion
 
+        #region weapon 4 (4, ID 3)
+
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            thisWeaponController = thisWeapon4.GetComponent<GunController>();
+            SelectWeapon(3);
+        }
+
+        #endregion
+
         #region undeploy
 
         if (Input.GetKeyDown(KeyCode.E) && isAnyEquip)
@@ -140,6 +152,8 @@ public class WeaponManager : MonoBehaviour
             thisWeapon2.SetActive(true);
         if(weaponID == 2)
             thisWeapon3.SetActive(true);
+        if (weaponID == 3)
+            thisWeapon4.SetActive(true);
         // and so on, continue support
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
@@ -148,7 +162,7 @@ public class WeaponManager : MonoBehaviour
         playerAnimationController.PlayAnim(weaponEquipClipName);
     }
 
-    IEnumerator SwitchGAndBack()
+    IEnumerator SwitchGAndBack() // needs a serious rework
     {
         bool hasWeapon;
         if (isAnyEquip)
