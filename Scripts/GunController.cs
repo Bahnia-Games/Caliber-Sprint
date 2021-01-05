@@ -73,6 +73,8 @@ public class GunController : MonoBehaviour
     private float randY;
     private float randZ;
 
+    private bool fireStage;
+
     private SightState sightState;
 
     #endregion
@@ -90,7 +92,9 @@ public class GunController : MonoBehaviour
     public string ADS_UN_SWITCH_SIGHT;
     public string ADS_ALT_IDLE;
     public string FIRE;
+    public string FIRE_2;
     public string ADS_FIRE;
+    public string ADS_FIRE_2;
     public string RELOAD;
     public string TAC_RELOAD;
 
@@ -115,7 +119,6 @@ public class GunController : MonoBehaviour
     {
         isEquip = true;
         currentAmmo = magSize;
-
     }
 
     void Update()
@@ -173,9 +176,32 @@ public class GunController : MonoBehaviour
         isFire = true;
         currentAmmo--; //subtract 1 bullet
         if (!isAds)
-            playerAnimationController.PlayAnim(FIRE);
+        {
+            if (fireStage)
+            {
+                playerAnimationController.PlayAnim(FIRE);
+                fireStage = false;
+            }
+            if (!fireStage)
+            {
+                playerAnimationController.PlayAnim(FIRE_2);
+                fireStage = true;
+            }
+        }
         if (isAds)
-            playerAnimationController.PlayAnim(ADS_FIRE);
+        {
+            if (fireStage)
+            {
+                playerAnimationController.PlayAnim(ADS_FIRE);
+                fireStage = false;
+            }
+            if (!fireStage)
+            {
+                playerAnimationController.PlayAnim(ADS_FIRE_2);
+                fireStage = true;
+            }
+        }
+            
 
         #region muzzle flashing
 
@@ -367,9 +393,6 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
-                playerAnimationController.PlayAnim(ADS);
-                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
-                yield return new WaitForSeconds(del2);
                 //HandleIdle(IdleState.ads);
             }
             if (isTac && isAds) // ads tac reload ((borked atm))
@@ -380,9 +403,6 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
-                playerAnimationController.PlayAnim(ADS);
-                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
-                yield return new WaitForSeconds(del2);
                 //HandleIdle(IdleState.ads);
             }
         }
@@ -396,6 +416,13 @@ public class GunController : MonoBehaviour
             {
                 StartCoroutine(ShellEject(SpecialState.derringerEmpty));
             }
+        }
+
+        if (isAds)
+        {
+            playerAnimationController.PlayAnim(ADS);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
         }
 
          //wait for reload delay Hi Nate! -Gabe
