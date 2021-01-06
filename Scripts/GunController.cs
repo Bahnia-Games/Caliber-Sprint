@@ -131,7 +131,8 @@ public class GunController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            Debug.Log("isads: " + isAds + " isAltAds: " + isAltAds + " current SightState: " + currentSightState + " isReload: " + isReload + " current clip: " + playerAnimationController.currentClip);
+            Debug.Log("isads: " + isAds + " isAltAds: " + isAltAds + " current SightState: " + currentSightState + " isReload: " + isReload + " current clip: " + playerAnimationController.currentClip + " current clip length: " + animator.GetCurrentAnimatorStateInfo(0).length);
+            // clip is being overwritten
         }
 
         #endregion
@@ -139,7 +140,10 @@ public class GunController : MonoBehaviour
         #region firing
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
+        {
             StartCoroutine(Shoot());
+            Debug.Log(2);
+        }
         if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && !isReload && !isFire) //Fire every frame mouse is held (Auto)
             StartCoroutine(Shoot());
 
@@ -151,12 +155,14 @@ public class GunController : MonoBehaviour
         {
             // does the magazine have at least 1 bullet and is less than the max ammo size?
             isTac = true; // tactical reload
+            Debug.Log(3 + " out");
             StartCoroutine(Reload());
         }
 
         if (currentAmmo <= 0 && !isReload) // is the current ammo 0?
         {
             isEmpty = true; //mag empty reload
+            Debug.Log(3 + " out");
             StartCoroutine(Reload());
         }
 
@@ -172,15 +178,28 @@ public class GunController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse1))
             adsKeyHeld = false;
 
-        if (adsKeyHeld && !isFire && !isReload && !isAds)
+        if (adsKeyHeld && !isFire && !isReload && !isAds) // firing during reload
+        {
             StartCoroutine(AimDownSight(SightState.ADS));
-        if (!adsKeyHeld && !isFire && !isReload && isAds)
+            Debug.Log(1);
+        }
+
+        if (!adsKeyHeld && !isFire && !isReload && isAds) 
+        {
             StartCoroutine(AimDownSight(SightState.UnADS));
+            Debug.Log(6 + " finished");
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is not alt ads, not firing, and not reloading
+        {
             StartCoroutine(AimDownSight(SightState.AltToggleOn));
+        }
+            
         if (Input.GetKeyDown(KeyCode.T) && ADS_UN_SWITCH_SIGHT != null && isAds && isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is alt ads, not firing, and not reloading
+        {
             StartCoroutine(AimDownSight(SightState.AltToggleOff));
+        }
 
 
 
@@ -402,6 +421,10 @@ public class GunController : MonoBehaviour
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 //HandleIdle(IdleState.hip);
+                currentAmmo = magSize; //refil mag
+                isTac = false;
+                isEmpty = false;
+                isReload = false;
             }
             if (isTac && !isAds) // tac reload
             {
@@ -409,34 +432,48 @@ public class GunController : MonoBehaviour
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 //HandleIdle(IdleState.hip);
+                currentAmmo = magSize; //refil mag
+                isTac = false;
+                isEmpty = false;
+                isReload = false;
             }
 
             if (isEmpty && isAds) // ads empty reload
             { // this needs to be simplified...
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
-                isAds = false;
+                //isAds = false;
                 yield return new WaitForSeconds(del);
-                playerAnimationController.PlayAnim(RELOAD);
-                float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
-                yield return new WaitForSeconds(del1);
+                //playerAnimationController.PlayAnim(RELOAD);
+                //float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
+                //yield return new WaitForSeconds(del1);
                 _check = true;
                 //HandleIdle(IdleState.ads);
+                currentAmmo = magSize; //refil mag
+                isTac = false;
+                isEmpty = false;
+                isReload = false;
             }
             if (isTac && isAds) // ads tac reload ((borked atm))
             {
+                Debug.Log(4 + "in");
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
-                isAds = false;
+                //isAds = false;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
-                playerAnimationController.PlayAnim(ADS);
-                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
-                yield return new WaitForSeconds(del2);
+                //playerAnimationController.PlayAnim(ADS);
+                //float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
+                //yield return new WaitForSeconds(del2);
                 _check = true;
                 //HandleIdle(IdleState.ads);
+                Debug.Log(5 + " done");
+                currentAmmo = magSize; //refil mag
+                isTac = false;
+                isEmpty = false;
+                isReload = false;
             }
         }
         else if (fireMode == "derringer") // implimented later
@@ -460,10 +497,6 @@ public class GunController : MonoBehaviour
         }*/
 
         //wait for reload delay Hi Nate! -Gabe
-        currentAmmo = magSize; //refil mag
-        isTac = false;
-        isEmpty = false;
-        isReload = false;
     }
     private IEnumerator AimDownSight(SightState _sightState) // ok i redid it
     {
