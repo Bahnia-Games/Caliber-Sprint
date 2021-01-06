@@ -5,7 +5,7 @@ using System.Collections.Generic;
 //using UnityEditorInternal;
 using UnityEngine;
 
-#pragma warning disable CS0108
+#pragma warning disable CS0108, CS0219
 
 public class GunController : MonoBehaviour
 {
@@ -45,7 +45,6 @@ public class GunController : MonoBehaviour
     [HideInInspector] public bool isFire;
     private bool isReload;
     private bool isAds;
-    private bool isAltAds;
 
     private bool isEmpty;
     private bool isTac;
@@ -75,7 +74,11 @@ public class GunController : MonoBehaviour
 
     private bool fireStage;
 
-    private SightState sightState;
+    private SightState currentSightState;
+
+    private bool adsKeyHeld;
+    private bool isAltAds;
+    private bool adsFO = true;
 
     #endregion
 
@@ -124,7 +127,14 @@ public class GunController : MonoBehaviour
     void Update()
     {
 
-        Debug.Log("reload? " + isReload);
+        #region diagnostics
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Debug.Log("isads: " + isAds + " isAltAds: " + isAltAds + " current SightState: " + currentSightState + " isReload: " + isReload + " current clip: " + playerAnimationController.currentClip);
+        }
+
+        #endregion
 
         #region firing
 
@@ -154,32 +164,34 @@ public class GunController : MonoBehaviour
 
         #region ads
 
-        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds && !isFire && !isReload) // ads normal
-        {
+        // get if the key is pressed
+        // if it is, set a state, dont call.
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            adsKeyHeld = true;
+        if (Input.GetKeyUp(KeyCode.Mouse1))
+            adsKeyHeld = false;
+
+        if (adsKeyHeld && !isFire && !isReload && !isAds)
             StartCoroutine(AimDownSight(SightState.ADS));
-        }
-            
-        if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && isAds) // unads normal
-        {
-            StartCoroutine(AimDownSight(SightState.UnADS)); 
-        }
+        if (!adsKeyHeld && !isFire && !isReload && isAds)
+            StartCoroutine(AimDownSight(SightState.UnADS));
 
-        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isFire && !isReload) // ads alt
-            StartCoroutine(AimDownSight(SightState.SightToggleOn));
-        if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null && !isFire && !isReload) // un ads alt
-            StartCoroutine(AimDownSight(SightState.SightToggleOff)); 
+        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is not alt ads, not firing, and not reloading
+            StartCoroutine(AimDownSight(SightState.AltToggleOn));
+        if (Input.GetKeyDown(KeyCode.T) && ADS_UN_SWITCH_SIGHT != null && isAds && isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is alt ads, not firing, and not reloading
+            StartCoroutine(AimDownSight(SightState.AltToggleOff));
 
-        if (Input.GetKeyUp(KeyCode.Mouse1) && isReload) // check for ads changes while reloading | let go
-            isAds = false;
-        if (Input.GetKey(KeyCode.Mouse1) && isReload) // pressed down
-            isAds = true;
+
+
         #endregion
 
-        #region undeploy
-
+        #region undeploy (depricated)
+        /*
         if (Input.GetKeyDown(KeyCode.E))
             StartCoroutine(Deploy(false));
-
+        */
+        // see WeaponManager.cs
         #endregion
     }
 
@@ -453,42 +465,43 @@ public class GunController : MonoBehaviour
         isEmpty = false;
         isReload = false;
     }
-    private IEnumerator AimDownSight(SightState _sightState) // redo whole thing
+    private IEnumerator AimDownSight(SightState _sightState) // ok i redid it
     {
-       if (_sightState == SightState.ADS) // call aim down sight
+        if (_sightState == SightState.ADS) // ads
         {
-            Debug.Log("Aiming down...");
-            isAds = true;
             playerAnimationController.PlayAnim(ADS);
-            crosshair.SetActive(false);
-            sightState = SightState.ADS;
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            //HandleIdle(IdleState.ads);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
+            currentSightState = SightState.ADS;
+            isAds = true;
         }
-       if (_sightState == SightState.UnADS) // call go back to hip
+        if (_sightState == SightState.UnADS) // unads
         {
-            isAds = false;
+            ;
+            // the uhhhh
+            ///the fuckijng uhhhhhhhhhhhhhhhhhhhhhh
             playerAnimationController.PlayAnim(UN_ADS);
-            crosshair.SetActive(true);
-            sightState = SightState.UnADS;
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            //HandleIdle(IdleState.hip);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
+            currentSightState = SightState.UnADS;
+            isAds = false;
         }
-       if (_sightState == SightState.SightToggleOn && isAds) // if aiming, call secondary sight
+        
+        if (_sightState == SightState.AltToggleOn) // alt
         {
-            isAltAds = true;
             playerAnimationController.PlayAnim(ADS_SWITCH_SIGHT);
-            sightState = SightState.SightToggleOn;
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            //HandleIdle(IdleState.secondaryAds);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
+            currentSightState = SightState.AltToggleOn;
+            isAltAds = true;
         }
-       if (_sightState == SightState.SightToggleOff && isAds) // if aiming, call primary sight
+        if (_sightState == SightState.AltToggleOff) // unalt
         {
-            isAltAds = false;
             playerAnimationController.PlayAnim(ADS_UN_SWITCH_SIGHT);
-            sightState = SightState.SightToggleOff;
-            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-            //HandleIdle(IdleState.ads);
+            float del = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(del);
+            currentSightState = SightState.AltToggleOff;
+            isAltAds = false;
         }
     }
     public IEnumerator Deploy(bool deploy)
@@ -529,8 +542,8 @@ public class GunController : MonoBehaviour
     {
         ADS,
         UnADS,
-        SightToggleOn,
-        SightToggleOff
+        AltToggleOn,
+        AltToggleOff
     }
     private enum SpecialState
     {

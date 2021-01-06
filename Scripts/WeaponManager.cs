@@ -114,7 +114,7 @@ public class WeaponManager : MonoBehaviour
 
         #region weapon 4 (4, ID 3)
 
-        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha3))
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha4))
         {
             thisWeaponController = thisWeapon4.GetComponent<GunController>();
             SelectWeapon(3);
