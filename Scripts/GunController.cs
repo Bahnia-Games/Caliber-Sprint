@@ -123,6 +123,9 @@ public class GunController : MonoBehaviour
 
     void Update()
     {
+
+        Debug.Log("reload? " + isReload);
+
         #region firing
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
@@ -134,14 +137,14 @@ public class GunController : MonoBehaviour
 
         #region reloading
 
-        if (Input.GetKeyDown(KeyCode.R) && !isFire && currentAmmo >= 1 && currentAmmo != magSize) // if the gun isnt firing and r is pressed, determine reload type
+        if (Input.GetKeyDown(KeyCode.R) && !isFire && currentAmmo >= 1 && currentAmmo != magSize && !isReload) // if the gun isnt firing and r is pressed, determine reload type
         {
-            // does the magazoine have at least 1 bullet and is less than the max ammo size?
+            // does the magazine have at least 1 bullet and is less than the max ammo size?
             isTac = true; // tactical reload
             StartCoroutine(Reload());
         }
 
-        if (currentAmmo <= 0) // is the current ammo 0?
+        if (currentAmmo <= 0 && !isReload) // is the current ammo 0?
         {
             isEmpty = true; //mag empty reload
             StartCoroutine(Reload());
@@ -151,19 +154,24 @@ public class GunController : MonoBehaviour
 
         #region ads
 
-        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds && !isFire && !isReload) // ads
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !isAds && !isFire && !isReload) // ads normal
+        {
             StartCoroutine(AimDownSight(SightState.ADS));
-        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isFire && !isReload)
-            StartCoroutine(AimDownSight(SightState.SightToggleOn));
-        else if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null && !isFire && !isReload)
-            StartCoroutine(AimDownSight(SightState.SightToggleOff));
-        //#warning might cause issues with transitions, switch to !getkey and nest if else v ^
-        if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && !isFire && !isReload) 
-            StartCoroutine(AimDownSight(SightState.UnADS));
+        }
+            
+        if (Input.GetKeyUp(KeyCode.Mouse1) && !isFire && !isReload && isAds) // unads normal
+        {
+            StartCoroutine(AimDownSight(SightState.UnADS)); 
+        }
 
-        if (Input.GetKeyUp(KeyCode.Mouse1) && isReload) // check for ads changes while reloading
+        if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isFire && !isReload) // ads alt
+            StartCoroutine(AimDownSight(SightState.SightToggleOn));
+        if (Input.GetKeyDown(KeyCode.T) && isAltAds && ADS_UN_SWITCH_SIGHT != null && !isFire && !isReload) // un ads alt
+            StartCoroutine(AimDownSight(SightState.SightToggleOff)); 
+
+        if (Input.GetKeyUp(KeyCode.Mouse1) && isReload) // check for ads changes while reloading | let go
             isAds = false;
-        if (Input.GetKeyDown(KeyCode.Mouse1) && isReload)
+        if (Input.GetKey(KeyCode.Mouse1) && isReload) // pressed down
             isAds = true;
         #endregion
 
@@ -371,7 +379,9 @@ public class GunController : MonoBehaviour
     }
     private IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
+        bool _check = false;
         isReload = true;
+        Debug.Log("reloading...");
         if (fireMode != "derringer")
         {
             if (isEmpty && !isAds) // empty reload
@@ -393,24 +403,32 @@ public class GunController : MonoBehaviour
             { // this needs to be simplified...
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                isAds = false;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
+                _check = true;
                 //HandleIdle(IdleState.ads);
             }
             if (isTac && isAds) // ads tac reload ((borked atm))
             {
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
+                isAds = false;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
+                playerAnimationController.PlayAnim(ADS);
+                float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del2);
+                _check = true;
                 //HandleIdle(IdleState.ads);
             }
         }
-        else if (fireMode == "derringer"){ // implimented later
+        else if (fireMode == "derringer") // implimented later
+        { // implimented later
             // reload stuff
             if (currentAmmo == 1)
             {
@@ -422,20 +440,20 @@ public class GunController : MonoBehaviour
             }
         }
 
-        if (isAds) // is the player still ads?
+        /*if (isAds && _check) // is the player still ads?
         {
             playerAnimationController.PlayAnim(ADS);
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(del);
-        }
+        }*/
 
-         //wait for reload delay Hi Nate! -Gabe
+        //wait for reload delay Hi Nate! -Gabe
         currentAmmo = magSize; //refil mag
         isTac = false;
         isEmpty = false;
         isReload = false;
     }
-    private IEnumerator AimDownSight(SightState _sightState)
+    private IEnumerator AimDownSight(SightState _sightState) // redo whole thing
     {
        if (_sightState == SightState.ADS) // call aim down sight
         {
