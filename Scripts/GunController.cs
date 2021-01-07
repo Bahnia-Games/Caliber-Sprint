@@ -74,7 +74,7 @@ public class GunController : MonoBehaviour
 
     private bool fireStage;
 
-    private SightState currentSightState;
+    private SightState currentSightState = SightState.AltToggleOff;
 
     private bool adsKeyHeld;
     private bool isAltAds;
@@ -444,9 +444,9 @@ public class GunController : MonoBehaviour
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 //isAds = false;
                 yield return new WaitForSeconds(del);
-                //playerAnimationController.PlayAnim(RELOAD);
-                //float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
-                //yield return new WaitForSeconds(del1);
+                playerAnimationController.PlayAnim(RELOAD);
+                float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
+                yield return new WaitForSeconds(del1);
                 _check = true;
                 //HandleIdle(IdleState.ads);
                 currentAmmo = magSize; //refil mag
@@ -474,6 +474,13 @@ public class GunController : MonoBehaviour
                 isTac = false;
                 isEmpty = false;
                 isReload = false;
+            }
+
+            if (isAds && currentSightState == SightState.ADS)
+                playerAnimationController.PlayAnim(ADS);
+            if (isAds && currentSightState == SightState.AltToggleOn)
+            {
+                playerAnimationController.PlayAnim(ADS_SWITCH_SIGHT);
             }
         }
         else if (fireMode == "derringer") // implimented later
