@@ -24,6 +24,8 @@ public class GunController : MonoBehaviour
     public string fireMode = "SemiAuto";
     public Camera camera;
     public Animator animator;
+    public PlayerAnimationController playerAnimationController;
+    private WeaponSoundController weaponSoundController;
 
     public ParticleSystem muzzleFlash;
     public ParticleSystem muzzleFlash2;
@@ -62,8 +64,6 @@ public class GunController : MonoBehaviour
 
     private GameObject hitObject;
     private RaycastHit hit;
-
-    public PlayerAnimationController playerAnimationController;
     #endregion
 
     #region global local variables
@@ -78,7 +78,7 @@ public class GunController : MonoBehaviour
 
     private bool adsKeyHeld;
     private bool isAltAds;
-    private bool adsFO = true;
+    private bool startDiagnostics;
 
     #endregion
 
@@ -115,7 +115,10 @@ public class GunController : MonoBehaviour
         if (fireMode == null) //Check if no fire mode is entered. Default is Semi Auto
             fireMode = "SemiAuto";
 
+        weaponSoundController = GetComponent<WeaponSoundController>();
 
+        if (weaponSoundController == null)
+            Debug.LogError("Error! WeaponSoundController missing from this weapon: " + gameObject.name);
     }
 
     void Start() //sex
@@ -129,11 +132,11 @@ public class GunController : MonoBehaviour
 
         #region diagnostics
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
+        if (!startDiagnostics && Input.GetKeyDown(KeyCode.H))
+            startDiagnostics = true;
+
+        if (startDiagnostics)
             Debug.Log("isads: " + isAds + " isAltAds: " + isAltAds + " current SightState: " + currentSightState + " isReload: " + isReload + " current clip: " + playerAnimationController.currentClip + " current clip length: " + animator.GetCurrentAnimatorStateInfo(0).length);
-            // clip is being overwritten
-        }
 
         #endregion
 
@@ -244,7 +247,7 @@ public class GunController : MonoBehaviour
                 fireStage = true;
             }
         }
-            
+        weaponSoundController.PlaySound(weaponSoundController.fire);
 
         #region muzzle flashing
 
