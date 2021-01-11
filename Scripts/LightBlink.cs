@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// depricated
 public class lightblink : MonoBehaviour
 {
     #pragma warning disable CS0108
