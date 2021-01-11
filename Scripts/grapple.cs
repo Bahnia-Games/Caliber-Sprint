@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// stale
 public class Grapple : MonoBehaviour
 {
     public Camera playerCam;
