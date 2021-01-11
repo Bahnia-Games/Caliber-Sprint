@@ -5,7 +5,7 @@ using System.Collections.Generic;
 //using UnityEditorInternal;
 using UnityEngine;
 
-#pragma warning disable CS0108, CS0219
+#pragma warning disable CS0108, CS0219, IDE0059
 
 public class GunController : MonoBehaviour
 {
@@ -41,7 +41,7 @@ public class GunController : MonoBehaviour
     public float muzzleLightFlashTime;
     public Light muzzleLight;
     public GameObject impactEffect;
-    private int layerMask = 1 << 8;
+    private readonly int layerMask = 1 << 8;
     public GameObject crosshair;
 
     [HideInInspector] public bool isFire;
@@ -417,7 +417,6 @@ public class GunController : MonoBehaviour
     }
     private IEnumerator Reload(SpecialState specialFireState = SpecialState.SFSNull)
     {
-        bool _check = false;
         isReload = true;
         Debug.Log("reloading...");
         if (fireMode != "derringer")
@@ -427,7 +426,6 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(RELOAD);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
-                //HandleIdle(IdleState.hip);
                 currentAmmo = magSize; //refil mag
                 isTac = false;
                 isEmpty = false;
@@ -438,7 +436,6 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
-                //HandleIdle(IdleState.hip);
                 currentAmmo = magSize; //refil mag
                 isTac = false;
                 isEmpty = false;
@@ -449,13 +446,10 @@ public class GunController : MonoBehaviour
             { // this needs to be simplified...
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
-                //isAds = false;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
-                yield return new WaitForSeconds(del1);
-                _check = true;
-                //HandleIdle(IdleState.ads);
+                yield return new WaitForSeconds(del1);;
                 currentAmmo = magSize; //refil mag
                 isTac = false;
                 isEmpty = false;
@@ -466,16 +460,10 @@ public class GunController : MonoBehaviour
                 Debug.Log(4 + "in");
                 playerAnimationController.PlayAnim(UN_ADS);
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
-                //isAds = false;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
-                //playerAnimationController.PlayAnim(ADS);
-                //float del2 = animator.GetCurrentAnimatorStateInfo(0).length;
-                //yield return new WaitForSeconds(del2);
-                _check = true;
-                //HandleIdle(IdleState.ads);
                 Debug.Log(5 + " done");
                 currentAmmo = magSize; //refil mag
                 isTac = false;
@@ -502,14 +490,6 @@ public class GunController : MonoBehaviour
                 StartCoroutine(ShellEject(SpecialState.derringerEmpty));
             }
         }
-
-        /*if (isAds && _check) // is the player still ads?
-        {
-            playerAnimationController.PlayAnim(ADS);
-            float del = animator.GetCurrentAnimatorStateInfo(0).length;
-            yield return new WaitForSeconds(del);
-        }*/
-
         //wait for reload delay Hi Nate! -Gabe
     }
     private IEnumerator AimDownSight(SightState _sightState) // ok i redid it
@@ -597,15 +577,6 @@ public class GunController : MonoBehaviour
         SFSNull,
         derringerTac,
         derringerEmpty
-    }
-    private void HandleIdle(IdleState state) // depricated
-    {
-        if (state == IdleState.hip)
-            playerAnimationController.PlayAnim(IDLE); 
-        if (state == IdleState.ads)
-            playerAnimationController.PlayAnim(ADS_IDLE); Debug.Log("idle ads");
-        if (state == IdleState.secondaryAds)
-            playerAnimationController.PlayAnim(ADS_ALT_IDLE);
     }
 
 }
