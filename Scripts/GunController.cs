@@ -57,6 +57,7 @@ public class GunController : MonoBehaviour
     public GameObject shellCasingPrefab; // as GO to add cool shit later
     public Transform shellCasingInstantiationPoint;
     public float shellEjectionForce;
+    public Vector2 shellEjectionRandomness;
     public Vector3 ejectRotationTune;
     public Vector2 ejectShellTorque;
     public float ejectionTuneTime;
@@ -316,17 +317,17 @@ public class GunController : MonoBehaviour
             #region impact effects
             bool isOtherType = false;
             // hitObject = hit.transform.GetComponent<GameObject>();
-            if (hit.transform.tag == "glass" && glassBulletImpact != null)
+            if (hit.transform.CompareTag("glass") && glassBulletImpact != null)
             {
                 InstantiateImpact(ImpactType.glass);
                 isOtherType = true;
             }
-            if (hit.transform.tag == "enemy" && fleshBulletImpact != null)
+            if (hit.transform.CompareTag("enemy") && fleshBulletImpact != null)
             {
                 InstantiateImpact(ImpactType.enemy);
                 isOtherType = true;
             }
-            if (hit.transform.tag == "metal" && metalBulletImpact != null)
+            if (hit.transform.CompareTag("metal") && metalBulletImpact != null)
             {
                 InstantiateImpact(ImpactType.metal);
                 isOtherType = true;
@@ -390,10 +391,13 @@ public class GunController : MonoBehaviour
         yield return new WaitForSeconds(ejectionTuneTime);
         if (fireMode != "derringer")
         {
-            Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(ejectRotationTune));
+            Instantiate(shellCasingPrefab, shellCasingInstantiationPoint.position, Quaternion.Euler(ejectRotationTune) * shellCasingInstantiationPoint.rotation, shellCasingInstantiationPoint.transform);
             GameObject thisShellCaseGO = GameObject.FindGameObjectWithTag("active_shell");
             Rigidbody thisShellCaseRB = thisShellCaseGO.GetComponent<Rigidbody>();
-            thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * shellEjectionForce);
+            float randForce = UnityEngine.Random.Range(shellEjectionRandomness.x, shellEjectionRandomness.y);
+            randForce = shellEjectionForce + randForce;
+            thisShellCaseRB.AddForce(shellCasingInstantiationPoint.up * randForce);
+            thisShellCaseRB.transform.parent = null; // ???
             Vector3 randomRot = new Vector3(UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y), UnityEngine.Random.Range(ejectShellTorque.x, ejectShellTorque.y)); // leave as is
             thisShellCaseRB.AddTorque(randomRot);
             Destroy(thisShellCaseGO, instantiatedObjectLifetime);
