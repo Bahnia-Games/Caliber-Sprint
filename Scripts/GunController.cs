@@ -193,29 +193,18 @@ public class GunController : MonoBehaviour
             StartCoroutine(AimDownSight(SightState.UnADS));
             Debug.Log(6 + " finished");
         }
-            
+        
 
         if (Input.GetKeyDown(KeyCode.T) && ADS_SWITCH_SIGHT != null && isAds && !isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is not alt ads, not firing, and not reloading
-        {
             StartCoroutine(AimDownSight(SightState.AltToggleOn));
-        }
-            
+
         if (Input.GetKeyDown(KeyCode.T) && ADS_UN_SWITCH_SIGHT != null && isAds && isAltAds && !isFire && !isReload) // t pressed, animation state exists, the player is ads, the player is alt ads, not firing, and not reloading
-        {
             StartCoroutine(AimDownSight(SightState.AltToggleOff));
-        }
 
 
 
         #endregion
 
-        #region undeploy (depricated)
-        /*
-        if (Input.GetKeyDown(KeyCode.E))
-            StartCoroutine(Deploy(false));
-        */
-        // see WeaponManager.cs
-        #endregion
     }
 
     private IEnumerator Shoot()
@@ -543,6 +532,7 @@ public class GunController : MonoBehaviour
 
         if (!deploy)
         {
+
             playerAnimationController.PlayAnim(UN_DEPLOY);
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(del);
