@@ -12,6 +12,7 @@ public class GunController : MonoBehaviour
 
     #region global variables (weapon parameters and other stuff i guess)
 
+    [Header("Weapon Properties")]
     public float damage = 1f;
     public float range = 1f;
     public int magSize = 1;
@@ -54,6 +55,7 @@ public class GunController : MonoBehaviour
     public float weaponDeployTime;
     [HideInInspector] public bool isEquip;
 
+    [Header("Shell Ejection")]
     public GameObject shellCasingPrefab; // as GO to add cool shit later
     public Transform shellCasingInstantiationPoint;
     public float shellEjectionForce;
@@ -65,6 +67,15 @@ public class GunController : MonoBehaviour
 
     private GameObject hitObject;
     private RaycastHit hit;
+
+    /// <summary>
+    /// Sound stuff goes herev
+    /// </summary>
+    [Header("Sound")]
+    public float removeDelay;
+    public float removeToInsertDelay;
+    public float insertToChargeDelay;
+    public float adsTimeModifier;
     #endregion
 
     #region global local variables
@@ -86,6 +97,7 @@ public class GunController : MonoBehaviour
     #region animation states
 
     // THESE ARE ANIMATOR STATE NAMES!!! NOT ANIMATION CLIP NAMES!!!!!!
+    [Header("Animation States")]
     public string DEPLOY;
     public string UN_DEPLOY;
     public string IDLE;
@@ -167,6 +179,7 @@ public class GunController : MonoBehaviour
         {
             isEmpty = true; //mag empty reload
             Debug.Log(3 + " out");
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.hammer);
             StartCoroutine(Reload());
         }
 
@@ -237,7 +250,11 @@ public class GunController : MonoBehaviour
                 fireStage = true;
             }
         }
-        weaponSoundController.PlaySound(weaponSoundController.fire);
+        #region sound
+
+        weaponSoundController.PlaySound(WeaponSoundController.Sound.fire);
+
+        #endregion
 
         #region muzzle flashing
 
@@ -413,6 +430,7 @@ public class GunController : MonoBehaviour
             if (isEmpty && !isAds) // empty reload
             {
                 playerAnimationController.PlayAnim(RELOAD);
+                StartCoroutine(ReloadSoundController(ReloadType.empty));
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 currentAmmo = magSize; //refil mag
@@ -423,6 +441,7 @@ public class GunController : MonoBehaviour
             if (isTac && !isAds) // tac reload
             {
                 playerAnimationController.PlayAnim(TAC_RELOAD);
+                StartCoroutine(ReloadSoundController(ReloadType.tac));
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 currentAmmo = magSize; //refil mag
@@ -434,6 +453,7 @@ public class GunController : MonoBehaviour
             if (isEmpty && isAds) // ads empty reload
             { // this needs to be simplified...
                 playerAnimationController.PlayAnim(UN_ADS);
+                StartCoroutine(ReloadSoundController(ReloadType.adsempty));
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(RELOAD);
@@ -448,6 +468,7 @@ public class GunController : MonoBehaviour
             {
                 Debug.Log(4 + "in");
                 playerAnimationController.PlayAnim(UN_ADS);
+                StartCoroutine(ReloadSoundController(ReloadType.adstac));
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del);
                 playerAnimationController.PlayAnim(TAC_RELOAD);
@@ -485,6 +506,7 @@ public class GunController : MonoBehaviour
     {
         if (_sightState == SightState.ADS) // ads
         {
+            crosshair.SetActive(false);
             playerAnimationController.PlayAnim(ADS);
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(del);
@@ -496,6 +518,7 @@ public class GunController : MonoBehaviour
             ;
             // the uhhhh
             ///the fuckijng uhhhhhhhhhhhhhhhhhhhhhh
+            crosshair.SetActive(true);
             playerAnimationController.PlayAnim(UN_ADS);
             float del = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(del);
@@ -520,6 +543,55 @@ public class GunController : MonoBehaviour
             isAltAds = false;
         }
     }
+    private IEnumerator ReloadSoundController(ReloadType reloadType)
+    {
+        
+        if (reloadType == ReloadType.empty)
+        {
+            yield return new WaitForSeconds(removeDelay);
+            // remove mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.removeMag);
+            yield return new WaitForSeconds(removeToInsertDelay);
+            // insert mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.insertMag);
+            yield return new WaitForSeconds(insertToChargeDelay);
+            // charge
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.charge);
+        }
+        if (reloadType == ReloadType.tac)
+        {
+            yield return new WaitForSeconds(removeDelay);
+            // remove mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.removeMag);
+            yield return new WaitForSeconds(removeToInsertDelay);
+            // insert mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.insertMag);
+        }
+        if (reloadType == ReloadType.adsempty)
+        {
+            yield return new WaitForSeconds(removeDelay + adsTimeModifier);
+            // remove mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.removeMag);
+            yield return new WaitForSeconds(removeToInsertDelay);
+            // insert mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.insertMag);
+            yield return new WaitForSeconds(insertToChargeDelay);
+            // charge
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.charge);
+        }
+        if (reloadType == ReloadType.adstac)
+        {
+            yield return new WaitForSeconds(removeDelay + adsTimeModifier);
+            // remove mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.removeMag);
+            yield return new WaitForSeconds(removeToInsertDelay);
+            // insert mag
+            weaponSoundController.PlaySound(WeaponSoundController.Sound.insertMag);
+        }
+        
+
+    }
+
     public IEnumerator Deploy(bool deploy)
     {
         if (deploy)
@@ -567,6 +639,13 @@ public class GunController : MonoBehaviour
         SFSNull,
         derringerTac,
         derringerEmpty
+    }
+    private enum ReloadType
+    {
+        adstac,
+        tac,
+        adsempty,
+        empty
     }
 
 }

@@ -8,5 +8,6 @@ public class MasterMiscController : MonoBehaviour
     private void Start()
     {
         Debug.developerConsoleVisible = true;
+        EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
     }
 }
