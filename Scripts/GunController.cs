@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Security.Policy; < cause errors, idfk why this is here anyway
@@ -16,6 +16,7 @@ public class GunController : MonoBehaviour
     public float damage = 1f;
     public float range = 1f;
     public int magSize = 1;
+		public float fireDelay;
     public float impactForce = 1f;
     public float maxRandSpread = 0.1f;
     public float minRandSpread = -0.1f;
@@ -344,7 +345,7 @@ public class GunController : MonoBehaviour
             #endregion
         }
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(del); //wait for fire delay
+        yield return new WaitForSeconds(fireDelaya); //wait for fire delay
 
         muzzleLight.gameObject.SetActive(false);
         isFire = false;
