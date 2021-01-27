@@ -345,7 +345,7 @@ public class GunController : MonoBehaviour
             #endregion
         }
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(fireDelaya); //wait for fire delay
+        yield return new WaitForSeconds(fireDelay); //wait for fire delay
 
         muzzleLight.gameObject.SetActive(false);
         isFire = false;
