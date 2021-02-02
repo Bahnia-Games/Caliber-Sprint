@@ -8,15 +8,17 @@ public class WeaponManager : MonoBehaviour
 #pragma warning disable CS1030
 
     public Animator animator;
+    public PlayerAnimationController playerAnimationController;
     private GunController gunController;
     private float weaponDeployTime;
-    private string weaponDeployBoolName;
+    private string weaponEquipClipName;
 
     private int selectedWeapon;
     private bool isAnyEquip;
 
     private GunController thisWeaponController;
     private GrenadeController thisGrenadeController;
+    private Grapplev2 thisGrappleController;
 
     public GameObject thisGrenade;
     [HideInInspector] public bool thisGrenadeEquip;
@@ -30,6 +32,8 @@ public class WeaponManager : MonoBehaviour
     // GunController thisWeapon2GunController;
 
     public GameObject thisWeapon3;
+
+    public GameObject thisWeapon4;
 
 
     private bool stop;
@@ -51,7 +55,12 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        #region grapple (g)
+        if (Input.GetKeyDown(KeyCode.G) && thisGrappleController.grappleEquipped == false)
+        {
+            thisGrappleController.EquipGrapple(true);
+        }
+        #endregion
 
         #region flash (q)
         if (Input.GetKeyDown(KeyCode.Q) && thisGrenadeEquip)
@@ -103,9 +112,19 @@ public class WeaponManager : MonoBehaviour
 
         #endregion
 
+        #region weapon 4 (4, ID 3)
+
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            thisWeaponController = thisWeapon4.GetComponent<GunController>();
+            SelectWeapon(3);
+        }
+
+        #endregion
+
         #region undeploy
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && isAnyEquip)
         {
             isAnyEquip = false;
             StartCoroutine(thisWeaponController.Deploy(false));
@@ -133,15 +152,17 @@ public class WeaponManager : MonoBehaviour
             thisWeapon2.SetActive(true);
         if(weaponID == 2)
             thisWeapon3.SetActive(true);
+        if (weaponID == 3)
+            thisWeapon4.SetActive(true);
         // and so on, continue support
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
-        weaponDeployBoolName = thisWeaponController.weaponDeployBoolName;
+        weaponEquipClipName = thisWeaponController.DEPLOY;
 
-        animator.SetBool(weaponDeployBoolName, true);
+        playerAnimationController.PlayAnim(weaponEquipClipName);
     }
 
-    IEnumerator SwitchGAndBack()
+    IEnumerator SwitchGAndBack() // needs a serious rework
     {
         bool hasWeapon;
         if (isAnyEquip)

@@ -14,6 +14,7 @@ public class target : MonoBehaviour
     public Transform leftForeArm;
     public Transform leftHand;
     public Transform torso;
+    [HideInInspector] public Rigidbody torsoRB;
     public Transform rightThigh;
     public Transform rightAnkle;
     public Transform rightFoot;
@@ -25,9 +26,17 @@ public class target : MonoBehaviour
     {
         if(deathMethod == null)
         {
-            Debug.Log("no death method selected for" + this.tag + "defaulting to destroy");
+            Debug.Log("no death method selected for" + this.tag + "defaulting to destroy"); // leave the this, im pretty sure its important
             deathMethod = "destroy";
         }
+    }
+
+    public void Awake()
+    {
+        // uhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+        if(torso != null && deathMethod == "die ragdoll")
+            torsoRB = torso.GetComponent<Rigidbody>();
+        // yeah
     }
 
     public void takeDamage(float amount)
