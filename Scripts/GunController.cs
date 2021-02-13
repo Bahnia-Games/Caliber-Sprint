@@ -16,7 +16,8 @@ public class GunController : MonoBehaviour
     public float damage = 1f;
     public float range = 1f;
     public int magSize = 1;
-		public float fireDelay;
+    [Range(1, 16)] public int raycastCount = 1;
+    public float fireDelay;
     public float impactForce = 1f;
     public float maxRandSpread = 0.1f;
     public float minRandSpread = -0.1f;
@@ -133,6 +134,12 @@ public class GunController : MonoBehaviour
 
         if (weaponSoundController == null)
             Debug.LogError("Error! WeaponSoundController missing from this weapon: " + gameObject.name);
+
+        if (raycastCount == 0)
+        {
+            Debug.Log("Error! invalid raycast count on this weapon: " + gameObject.name);
+        }
+            
     }
 
     void Start() //sex
@@ -306,43 +313,46 @@ public class GunController : MonoBehaviour
         #region hitscan
 
         //RaycastHit hit;
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
+        for (int _i = 1; _i >= raycastCount; _i++)
         {
-            target target = hit.transform.GetComponent<target>();
-
-            if (target != null)
-                target.takeDamage(damage);
-
-            if (hit.rigidbody != null)
-                hit.rigidbody.AddForce(-hit.normal * impactForce);
-
-            GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(impactGameObj, 1f);
-
-            #endregion
-
-            #region impact effects
-            bool isOtherType = false;
-            // hitObject = hit.transform.GetComponent<GameObject>();
-            if (hit.transform.CompareTag("glass") && glassBulletImpact != null)
+            if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
             {
-                InstantiateImpact(ImpactType.glass);
-                isOtherType = true;
-            }
-            if (hit.transform.CompareTag("enemy") && fleshBulletImpact != null)
-            {
-                InstantiateImpact(ImpactType.enemy);
-                isOtherType = true;
-            }
-            if (hit.transform.CompareTag("metal") && metalBulletImpact != null)
-            {
-                InstantiateImpact(ImpactType.metal);
-                isOtherType = true;
-            }
+                target target = hit.transform.GetComponent<target>();
 
-            if (hit.point != null && defaultBulletImapct != null && !isOtherType)
-                InstantiateImpact(ImpactType.defaultt);
-            #endregion
+                if (target != null)
+                    target.takeDamage(damage);
+
+                if (hit.rigidbody != null)
+                    hit.rigidbody.AddForce(-hit.normal * impactForce);
+
+                GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(impactGameObj, 1f);
+
+                #endregion
+
+                #region impact effects
+                bool isOtherType = false;
+                // hitObject = hit.transform.GetComponent<GameObject>();
+                if (hit.transform.CompareTag("glass") && glassBulletImpact != null)
+                {
+                    InstantiateImpact(ImpactType.glass);
+                    isOtherType = true;
+                }
+                if (hit.transform.CompareTag("enemy") && fleshBulletImpact != null)
+                {
+                    InstantiateImpact(ImpactType.enemy);
+                    isOtherType = true;
+                }
+                if (hit.transform.CompareTag("metal") && metalBulletImpact != null)
+                {
+                    InstantiateImpact(ImpactType.metal);
+                    isOtherType = true;
+                }
+
+                if (hit.point != null && defaultBulletImapct != null && !isOtherType)
+                    InstantiateImpact(ImpactType.defaultt);
+                #endregion
+            }
         }
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(fireDelay); //wait for fire delay
@@ -413,7 +423,7 @@ public class GunController : MonoBehaviour
         {
             if (specialState == SpecialState.derringerTac)
             {
-
+                // anything derringer is marked for deletion
             } if (specialState == SpecialState.derringerEmpty)
             {
 

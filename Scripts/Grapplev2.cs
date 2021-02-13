@@ -7,6 +7,7 @@ public class Grapplev2 : MonoBehaviour
     public Camera playerCam;
     public bool grappleEquipped;
 
+    [Header("Properties")]
     public GameObject grappleHook;
     public Vector3 firingRotation;
     public Rigidbody grappleHookRB; //pub bc unity kept screaming at me
@@ -36,6 +37,14 @@ public class Grapplev2 : MonoBehaviour
 
     private GameObject grapplePoi; // grapple POI
     public static Grapplev2 Instance;
+
+    #region animation
+    [Header("Animation")]
+    public string EQUIP;
+    public string UNEQUIP;
+    public string FIRE;
+
+    #endregion
 
 
     // Start is called before the first frame update

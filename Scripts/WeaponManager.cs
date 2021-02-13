@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class WeaponManager : MonoBehaviour
+public class WeaponManager : MonoBehaviour // this was made in the dark days, before i knew what an enum was...
 {
 #pragma warning disable CS1030
 
@@ -34,6 +34,8 @@ public class WeaponManager : MonoBehaviour
     public GameObject thisWeapon3;
 
     public GameObject thisWeapon4;
+
+    public GameObject thisWeapon5;
 
 
     private bool stop;
@@ -122,6 +124,16 @@ public class WeaponManager : MonoBehaviour
 
         #endregion
 
+        #region weapon 5 (5, ID 4)
+
+        if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            thisWeaponController = thisWeapon5.GetComponent<GunController>();
+            SelectWeapon(4);
+        }
+
+        #endregion
+
         #region undeploy
 
         if (Input.GetKeyDown(KeyCode.E) && isAnyEquip)
@@ -154,6 +166,8 @@ public class WeaponManager : MonoBehaviour
             thisWeapon3.SetActive(true);
         if (weaponID == 3)
             thisWeapon4.SetActive(true);
+        if (weaponID == 4)
+            thisWeapon5.SetActive(true);
         // and so on, continue support
 
         weaponDeployTime = thisWeaponController.weaponDeployTime;
