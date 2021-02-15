@@ -313,7 +313,7 @@ public class GunController : MonoBehaviour
         #region hitscan
 
         //RaycastHit hit;
-        for (int _i = 1; _i >= raycastCount; _i++)
+        /* for (int _i = 1; _i >= raycastCount; _i++) // THIS CAUSES COMPUTER TO FREEZE
         {
             if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
             {
@@ -327,6 +327,8 @@ public class GunController : MonoBehaviour
 
                 GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(impactGameObj, 1f);
+
+                Debug.DrawRay(camera.transform.position, camera.transform.forward, Color.red, 30);
 
                 #endregion
 
@@ -353,7 +355,7 @@ public class GunController : MonoBehaviour
                     InstantiateImpact(ImpactType.defaultt);
                 #endregion
             }
-        }
+        } */
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(fireDelay); //wait for fire delay
 
