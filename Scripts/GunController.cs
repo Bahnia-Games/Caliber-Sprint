@@ -166,7 +166,6 @@ public class GunController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && fireMode == "SemiAuto" && !isReload && !isFire) //Fire everytime mouse is clicked (Semi Auto)
         {
             StartCoroutine(Shoot());
-            Debug.Log(2);
         }
         if (Input.GetKey(KeyCode.Mouse0) && fireMode == "Auto" && !isReload && !isFire) //Fire every frame mouse is held (Auto)
             StartCoroutine(Shoot());
@@ -179,14 +178,12 @@ public class GunController : MonoBehaviour
         {
             // does the magazine have at least 1 bullet and is less than the max ammo size?
             isTac = true; // tactical reload
-            Debug.Log(3 + " out");
             StartCoroutine(Reload());
         }
 
         if (currentAmmo <= 0 && !isReload) // is the current ammo 0?
         {
             isEmpty = true; //mag empty reload
-            Debug.Log(3 + " out");
             weaponSoundController.PlaySound(WeaponSoundController.Sound.hammer);
             StartCoroutine(Reload());
         }
@@ -206,13 +203,11 @@ public class GunController : MonoBehaviour
         if (adsKeyHeld && !isFire && !isReload && !isAds) // firing during reload
         {
             StartCoroutine(AimDownSight(SightState.ADS));
-            Debug.Log(1);
         }
 
         if (!adsKeyHeld && !isFire && !isReload && isAds) 
         {
             StartCoroutine(AimDownSight(SightState.UnADS));
-            Debug.Log(6 + " finished");
         }
         
 
@@ -291,30 +286,30 @@ public class GunController : MonoBehaviour
 
         #endregion
 
-        #region bullet spread
-
-        if (!isAds) // I swear if people suggest dynamic bullet spread im gonna cry, ffs this isnt csgo
-        {
-            randX = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
-            randY = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
-            randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
-        } 
-        if (isAds)
-        {
-            randX = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
-            randY = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
-            randZ = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
-        }
-
-        Vector3 rand = new Vector3(randX, randY, randZ);
-
-        #endregion
-
         #region hitscan
 
         //RaycastHit hit;
-        /* for (int _i = 1; _i >= raycastCount; _i++) // THIS CAUSES COMPUTER TO FREEZE
+        for (int _i = 1; _i <= raycastCount; _i++) // THIS NO LONGER CAUSES FREEZING BUT IT DONT WORK
         {
+            #region bullet spread
+
+            if (!isAds) // I swear if people suggest dynamic bullet spread im gonna cry, ffs this isnt csgo
+            {
+                randX = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+                randY = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+                randZ = UnityEngine.Random.Range(maxRandSpread, minRandSpread);
+            }
+            if (isAds)
+            {
+                randX = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+                randY = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+                randZ = UnityEngine.Random.Range(maxRandADSSpread, minRandADSSpread);
+            }
+
+            Vector3 rand = new Vector3(randX, randY, randZ);
+
+            #endregion
+
             if (Physics.Raycast(camera.transform.position, camera.transform.forward + rand, out hit, range, layerMask))
             {
                 target target = hit.transform.GetComponent<target>();
@@ -328,7 +323,7 @@ public class GunController : MonoBehaviour
                 GameObject impactGameObj = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(impactGameObj, 1f);
 
-                Debug.DrawRay(camera.transform.position, camera.transform.forward, Color.red, 30);
+                Debug.DrawRay(camera.transform.position, hit.transform.position, Color.red, 30);
 
                 #endregion
 
@@ -355,7 +350,7 @@ public class GunController : MonoBehaviour
                     InstantiateImpact(ImpactType.defaultt);
                 #endregion
             }
-        } */
+        }
         float del = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(fireDelay); //wait for fire delay
 
@@ -479,7 +474,6 @@ public class GunController : MonoBehaviour
             }
             if (isTac && isAds) // ads tac reload ((borked atm))
             {
-                Debug.Log(4 + "in");
                 playerAnimationController.PlayAnim(UN_ADS);
                 StartCoroutine(ReloadSoundController(ReloadType.adstac));
                 float del = animator.GetCurrentAnimatorStateInfo(0).length;
@@ -487,7 +481,6 @@ public class GunController : MonoBehaviour
                 playerAnimationController.PlayAnim(TAC_RELOAD);
                 float del1 = animator.GetCurrentAnimatorStateInfo(0).length;
                 yield return new WaitForSeconds(del1);
-                Debug.Log(5 + " done");
                 currentAmmo = magSize; //refil mag
                 isTac = false;
                 isEmpty = false;
@@ -604,7 +597,6 @@ public class GunController : MonoBehaviour
         
 
     }
-
     public IEnumerator Deploy(bool deploy)
     {
         if (deploy)
