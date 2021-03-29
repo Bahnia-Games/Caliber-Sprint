@@ -24,7 +24,7 @@ public class VisualDebugger : MonoBehaviour
         }
     }
 
-    public static void InitLog(string variableName, int index)
+    public static void InitLog(int index)
     {
         if (visualDebuggerEnabled)
         {
@@ -40,12 +40,12 @@ public class VisualDebugger : MonoBehaviour
             Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
     }
 
-    public static void Log(string variableName, int index, object data)
+    public static void Log(int index, string variableName, object data)
     {
         if (visualDebuggerEnabled)
             debugText[index - 1].text = variableName + ": " + data.ToString();
-        else if (!visualDebuggerEnabled)
-            Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
+        else if (!visualDebuggerEnabled) ;
+            //Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
         
     }
 }
