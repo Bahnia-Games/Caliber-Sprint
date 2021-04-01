@@ -108,6 +108,12 @@ namespace Assets.Git.Scripts.Menu
                 case TargetSetting.anisotrophicTextureQuality:
                     cAnisotrophicTextureQuality = index;
                     break;
+                case TargetSetting.vsync:
+                    cVsync = index;
+                    break;
+                case TargetSetting.realtimeReflections:
+                    cRealtimeReflections = index;
+                    break;
             }
         }
 
