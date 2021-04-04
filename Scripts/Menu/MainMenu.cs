@@ -21,7 +21,8 @@ public class MainMenu : MonoBehaviour
         Main, // main screen of the main menu
         Singleplayer, // the singleplayer menu
         Multiplayer,
-        Settings
+        Settings,
+        CustomVideoSettings
 
     }
 

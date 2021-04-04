@@ -18,16 +18,15 @@ namespace Assets.Git.Scripts
             else if (type == typeof(string))
                 PlayerPrefs.SetString(dataName, (string)data);
             else
-            {
                 try
                 {
                     throw new ArgumentException();
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Debug.LogError("A class has tried to save an invalid data type to PlayerPrefs! @SaveManager L11");
                     Debug.Log(ex.ToString());
                 }
-            }
         }
     }
 }

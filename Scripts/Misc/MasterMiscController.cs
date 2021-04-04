@@ -53,15 +53,12 @@ public class MasterMiscController : MonoBehaviour
     {
         string _sceneName = sceneName.ToString();
         foreach (char _char in _sceneName)
-        {
             if (_char == '_')
             {
                 string[] __sceneName = new string[2]; // this will hold split data
                 __sceneName = _sceneName.Split('_'); // split at underscore
                 _sceneName = __sceneName[0] + ' ' + __sceneName[1]; // add a space to the string
             }
-
-        }
         Debug.Log("Attempting to load scene: " + _sceneName);
         // loading screen???
         //SceneManager.LoadSceneAsync(_sceneName); // async for loading screen
