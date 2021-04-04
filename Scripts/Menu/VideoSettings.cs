@@ -69,6 +69,7 @@ namespace Assets.Git.Scripts.Menu
             textureQualityDD = dropdowns[1];
             anisotrophicTextureQualityDD = dropdowns[2];
             vsyncDD = dropdowns[3];
+            realtimeReflectionsDD = dropdowns[4];
 
             // makes me sick
             qualityPresetsDD.onValueChanged.AddListener(delegate {

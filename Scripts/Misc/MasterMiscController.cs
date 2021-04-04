@@ -1,10 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MasterMiscController : MonoBehaviour
 {
     public static bool drpEnabled;
+
+    [Header("Menu Stuff")]
+    public GameObject canvas;
+    private Color canvasImagePreviousColor;
+    public GameObject loadingObject;
+    public GameObject introSequenceContainer;
 
     public enum Scenes
     {
@@ -49,8 +57,30 @@ public class MasterMiscController : MonoBehaviour
 
     }
 
-    public void LoadScene(Scenes sceneName)
+    /// <summary>
+    /// Argument summary:
+    /// -useloading = use loading screen
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
+    public void LoadScene(Scenes sceneName, string arg = null)
     {
+        bool moveAlong = true;
+        if (arg == null)
+            moveAlong = false;
+        if (arg == "-useloading" && moveAlong)
+        {
+            loadingObject.SetActive(true);
+            Image imgGo = canvas.GetComponent<Image>();
+            if (imgGo != null)
+                canvasImagePreviousColor = imgGo.color;
+            imgGo.color = Color.black;
+        }
+        else if (arg != null && moveAlong)
+            Debug.LogWarning("Invalid arguments! @MasterMiscController.Loadscene(sceneName, args)");
+
+        introSequenceContainer.SetActive(false);
+
         string _sceneName = sceneName.ToString();
         foreach (char _char in _sceneName)
             if (_char == '_')
@@ -60,8 +90,14 @@ public class MasterMiscController : MonoBehaviour
                 _sceneName = __sceneName[0] + ' ' + __sceneName[1]; // add a space to the string
             }
         Debug.Log("Attempting to load scene: " + _sceneName);
-        // loading screen???
-        //SceneManager.LoadSceneAsync(_sceneName); // async for loading screen
+
+        StartCoroutine(LoadAsynchronously(_sceneName));
     }
 
+    private IEnumerator LoadAsynchronously (string sceneName)
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName); // async for loading screen
+        while (!operation.isDone) // congrats on being the frst while loop in cs
+            yield return new WaitForEndOfFrame();
+    }
 }
