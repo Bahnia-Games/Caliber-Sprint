@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Assets.Git.Scripts;
 
 public class MasterMiscController : MonoBehaviour
 {
     public static bool drpEnabled;
+
+    [HideInInspector ]public float masterAudio;
 
     [Header("Menu Stuff")]
     public GameObject canvas;
@@ -48,14 +51,8 @@ public class MasterMiscController : MonoBehaviour
         // multiplayer maps
     }
 
-    private void Start()
-    {
-        EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
-    }
-    public void Awake()
-    {
-
-    }
+    private void Start() => EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
+    private void OnEnable() => SceneManager.sceneLoaded += SetAduio;
 
     /// <summary>
     /// Argument summary:
@@ -99,5 +96,17 @@ public class MasterMiscController : MonoBehaviour
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName); // async for loading screen
         while (!operation.isDone) // congrats on being the frst while loop in cs
             yield return new WaitForEndOfFrame();
+    }
+
+    private void SetAduio(Scene unused, LoadSceneMode _unused) 
+    {
+        (object data, SaveManager.GetStatus status) audio = SaveManager.Load(SaveManager.DataType.dfloat, "masterAudio");
+        if (audio.status == SaveManager.GetStatus.success) {
+            masterAudio = (float)audio.data; AudioListener.volume = masterAudio; 
+        } else 
+        { 
+            masterAudio = 1.0f; AudioListener.volume = masterAudio;
+            Debug.LogWarning("Data for master audio could not be found, defaulting to 100% @MasterMiscController SetAudio()");
+        }
     }
 }

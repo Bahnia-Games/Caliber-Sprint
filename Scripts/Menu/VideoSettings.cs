@@ -126,20 +126,30 @@ namespace Assets.Git.Scripts.Menu
                 AssignTextureQuality();
                 AssignAnisotrophicTextureQuality();
                 AssignVsync();
-            } 
+            }
+            SaveManager.Save();
         }
 
         private void AssignPlayerPrefs()
         {
-            // imma do this later
+            SaveManager.AddData("qualityPreset", cQualityPreset);
+            SaveManager.AddData("textureQuality", cTextureQuality);
+            SaveManager.AddData("anisTextureQuality", cAnisotrophicTextureQuality);
+            SaveManager.AddData("vSync", cVsync);
+            SaveManager.AddData("realtimeReflections", cRealtimeReflections);
+        }
+        private void LoadPrefs()
+        {
+            cQualityPreset = (int)SaveManager.Load(SaveManager.DataType.dint, "qualityPreset").data;
+            cTextureQuality = (int)SaveManager.Load(SaveManager.DataType.dint, "textureQuality").data;
+            cAnisotrophicTextureQuality = (int)SaveManager.Load(SaveManager.DataType.dint, "anisTextureQuality").data;
+            cVsync = (int)SaveManager.Load(SaveManager.DataType.dint, "vSync").data;
+            cRealtimeReflections = (int)SaveManager.Load(SaveManager.DataType.dint, "realtimeReflections").data;
         }
         private void AssignGraphicsQuality()
         {
-            if (cQualityPreset == 6) // custom preset
-            {
-                CustomButton.SetActive(true);
-                return;
-            }
+            if (cQualityPreset == 6) {// custom preset
+                CustomButton.SetActive(true); return; }
             else
                 CustomButton.SetActive(false);
 
