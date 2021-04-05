@@ -89,8 +89,8 @@ namespace Assets.Git.Scripts.Menu
                 AssignVsync();
             });
             realtimeReflectionsDD.onValueChanged.AddListener(delegate {
-                HandleInputData(TargetSetting.realtimeReflections, vsyncDD.value);
-                AssignVsync();
+                HandleInputData(TargetSetting.realtimeReflections, realtimeReflectionsDD.value);
+                AssignRealtimeReflections();
             });
 
             // restore dropdowns
@@ -101,6 +101,16 @@ namespace Assets.Git.Scripts.Menu
             vsyncDD.value = cVsync;
             realtimeReflectionsDD.value = cRealtimeReflections;
 
+            // preassign settings based on playerprefs
+            if (cQualityPreset == 6)
+            {
+                AssignGraphicsQuality();
+                AssignTextureQuality();
+                AssignAnisotrophicTextureQuality();
+                AssignVsync();
+            }
+            else
+                AssignGraphicsQuality();
         }
 
         private void HandleInputData(TargetSetting targetSetting, int index)
