@@ -16,13 +16,13 @@ namespace Assets.Git.Scripts.Menu
         private float currentMasterVolume;
         [SerializeField] private TMP_Text masterVolumePercentageText;
         [SerializeField] private Slider masterVolumeSlider;
-        private (object data, SaveManager.GetStatus status) loadedAudioData;
+        private (object data, SaveManager.GetStatus status) loadedMasterVolume;
 
         private void Awake()
         {
-            if ((loadedAudioData = SaveManager.Load(SaveManager.DataType.dfloat, "masterAudio")).status == SaveManager.GetStatus.success)
+            if ((loadedMasterVolume = SaveManager.Load(SaveManager.DataType.dfloat, "masterAudio")).status == SaveManager.GetStatus.success)
             {
-                currentMasterVolume = (float)loadedAudioData.data;
+                currentMasterVolume = (float)loadedMasterVolume.data;
                 masterVolumeSlider.value = currentMasterVolume;
             }
             else

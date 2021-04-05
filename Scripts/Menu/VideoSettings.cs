@@ -93,8 +93,15 @@ namespace Assets.Git.Scripts.Menu
                 AssignVsync();
             });
 
+            // restore dropdowns
+            LoadPrefs();
+            qualityPresetsDD.value = cQualityPreset;
+            textureQualityDD.value = cTextureQuality;
+            anisotrophicTextureQualityDD.value = cAnisotrophicTextureQuality;
+            vsyncDD.value = cVsync;
+            realtimeReflectionsDD.value = cRealtimeReflections;
+
         }
-        //private void SetQuality() => QualitySettings.SetQualityLevel(currentIndex[0]);
 
         private void HandleInputData(TargetSetting targetSetting, int index)
         { 
