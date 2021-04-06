@@ -46,6 +46,8 @@ public class MasterMiscController : MonoBehaviour
 
         // test scenes
 
+        PreAlphaTest,
+
         // chapters
 
         // multiplayer maps
@@ -66,17 +68,12 @@ public class MasterMiscController : MonoBehaviour
         if (arg == null)
             moveAlong = false;
         if (arg == "-useloading" && moveAlong)
-        {
             loadingObject.SetActive(true);
-            Image imgGo = canvas.GetComponent<Image>();
-            if (imgGo != null)
-                canvasImagePreviousColor = imgGo.color;
-            imgGo.color = Color.black;
-        }
         else if (arg != null && moveAlong)
             Debug.LogWarning("Invalid arguments! @MasterMiscController.Loadscene(sceneName, args)");
 
-        introSequenceContainer.SetActive(false);
+        if (introSequenceContainer != null)
+            introSequenceContainer.SetActive(false);
 
         string _sceneName = sceneName.ToString();
         foreach (char _char in _sceneName)
