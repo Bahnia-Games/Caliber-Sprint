@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Assets.Git.Scripts
 {
-    class SaveManager : MonoBehaviour
+    public class SaveManager : MonoBehaviour
     {
+        
         public enum DataType
         {
             dstring,

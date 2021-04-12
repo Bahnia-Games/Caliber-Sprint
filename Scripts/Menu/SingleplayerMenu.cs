@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using Assets.Git.Scripts.Menu.Gameplay;
 
 namespace Assets.Git.Scripts.Menu
 {
@@ -163,7 +164,7 @@ namespace Assets.Git.Scripts.Menu
 
         public void ChapterOnClick() => StartCoroutine(_ChapterOnClick());
 
-        private IEnumerator _ChapterOnClick()
+        private IEnumerator _ChapterOnClick() // bug here is minor, and for testing purposes is not important to fix. In the final game, it will not exist
         {
             checkmarkAnimator.Play(checkMarkSelect);
             yield return new WaitForSeconds(checkmarkAnimator.GetCurrentAnimatorStateInfo(0).length);
@@ -180,6 +181,7 @@ namespace Assets.Git.Scripts.Menu
                     break;
                 case 3:
                     mmc.LoadScene(MasterMiscController.Scenes.artcover2);
+                    
                     break;
                 case 4:
                     ; // ect.
