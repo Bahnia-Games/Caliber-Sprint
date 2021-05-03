@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Git.Scripts.Menu.Gameplay
+namespace Assets.Git.Scripts.Gameplay
 {
-    public class GameplayManager : MonoBehaviour // this class essentially reads gameplay info to save it
+    public class GameplayManager : MonoBehaviour // this class essentially reads gameplay info to save it | attatch to master misc
     {
         /// <summary>
         /// Structure for saving games:
@@ -68,6 +68,7 @@ namespace Assets.Git.Scripts.Menu.Gameplay
             ReadData();
         }
         public void OnDestroy() => WriteData();
+
         #region integers
         public static int ChapterNumber { get { return playerData.ChapterNumber; } set { playerData.ChapterNumber = value; } }
         public static int ChapterPart { get { return playerData.ChapterPart; } set { playerData.ChapterPart = value; } }
@@ -104,7 +105,13 @@ namespace Assets.Git.Scripts.Menu.Gameplay
         public static float PlayerzRotation { get { return playerData.PlayerzRotation; } set { playerData.PlayerzRotation = value; } }
 
         #endregion
-        private void ReadData() => playerData = GameplaySaveManager.Load();
-        private void WriteData() => GameplaySaveManager.Save(playerData);
+
+        public void ReadData() => playerData = GameplaySaveManager.Load();
+        public void WriteData() => GameplaySaveManager.Save(playerData);
+        public void DeleteSave() => GameplaySaveManager.DeleteSave();
+
+        // everything below is the manager part
+
+
     }
 }

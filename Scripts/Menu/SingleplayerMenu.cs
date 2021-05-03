@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using Assets.Git.Scripts.Menu.Gameplay;
+using Assets.Git.Scripts.Gameplay;
 
 namespace Assets.Git.Scripts.Menu
 {
@@ -27,13 +27,13 @@ namespace Assets.Git.Scripts.Menu
         /// 0: Test scene 1
         /// 1: art cover  1
         /// 2: art cover 2
-        /// 3: art cover 3 (3+ nonexistent atm)
-        /// 4: art cover 4
-        /// 5: art cover 5
-        /// 6: art cover 6
-        /// 7: art cover 7
-        /// 8: art cover 8
-        /// 9: art cover 9
+        /// 3: shader test 1
+        /// 4: nul
+        /// 5: nul
+        /// 6: nul
+        /// 7: nul
+        /// 8: nul
+        /// 9: nul
         /// 
         /// Post alpha : (Due to spoilers, chapter names not listed)
         /// 0: Chapter 0: placeholder
@@ -171,20 +171,23 @@ namespace Assets.Git.Scripts.Menu
             checkMarkGO.SetActive(true);
             fadeOutAnimator.Play("fadeOut");
             yield return new WaitForSeconds(fadeOutAnimator.GetCurrentAnimatorStateInfo(0).length);
+            Debug.Log(currentPage);
             switch (currentPage)
             {
+                case 0:
+                    mmc.LoadScene(MasterMiscController.Scenes.PreAlphaTest, true);
+                    break;
                 case 1:
-                    mmc.LoadScene(MasterMiscController.Scenes.PreAlphaTest, "-useloading");
+                    mmc.LoadScene(MasterMiscController.Scenes.artcover, true);
                     break;
                 case 2:
-                    mmc.LoadScene(MasterMiscController.Scenes.artcover, "-useloading");
+                    mmc.LoadScene(MasterMiscController.Scenes.artcover2, true);
                     break;
                 case 3:
-                    mmc.LoadScene(MasterMiscController.Scenes.artcover2);
-                    
+                    mmc.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
                     break;
                 case 4:
-                    ; // ect.
+                    ; // ect
                     break;
             }
         }

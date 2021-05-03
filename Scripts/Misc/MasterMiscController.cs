@@ -9,7 +9,7 @@ public class MasterMiscController : MonoBehaviour
 {
     public static bool drpEnabled;
 
-    [HideInInspector ]public float masterAudio;
+    [HideInInspector] public float masterAudio;
 
     [Header("Menu Stuff")]
     public GameObject canvas;
@@ -48,6 +48,8 @@ public class MasterMiscController : MonoBehaviour
 
         PreAlphaTest,
 
+        ShaderTest,
+
         // chapters
 
         // multiplayer maps
@@ -62,15 +64,13 @@ public class MasterMiscController : MonoBehaviour
     /// 
     /// </summary>
     /// <param name="args"></param>
-    public void LoadScene(Scenes sceneName, string arg = null)
+    public void LoadScene(Scenes sceneName, bool useLoading = false)
     {
         bool moveAlong = true;
-        if (arg == null)
+        if (!useLoading)
             moveAlong = false;
-        if (arg == "-useloading" && moveAlong)
+        if (useLoading && moveAlong)
             loadingObject.SetActive(true);
-        else if (arg != null && moveAlong)
-            Debug.LogWarning("Invalid arguments! @MasterMiscController.Loadscene(sceneName, args)");
 
         if (introSequenceContainer != null)
             introSequenceContainer.SetActive(false);

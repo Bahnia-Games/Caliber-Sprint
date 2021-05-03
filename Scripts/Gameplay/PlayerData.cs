@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Git.Scripts.Menu.Gameplay
+namespace Assets.Git.Scripts.Gameplay
 {
     [Serializable]
-   public class PlayerData
+    ///<summary>
+    /// DO NOT ACCESS THIS CLASS DIRECTLY
+    /// </summary>
+    public class PlayerData
     {
         /// <summary>
         /// DO NOT WRITE TO THIS CLASS DIRECTLY OR I WILL SHOOT YOU
