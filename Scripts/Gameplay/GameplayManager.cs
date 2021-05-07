@@ -62,6 +62,9 @@ namespace Assets.Git.Scripts.Gameplay
         private (object[] data, SaveManager.GetStatus[] getStatus) loadedSaveData;
         private string[] intKeys = new string[21];
         public static PlayerData playerData { get; private set; }
+
+        private GameplaySaveManager gsm = new GameplaySaveManager();
+
         public void Awake()
         {
             playerData = new PlayerData();
@@ -106,9 +109,9 @@ namespace Assets.Git.Scripts.Gameplay
 
         #endregion
 
-        public void ReadData() => playerData = GameplaySaveManager.Load();
-        public void WriteData() => GameplaySaveManager.Save(playerData);
-        public void DeleteSave() => GameplaySaveManager.DeleteSave();
+        public void ReadData() => playerData = gsm.Load();
+        public void WriteData() => gsm.Save(playerData);
+        public void DeleteSave() => gsm.DeleteSave();
 
         // everything below is the manager part
 

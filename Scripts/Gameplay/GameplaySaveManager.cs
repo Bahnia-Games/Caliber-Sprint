@@ -17,16 +17,16 @@ namespace Assets.Git.Scripts.Gameplay
         /// DO NOT ACCESS THIS CLASS DIRECTLY OR I WILL SHOOT YOU
         /// </summary>
 
-        private static string checksum;
-        private static int checksumMod;
+        private string checksum;
+        private int checksumMod;
 
-        private static bool secondAttempt = false;
+        private bool secondAttempt = false;
 
-        private static BinaryFormatter binaryFromatter = new BinaryFormatter();
+        private BinaryFormatter binaryFromatter = new BinaryFormatter();
 
-        private static string dataPath = Application.persistentDataPath + "/main.csplayerdata";
+        private string dataPath = Application.persistentDataPath + "/main.csplayerdata";
 
-        private static System.Random random = new System.Random();
+        private System.Random random = new System.Random();
 
         private enum State { 
             save,
@@ -34,9 +34,9 @@ namespace Assets.Git.Scripts.Gameplay
             none
         }
 
-        private static State state = State.none;
+        private State state = State.none;
 
-        public static PlayerData Load()
+        public PlayerData Load()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Assets.Git.Scripts.Gameplay
             }
         }
 
-        public static void Save(PlayerData data)
+        public void Save(PlayerData data)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace Assets.Git.Scripts.Gameplay
             }
         }
 
-        private static string GetChecksum(FileStream stream)
+        private string GetChecksum(FileStream stream)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Assets.Git.Scripts.Gameplay
         /// <summary>
         /// DO NOT CALL THIS DIRECTLY
         /// </summary>
-        public static void DeleteSave()
+        public void DeleteSave()
         {
             if (File.Exists(dataPath))
                 File.Delete(dataPath);
