@@ -25,10 +25,10 @@ namespace Assets.Git.Scripts.Menu
         /// <summary>
         /// Chapter Summary (alpha):
         /// 0: Test scene 1
-        /// 1: art cover  1
-        /// 2: art cover 2
-        /// 3: shader test 1
-        /// 4: nul
+        /// 1: Chloe Firing Range
+        /// 2: art cover 1
+        /// 3: art cover  1
+        /// 4: shader test 1
         /// 5: nul
         /// 6: nul
         /// 7: nul
