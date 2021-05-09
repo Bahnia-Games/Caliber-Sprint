@@ -48,6 +48,8 @@ public class MasterMiscController : MonoBehaviour
 
         PreAlphaTest,
 
+        FiringRangeTest,
+
         ShaderTest,
 
         // chapters

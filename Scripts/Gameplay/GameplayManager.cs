@@ -69,6 +69,7 @@ namespace Assets.Git.Scripts.Gameplay
         {
             playerData = new PlayerData();
             ReadData();
+            gsm.dataPath = Application.persistentDataPath + "/main.csplayerdata";
         }
         public void OnDestroy() => WriteData();
 

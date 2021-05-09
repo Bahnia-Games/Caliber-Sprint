@@ -178,16 +178,17 @@ namespace Assets.Git.Scripts.Menu
                     mmc.LoadScene(MasterMiscController.Scenes.PreAlphaTest, true);
                     break;
                 case 1:
-                    mmc.LoadScene(MasterMiscController.Scenes.artcover, true);
+                    mmc.LoadScene(MasterMiscController.Scenes.FiringRangeTest, true);
                     break;
                 case 2:
-                    mmc.LoadScene(MasterMiscController.Scenes.artcover2, true);
+                    mmc.LoadScene(MasterMiscController.Scenes.artcover, true);
                     break;
                 case 3:
-                    mmc.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
+                    mmc.LoadScene(MasterMiscController.Scenes.artcover2, true);
+
                     break;
                 case 4:
-                    ; // ect
+                    mmc.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
                     break;
             }
         }

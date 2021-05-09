@@ -24,7 +24,7 @@ namespace Assets.Git.Scripts.Gameplay
 
         private BinaryFormatter binaryFromatter = new BinaryFormatter();
 
-        private string dataPath = Application.persistentDataPath + "/main.csplayerdata";
+        public string dataPath;
 
         private System.Random random = new System.Random();
 
