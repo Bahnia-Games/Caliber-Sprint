@@ -11,76 +11,81 @@ using System.Security.Cryptography;
 
 namespace Assets.Git.Scripts.Gameplay
 {
-    public class GameplaySaveManager // switch to reference only
+    public class GameplaySaveManager
     {
         ///<summary>
         /// DO NOT ACCESS THIS CLASS DIRECTLY OR I WILL SHOOT YOU
         /// </summary>
-
-        private string checksum;
-        private int checksumMod;
-
+        /// 
         private bool secondAttempt = false;
 
         private BinaryFormatter binaryFromatter = new BinaryFormatter();
 
         public string dataPath;
-
-        private System.Random random = new System.Random();
-
+        internal string hashPath;
         private enum State { 
             save,
             load,
             none
         }
 
+        public enum DataState
+        {
+            ok,
+            notfound,
+            corrupt,
+            busy
+        }
+
         private State state = State.none;
 
-        public PlayerData Load()
+        public (PlayerData data, DataState) Load()
         {
             try
             {
                 if (state != State.save || state == State.none)
                 {
+                    if (!File.Exists(dataPath))
+                        return (null, DataState.notfound);
+
+
                     state = State.load;
-                    (object data, SaveManager.GetStatus status) checksumModLoad = SaveManager.Load(SaveManager.DataType.dint, "checksumMod");
-
-                    if (checksumModLoad.status == SaveManager.GetStatus.notfound)
-                    {
-                        Debug.LogError("Unable to get checksum randomizer @GameplaySaveManager.cs PlayerData Load()");
-                        return null;
-                    }
-                    checksumMod = (int)checksumModLoad.data;
-
                     FileStream dataStream = new FileStream(dataPath, FileMode.Open);
-
-                    string sum;
-                    using (var md5 = MD5.Create())
-                    {
-                        var hash = md5.ComputeHash(dataStream);
-                        sum = BitConverter.ToString(hash).Replace("-", checksumMod.ToString());
-                    }
-                    if (sum != checksum)
-                    {
-                        Debug.LogError("Checksum for save data invalid! @GameplaySaveManager.cs PlayerData Load()");
-                        return null;
-                    }
-
                     PlayerData data = (PlayerData)binaryFromatter.Deserialize(dataStream);
+                    string computeHash;
+                    using (SHA1 hasher = SHA1.Create())
+                        computeHash = BitConverter.ToString(hasher.ComputeHash(dataStream));
                     dataStream.Close();
-                    state = State.none;
 
-                    return data;
-                } else
-                {
-                    Debug.LogError("@GameplaySaveManager PlayerData Load() cannot load because savemanager is in another state.");
-                    return null;
+                    string readHash;
+                    using (BinaryReader reader = new BinaryReader(File.Open(hashPath, FileMode.Open)))
+                        readHash = BitConverter.ToString(reader.ReadBytes(20));
+
+                    if (readHash == computeHash)
+                        return (data, DataState.ok);
+                    else
+                    {
+                        Debug.LogError("Checksum invalid (is the checksum or save corrupted?) @GameplaySaveManager.cs PlayerData Load()");
+                        return (null, DataState.corrupt);
+                    }
                 }
-            } catch (Exception ex)
+                else
+                {
+                    Debug.LogError("Cannot load because savemanager is in another state. @GameplaySaveManager.cs PlayerData Load()");
+                    return (null, DataState.busy);
+                }
+            } catch (FileNotFoundException ex)
+            {
+                Debug.LogError("Player data or checksum not found. @GameplaySaveManager.cs PlayerData Load()");
+                Debug.LogError(ex.ToString());
+                return (null, DataState.notfound);
+            }
+
+            catch (Exception ex)
             {
                 Debug.LogError("Unable to load player data. @GameplaySaveManager.cs PlayerData Load()");
                 Debug.LogError(ex.ToString());
-                return null;
+                return (null, DataState.corrupt);
             }
         }
 
@@ -93,17 +98,23 @@ namespace Assets.Git.Scripts.Gameplay
                     state = State.save;
                     if (File.Exists(dataPath))
                         File.Delete(dataPath);
+                    if (File.Exists(hashPath))
+                        File.Delete(hashPath);
 
                     FileStream dataStream = new FileStream(dataPath, FileMode.Create);
                     binaryFromatter.Serialize(dataStream, data);
+                    using (SHA1 hasher = SHA1.Create())
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(File.Open(hashPath, FileMode.Create)))
+                            writer.Write(hasher.ComputeHash(dataStream));
+                    }
 
-                    checksum = GetChecksum(dataStream);
-                    checksumMod = 0;
                     dataStream.Close();
-                    state = State.none;
-                } else
+                    Debug.Log("Successfully saved @GameplaySaveManager.cs Save()");
+                }
+                else
                 {
-                    Debug.LogError("@GameplaySaveManager Save() cannot save because savemanager is in another state.");
+                    Debug.LogError("Cannot save because savemanager is in another state. @GameplaySaveManager.cs Save()");
                 }
             } catch (Exception ex)
             {
@@ -123,31 +134,22 @@ namespace Assets.Git.Scripts.Gameplay
             }
         }
 
-        private string GetChecksum(FileStream stream)
-        {
-            try
-            {
-                using (var md5 = MD5.Create())
-                {
-                    checksumMod = random.Next(0, 100);
-                    SaveManager.AddData("checksumMod", checksumMod);
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", checksumMod.ToString());
-                }
-            } catch (Exception ex)
-            {
-                Debug.LogError("Could not calculate checksum. @GameplaySaveManager string GetChecksum()");
-                Debug.LogError(ex.ToString());
-                return null;
-            }
-        }
         /// <summary>
         /// DO NOT CALL THIS DIRECTLY
         /// </summary>
-        public void DeleteSave()
+        internal void DeleteSave()
         {
             if (File.Exists(dataPath))
                 File.Delete(dataPath);
+        }
+
+        /// <summary>
+        /// DO NOT CALL THIS DIRECTLY
+        /// </summary>
+        internal void DeleteHash()
+        {
+            if (File.Exists(hashPath))
+                File.Delete(hashPath);
         }
     }
 }

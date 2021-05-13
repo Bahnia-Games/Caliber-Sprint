@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Assets.Git.Scripts;
+using Assets.Git.Scripts.Gameplay;
 
 public class MasterMiscController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class MasterMiscController : MonoBehaviour
     private Color canvasImagePreviousColor;
     public GameObject loadingObject;
     public GameObject introSequenceContainer;
+
+    public GameplayManager gameplayManager; // per scene. make sure none already preexist
 
     public enum Scenes
     {
@@ -57,7 +60,11 @@ public class MasterMiscController : MonoBehaviour
         // multiplayer maps
     }
 
-    private void Start() => EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
+    private void Start()
+    {
+        EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
+        gameplayManager = new GameplayManager();
+    }
     private void OnEnable() => SceneManager.sceneLoaded += SetAduio;
 
     /// <summary>

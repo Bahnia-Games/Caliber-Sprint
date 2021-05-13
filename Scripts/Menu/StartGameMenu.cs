@@ -12,7 +12,6 @@ namespace Assets.Git.Scripts.Menu
 {
     public class StartGameMenu : MonoBehaviour
     {
-        [SerializeField] GameplayManager gameplayManager;
         [SerializeField] MasterMiscController masterMiscController;
         [SerializeField] Animator checkmarkAnimator;
         [SerializeField] Animator fadeOutAnimator;
@@ -21,8 +20,13 @@ namespace Assets.Git.Scripts.Menu
 
         [SerializeField] private Button continueGameButton;
 
+        private GameplayManager gameplayManager;
+
         public void Start()
         {
+            if (masterMiscController != null)
+                gameplayManager = masterMiscController.gameplayManager;
+
             if (GameplayManager.playerData == null)
                 continueGameButton.interactable = false;
         }
@@ -36,9 +40,10 @@ namespace Assets.Git.Scripts.Menu
             checkMarkGO.SetActive(true);
             fadeOutAnimator.Play("fadeOut");
             yield return new WaitForSeconds(fadeOutAnimator.GetCurrentAnimatorStateInfo(0).length);
-            gameplayManager.DeleteSave();
+            new GameplayManager().DeleteSave();
+            new GameplayManager().DeleteChecksum();
 
-            masterMiscController.LoadScene(MasterMiscController.Scenes.PreAlphaTest, true);
+            masterMiscController.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
         }
 
         public void LoadGameOnClick()

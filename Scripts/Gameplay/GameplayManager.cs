@@ -63,13 +63,15 @@ namespace Assets.Git.Scripts.Gameplay
         private string[] intKeys = new string[21];
         public static PlayerData playerData { get; private set; }
 
-        private GameplaySaveManager gsm = new GameplaySaveManager();
+        private GameplaySaveManager gsm;
 
-        public void Awake()
+        public void OnEnable()
         {
+            gsm = new GameplaySaveManager();
             playerData = new PlayerData();
             ReadData();
             gsm.dataPath = Application.persistentDataPath + "/main.csplayerdata";
+            gsm.hashPath = Application.persistentDataPath + "/main.hshe";
         }
         public void OnDestroy() => WriteData();
 
@@ -110,9 +112,27 @@ namespace Assets.Git.Scripts.Gameplay
 
         #endregion
 
-        public void ReadData() => playerData = gsm.Load();
-        public void WriteData() => gsm.Save(playerData);
-        public void DeleteSave() => gsm.DeleteSave();
+        public void ReadData() 
+        {
+            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load();
+            if (loadData.state == GameplaySaveManager.DataState.ok)
+                playerData = loadData.data;
+            if (loadData.state == GameplaySaveManager.DataState.corrupt)
+            {
+                // corrupt popup
+            }
+            if (loadData.state == GameplaySaveManager.DataState.notfound)
+            {
+                // not found popup
+            }
+            if (loadData.state == GameplaySaveManager.DataState.busy)
+            {
+                // busy popup (prob wont ever happen)
+            }
+        }
+        internal void WriteData() => gsm.Save(playerData);
+        internal void DeleteSave() => new GameplaySaveManager().DeleteSave();
+        internal void DeleteChecksum() => new GameplaySaveManager().DeleteHash();
 
         // everything below is the manager part
 
