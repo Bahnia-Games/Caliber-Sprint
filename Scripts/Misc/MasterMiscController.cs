@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Assets.Git.Scripts;
 using Assets.Git.Scripts.Gameplay;
+using System;
+using Assets.Git.Scripts.Misc;
 
 public class MasterMiscController : MonoBehaviour
 {
@@ -64,6 +66,7 @@ public class MasterMiscController : MonoBehaviour
     {
         EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
         gameplayManager = new GameplayManager();
+        ApplicationQuitRequest += OnApplicationRequestQuit;
     }
     private void OnEnable() => SceneManager.sceneLoaded += SetAduio;
 
@@ -114,5 +117,21 @@ public class MasterMiscController : MonoBehaviour
             masterAudio = 1.0f; AudioListener.volume = masterAudio;
             Debug.LogWarning("Data for master audio could not be found, defaulting to 100% @MasterMiscController SetAudio()");
         }
+    }
+
+    public event EventHandler<QuitEventArgs> ApplicationQuitRequest;
+    public void InvokeApplicationQuitRequest(object sender, QuitEventArgs args) => ApplicationQuitRequest.Invoke(sender, args);
+    private void OnApplicationRequestQuit(object sender, QuitEventArgs args)
+    {
+        // stuff
+        Debug.LogWarning("Quit request recieved.");
+        StartCoroutine(ApplicationQuitAtEndOfFrame());
+    }
+
+    private IEnumerator ApplicationQuitAtEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        Debug.LogWarning("Quitting...");
+        Application.Quit();
     }
 }

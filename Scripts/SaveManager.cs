@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Assets.Git.Scripts
 {
+    /// <summary>
+    /// This is for playerprefs
+    /// </summary>
     public class SaveManager : MonoBehaviour
     {
         

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Assets.Git.Scripts.Misc;
+using Assets.Git.Scripts.Menu;
 
 namespace Assets.Git.Scripts.Gameplay
 {
@@ -60,18 +62,23 @@ namespace Assets.Git.Scripts.Gameplay
         /// </summary>
 
         private (object[] data, SaveManager.GetStatus[] getStatus) loadedSaveData;
-        private string[] intKeys = new string[21];
         public static PlayerData playerData { get; private set; }
 
         private GameplaySaveManager gsm;
+        private ErrorReporter errorReporter;
+
+        private string dataPath;
+        private string hashPath;
 
         public void OnEnable()
         {
+            errorReporter = GetComponent<ErrorReporter>();
             gsm = new GameplaySaveManager();
             playerData = new PlayerData();
             ReadData();
-            gsm.dataPath = Application.persistentDataPath + "/main.csplayerdata";
-            gsm.hashPath = Application.persistentDataPath + "/main.hshe";
+
+            dataPath = Application.persistentDataPath + "/main.csplayerdata";
+            hashPath = Application.persistentDataPath + "/main.hshe";
         }
         public void OnDestroy() => WriteData();
 
@@ -114,28 +121,36 @@ namespace Assets.Git.Scripts.Gameplay
 
         public void ReadData() 
         {
-            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load();
+            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load(dataPath, hashPath);
             if (loadData.state == GameplaySaveManager.DataState.ok)
                 playerData = loadData.data;
             if (loadData.state == GameplaySaveManager.DataState.corrupt)
             {
-                // corrupt popup
+                DeleteSave();
+                errorReporter.ReportError("Corrupt save", "GameplayManager could not read save. Please create a new game.", ErrorReporter.ActionType.ok);
             }
             if (loadData.state == GameplaySaveManager.DataState.notfound)
-            {
-                // not found popup
-            }
+                errorReporter.ReportError("Save not found", "Game save data could not be located on this machine.", ErrorReporter.ActionType.ok);
             if (loadData.state == GameplaySaveManager.DataState.busy)
+                errorReporter.ReportError("Save manager fail", "SaveManager is currently busy. Please try to load game again (if the error persists, please see [placeholder].", ErrorReporter.ActionType.ok);
+
+        }
+        internal void WriteData() => gsm.Save(playerData, dataPath, hashPath);
+        internal void DeleteSave() => new GameplaySaveManager().DeleteSave(dataPath);
+        internal void DeleteChecksum() => new GameplaySaveManager().DeleteHash(hashPath);
+
+        private void ApplicationQuitRequest(object unused, QuitEventArgs args)
+        {
+            switch (args.quitReason)
             {
-                // busy popup (prob wont ever happen)
+                case QuitEventArgs.QuitReason.request:
+                    WriteData();
+                    break;
+                case QuitEventArgs.QuitReason.force:
+                    WriteData();
+                    break;
             }
         }
-        internal void WriteData() => gsm.Save(playerData);
-        internal void DeleteSave() => new GameplaySaveManager().DeleteSave();
-        internal void DeleteChecksum() => new GameplaySaveManager().DeleteHash();
-
         // everything below is the manager part
-
-
     }
 }

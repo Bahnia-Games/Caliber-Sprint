@@ -1,8 +1,6 @@
 ﻿using Assets.Git.Scripts;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Assets.Git.Scripts.Misc;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,6 +9,7 @@ public class MainMenu : MonoBehaviour
     /// Buttons do not like static methods
     /// </summary>
 
+    [SerializeField] private GameObject miscScriptContainer;
     public enum MainMenuTransitions { 
         /// <summary>
         /// Rules:
@@ -30,7 +29,9 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
-        Debug.LogWarning("Application Has Quit!");
+        QuitEventArgs args = new QuitEventArgs();
+        args.quitReason = QuitEventArgs.QuitReason.request;
+        args.Requester = "MainMenu.cs QuitGame()";
+        GetComponent<MasterMiscController>().InvokeApplicationQuitRequest(this, args); // bruh for some reason i cant invoke outside mmc.
     }
 }

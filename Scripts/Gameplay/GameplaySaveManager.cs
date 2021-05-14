@@ -11,18 +11,17 @@ using System.Security.Cryptography;
 
 namespace Assets.Git.Scripts.Gameplay
 {
+    /// <summary>
+    /// Do not access directly.
+    /// </summary>
     public class GameplaySaveManager
     {
-        ///<summary>
-        /// DO NOT ACCESS THIS CLASS DIRECTLY OR I WILL SHOOT YOU
-        /// </summary>
-        /// 
         private bool secondAttempt = false;
 
         private BinaryFormatter binaryFromatter = new BinaryFormatter();
 
-        public string dataPath;
-        internal string hashPath;
+        //public string dataPath;
+        //internal string hashPath;
         private enum State { 
             save,
             load,
@@ -39,7 +38,7 @@ namespace Assets.Git.Scripts.Gameplay
 
         private State state = State.none;
 
-        public (PlayerData data, DataState) Load()
+        public (PlayerData data, DataState) Load(string dataPath, string hashPath)
         {
             try
             {
@@ -89,7 +88,7 @@ namespace Assets.Git.Scripts.Gameplay
             }
         }
 
-        public void Save(PlayerData data)
+        public void Save(PlayerData data, string dataPath, string hashPath)
         {
             try
             {
@@ -122,7 +121,7 @@ namespace Assets.Git.Scripts.Gameplay
                 {
                     Debug.LogError("Critical error! Could not save player data, making second attempt...");
                     secondAttempt = true;
-                    Save(data);
+                    Save(data, dataPath, hashPath);
                     return;
                 } else
                 {
@@ -137,7 +136,7 @@ namespace Assets.Git.Scripts.Gameplay
         /// <summary>
         /// DO NOT CALL THIS DIRECTLY
         /// </summary>
-        internal void DeleteSave()
+        internal void DeleteSave(string dataPath)
         {
             if (File.Exists(dataPath))
                 File.Delete(dataPath);
@@ -146,7 +145,7 @@ namespace Assets.Git.Scripts.Gameplay
         /// <summary>
         /// DO NOT CALL THIS DIRECTLY
         /// </summary>
-        internal void DeleteHash()
+        internal void DeleteHash(string hashPath)
         {
             if (File.Exists(hashPath))
                 File.Delete(hashPath);
