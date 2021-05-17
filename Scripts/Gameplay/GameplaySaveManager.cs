@@ -1,13 +1,8 @@
-﻿using Assets.Git.Scripts.Gameplay;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using System.Security.Cryptography;
+using UnityEngine;
 
 namespace Assets.Git.Scripts.Gameplay
 {
@@ -44,9 +39,9 @@ namespace Assets.Git.Scripts.Gameplay
             {
                 if (state != State.save || state == State.none)
                 {
-                    if (!File.Exists(dataPath))
+                    Debug.LogWarning(dataPath);
+                    if (!File.Exists(dataPath) || !File.Exists(hashPath))
                         return (null, DataState.notfound);
-
 
                     state = State.load;
                     FileStream dataStream = new FileStream(dataPath, FileMode.Open);

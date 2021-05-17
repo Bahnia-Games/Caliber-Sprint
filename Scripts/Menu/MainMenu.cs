@@ -32,6 +32,6 @@ public class MainMenu : MonoBehaviour
         QuitEventArgs args = new QuitEventArgs();
         args.quitReason = QuitEventArgs.QuitReason.request;
         args.Requester = "MainMenu.cs QuitGame()";
-        GetComponent<MasterMiscController>().InvokeApplicationQuitRequest(this, args); // bruh for some reason i cant invoke outside mmc.
+        miscScriptContainer.GetComponent<MasterMiscController>().InvokeApplicationQuitRequest(this, args); // bruh for some reason i cant invoke outside mmc.
     }
 }

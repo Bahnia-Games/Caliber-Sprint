@@ -9,7 +9,7 @@ namespace Assets.Git.Scripts.Menu
         [SerializeField] private GameObject errorPopupGO;
         [SerializeField] private TMP_Text errorTitle;
         [SerializeField] private TMP_Text errorText;
-        [SerializeField] private TextMeshProUGUI buttonUGUI;
+        [SerializeField] private TMP_Text buttonUGUI;
 
         private ActionType currentActionType;
 

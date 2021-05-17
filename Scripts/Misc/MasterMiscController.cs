@@ -8,6 +8,7 @@ using Assets.Git.Scripts.Gameplay;
 using System;
 using Assets.Git.Scripts.Misc;
 
+
 public class MasterMiscController : MonoBehaviour
 {
     public static bool drpEnabled;
@@ -16,7 +17,6 @@ public class MasterMiscController : MonoBehaviour
 
     [Header("Menu Stuff")]
     public GameObject canvas;
-    private Color canvasImagePreviousColor;
     public GameObject loadingObject;
     public GameObject introSequenceContainer;
 

@@ -1,9 +1,4 @@
-﻿using Assets.Git.Scripts.Gameplay;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using UnityEngine;
 using Assets.Git.Scripts.Misc;
 using Assets.Git.Scripts.Menu;
@@ -121,6 +116,7 @@ namespace Assets.Git.Scripts.Gameplay
 
         public void ReadData() 
         {
+            Debug.Log("Attempting to read data @GameplayManager.cs ReadData()");
             (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load(dataPath, hashPath);
             if (loadData.state == GameplaySaveManager.DataState.ok)
                 playerData = loadData.data;
