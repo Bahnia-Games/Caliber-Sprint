@@ -11,6 +11,10 @@ namespace Assets.Git.Scripts.Gameplay
     /// </summary>
     public class GameplaySaveManager
     {
+
+        private string dataPath;
+        private string hashPath;
+
         private bool secondAttempt = false;
 
         private BinaryFormatter binaryFromatter = new BinaryFormatter();
@@ -33,13 +37,19 @@ namespace Assets.Git.Scripts.Gameplay
 
         private State state = State.none;
 
-        public (PlayerData data, DataState) Load(string dataPath, string hashPath)
+        public GameplaySaveManager(string dataPath, string hashPath)
+        {
+            Debug.Log("Initializing a GameplaySaveManager instance with the data path: " + dataPath + " , and hash path : " + hashPath);
+            this.dataPath = dataPath;
+            this.hashPath = hashPath;
+        }
+
+        public (PlayerData data, DataState) Load()
         {
             try
             {
                 if (state != State.save || state == State.none)
-                {
-                    Debug.LogWarning(dataPath);
+                {                    
                     if (!File.Exists(dataPath) || !File.Exists(hashPath))
                         return (null, DataState.notfound);
 

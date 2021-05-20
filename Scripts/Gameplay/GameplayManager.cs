@@ -65,15 +65,17 @@ namespace Assets.Git.Scripts.Gameplay
         private string dataPath;
         private string hashPath;
 
-        public void OnEnable()
+        public void Start()
         {
+            dataPath = Application.persistentDataPath + "/main.csplayerdata";
+            hashPath = Application.persistentDataPath + "/main.hshe";
+
             errorReporter = GetComponent<ErrorReporter>();
-            gsm = new GameplaySaveManager();
+            gsm = new GameplaySaveManager(dataPath, hashPath);
             playerData = new PlayerData();
             ReadData();
 
-            dataPath = Application.persistentDataPath + "/main.csplayerdata";
-            hashPath = Application.persistentDataPath + "/main.hshe";
+            
         }
         public void OnDestroy() => WriteData();
 
@@ -117,7 +119,7 @@ namespace Assets.Git.Scripts.Gameplay
         public void ReadData() 
         {
             Debug.Log("Attempting to read data @GameplayManager.cs ReadData()");
-            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load(dataPath, hashPath);
+            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load();
             if (loadData.state == GameplaySaveManager.DataState.ok)
                 playerData = loadData.data;
             if (loadData.state == GameplaySaveManager.DataState.corrupt)
@@ -132,8 +134,8 @@ namespace Assets.Git.Scripts.Gameplay
 
         }
         internal void WriteData() => gsm.Save(playerData, dataPath, hashPath);
-        internal void DeleteSave() => new GameplaySaveManager().DeleteSave(dataPath);
-        internal void DeleteChecksum() => new GameplaySaveManager().DeleteHash(hashPath);
+        internal void DeleteSave() => new GameplaySaveManager(dataPath, hashPath).DeleteSave(dataPath);
+        internal void DeleteChecksum() => new GameplaySaveManager(dataPath, hashPath).DeleteHash(hashPath);
 
         private void ApplicationQuitRequest(object unused, QuitEventArgs args)
         {
