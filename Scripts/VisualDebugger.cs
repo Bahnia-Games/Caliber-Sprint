@@ -8,7 +8,7 @@ public class VisualDebugger : MonoBehaviour
 {
     [SerializeField] private static Transform[] debugSlot = new Transform[12];
     [SerializeField] private static Text[] debugText = new Text[12];
-    public static bool visualDebuggerEnabled = false;
+    public static bool visualDebuggerEnabled = true;
 
     void Awake()
     {

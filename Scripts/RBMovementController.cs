@@ -41,9 +41,9 @@ public class RBMovementController : MonoBehaviour
     public float slideCooldownRate;
     public float notMovingSpeedDecayRate;
 
+    public Vector2 maxAccelVelo;
+
     [HideInInspector] public bool isMobilityEquip;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -54,12 +54,17 @@ public class RBMovementController : MonoBehaviour
 
     private void Awake()
     {
-
+        VisualDebugger.InitLog(1);
+        VisualDebugger.InitLog(2);
+        VisualDebugger.InitLog(3);
     }
 
     // Update is called once per frame
     void Update()
     {
+        VisualDebugger.Log(1, "Amt Jump", amtJump);
+        VisualDebugger.Log(2, "Is Grounded", isGrounded);
+        VisualDebugger.Log(3, "Speed", rb.velocity);
 
         movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 
@@ -79,27 +84,27 @@ public class RBMovementController : MonoBehaviour
 
 
         if (rb.velocity.y < 0 && !isGrounded)
-        {
             rb.drag = fallDrag;
-        }
 
         if (isGrounded)
-        {
             amtJump = 0;
-        }
 
-        if (Input.GetButtonDown("Jump") && amtJump < 1 || Input.GetButtonDown("Jump") && isGrounded)
+
+        if (Input.GetButtonDown("Jump") && amtJump >= 2 && !isGrounded)
         {
+            Debug.Log("Juping in air");
             Jump();
-        } else if (Input.GetButtonUp("Jump"))
-        {
-            rb.drag = drag;
         }
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            Debug.Log("Jumping off ground");
+            Jump();
+        }
+        else if (Input.GetButtonUp("Jump")) // potential bug
+            rb.drag = drag;
 
         if (!isGrounded)
-        {
-            rb.AddForce(Vector3.down * fallSpeed * Time.deltaTime);
-        }
+            rb.AddRelativeForce(Vector3.down * fallSpeed * Time.deltaTime);
 
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
@@ -120,23 +125,22 @@ public class RBMovementController : MonoBehaviour
             isSliding = false;
             isSlideCool = false;
             slideCoolTimer -= Time.deltaTime;
-
         }
-
-
     }
 
     private void FixedUpdate()
     {
         if (!isSliding)
-        {
             MovePlayer(movement);
-        }
-        
     }
 
     void MovePlayer(Vector3 direction)
     {
+        //if (rb.velocity.x > maxAccelVelo.x || rb.velocity.z > maxAccelVelo.y)
+        //    rb.transform.TransformDirection(direction * speed);
+        //else
+        //    rb.AddForce(direction * speed * Time.deltaTime);
+
         rb.AddRelativeForce(direction * speed * Time.deltaTime);
     }
 
@@ -145,10 +149,8 @@ public class RBMovementController : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce);
         amtJump++;
 
-        if (!isMobilityEquip) // Worksround for now
-        {
-            amtJump++;
-        }
+        //if (!isMobilityEquip) // Worksround for now
+        //    amtJump++;
     }
 
 }
