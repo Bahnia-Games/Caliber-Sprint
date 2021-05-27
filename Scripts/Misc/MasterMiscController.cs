@@ -22,6 +22,8 @@ public class MasterMiscController : MonoBehaviour
 
     public GameplayManager gameplayManager; // per scene. make sure none already preexist
 
+    [Header("Misc")]
+    [SerializeField] private bool visualDebugEnabled = false;
     public enum Scenes
     {
         /// <summary>
@@ -64,18 +66,14 @@ public class MasterMiscController : MonoBehaviour
 
     private void Start()
     {
+        VisualDebugger.visualDebuggerEnabled = visualDebugEnabled;
         EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
         gameplayManager = new GameplayManager();
         ApplicationQuitRequest += OnApplicationRequestQuit;
     }
     private void OnEnable() => SceneManager.sceneLoaded += SetAduio;
 
-    /// <summary>
-    /// Argument summary:
-    /// -useloading = use loading screen
-    /// 
-    /// </summary>
-    /// <param name="args"></param>
+
     public void LoadScene(Scenes sceneName, bool useLoading = false)
     {
         bool moveAlong = true;
@@ -111,7 +109,6 @@ public class MasterMiscController : MonoBehaviour
     {
         (object data, SaveManager.GetStatus status) audio = SaveManager.Load(SaveManager.DataType.dfloat, "masterAudio");
         if (audio.status == SaveManager.GetStatus.success) {
-            masterAudio = (float)audio.data; AudioListener.volume = masterAudio; 
         } else 
         { 
             masterAudio = 1.0f; AudioListener.volume = masterAudio;

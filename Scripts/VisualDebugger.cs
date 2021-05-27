@@ -17,7 +17,6 @@ public class VisualDebugger : MonoBehaviour
             for (int i = 1; i <= 12; i++)
             {
                 string _name = "debug slot (" + i + ")";
-                Debug.Log(i - 1);
                 GameObject _go = GameObject.Find(_name);
                 debugSlot[i - 1] = _go.GetComponent<Transform>();
             }

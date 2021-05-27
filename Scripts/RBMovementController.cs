@@ -5,13 +5,16 @@ using UnityEngine;
 public class RBMovementController : MonoBehaviour
 {
     //disable warnings
-    #pragma warning disable CS0108, CS0104
+#pragma warning disable CS0108, CS0104
+
+    [SerializeField] private Camera cam;
+    [SerializeField] private Animator cameraAnimator;
 
     public float speed = 5f;
     public float defSpeed;
-    Rigidbody rb;
-    public Transform player;
-    public CapsuleCollider collider;
+    private Rigidbody rb;
+    [SerializeField] private Transform player;
+    [SerializeField] private CapsuleCollider collider;
     public Vector3 movement;
     public float fallSpeed;
     public float drag;
@@ -19,12 +22,12 @@ public class RBMovementController : MonoBehaviour
     public float decayDrag = 100f;
     public float fallDrag = 0.01f;
 
-    public LayerMask groundMask;
-    public float checkRad;
-    public Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float checkRad;
+    [SerializeField] private Transform groundCheck;
     private bool isGrounded;
     public float jumpForce;
-    int amtJump = 0;
+    private int amtJump = 0;
 
     public Vector3 playerStand;
     public Vector3 playerCrouch;
@@ -43,13 +46,63 @@ public class RBMovementController : MonoBehaviour
 
     public Vector2 maxAccelVelo;
 
+    [SerializeField] private Transform wallCheckL;
+    [SerializeField] private Transform wallCheckR;
+    [SerializeField] private float wallRunCheckRad;
+    private LayerMask wallRunMask = 16;
+
+    public Vector3 wallrunRotationROffset;
+    public Vector3 wallrunRotationLOffset;
+    public Vector3 wallrunPositionROffset;
+    public Vector3 wallrunPositionLOffset;
+    public float wallrunRotOffsetSpeed;
+    public float wallrunPosOffsetSpeed;
+
+    public float wallruntime;
+    public float wallrunEnterAcceleration;
+    public float wallrunExitAcceletation;
+
+    Vector3 cameraOriginalPos;
+
     [HideInInspector] public bool isMobilityEquip;
+
+    bool canWallrunFlag;
+    bool wallrunStartFireOnce = true;
+
+    public enum States
+    {
+        idle,
+        sprint,
+        slide,
+        wallrun,
+        jump,
+        doublejump
+    }
+
+    enum WrType
+    {
+        l,
+        r
+    }
+
+    enum AnimationStates
+    {
+        EnterWRR,
+        EnterWRL,
+        WRR,
+        WRL,
+        ExitWRR,
+        ExitWRL
+    }
+
+    private States state;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
         isMobilityEquip = false; // placeholder
+        cameraOriginalPos = cam.transform.position;
     }
 
     private void Awake()
@@ -57,11 +110,13 @@ public class RBMovementController : MonoBehaviour
         VisualDebugger.InitLog(1);
         VisualDebugger.InitLog(2);
         VisualDebugger.InitLog(3);
+        VisualDebugger.InitLog(4);
     }
 
     // Update is called once per frame
     void Update()
     {
+        state = States.idle;
         VisualDebugger.Log(1, "Amt Jump", amtJump);
         VisualDebugger.Log(2, "Is Grounded", isGrounded);
         VisualDebugger.Log(3, "Speed", rb.velocity);
@@ -72,39 +127,46 @@ public class RBMovementController : MonoBehaviour
 
 
         speed = Mathf.Clamp(speed, 0.0f , Mathf.Infinity);
+        
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) /* && Grapple.isGrapple */)
         {
+            state = States.sprint;
             speed = defSpeed;
             rb.drag = drag;
         } else if (rb.velocity.x > 0 || rb.velocity.z > 0)
         {
+            state = States.idle;
             speed -= notMovingSpeedDecayRate * Time.deltaTime;
             rb.drag = decayDrag;
         }
-
 
         if (rb.velocity.y < 0 && !isGrounded)
             rb.drag = fallDrag;
 
         if (isGrounded)
-            amtJump = 0;
-
-
-        if (Input.GetButtonDown("Jump") && amtJump >= 2 && !isGrounded)
         {
+            amtJump = 0;
+            canWallrunFlag = true;
+        }
+
+
+        if (Input.GetButtonDown("Jump") && amtJump >= 2 && (!isGrounded || state == States.wallrun))
+        {
+            state = States.doublejump;
             Debug.Log("Juping in air");
             Jump();
         }
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && (isGrounded || state == States.wallrun))
         {
+            state = States.jump;
             Debug.Log("Jumping off ground");
             Jump();
         }
         else if (Input.GetButtonUp("Jump")) // potential bug
+        {
+            state = States.jump;
             rb.drag = drag;
-
-        if (!isGrounded)
-            rb.AddRelativeForce(Vector3.down * fallSpeed * Time.deltaTime);
+        }
 
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
         {
@@ -126,6 +188,43 @@ public class RBMovementController : MonoBehaviour
             isSlideCool = false;
             slideCoolTimer -= Time.deltaTime;
         }
+
+        WrType curtype = WrType.r;
+        if ((Physics.CheckSphere(wallCheckL.position, wallRunCheckRad, 1 << 16) || Physics.CheckSphere(wallCheckR.position, wallRunCheckRad, 1 << 16)) && !isGrounded && canWallrunFlag) // check left/right wallrun
+        {
+            amtJump = 0;
+            state = States.wallrun;
+            rb.useGravity = false;
+            if (wallrunStartFireOnce && Physics.CheckSphere(wallCheckR.position, wallRunCheckRad, 1 << 16))
+            {
+                StartCoroutine(Wallrun(WrType.l));
+                curtype = WrType.l;
+            }
+            if (wallrunStartFireOnce && Physics.CheckSphere(wallCheckL.position, wallRunCheckRad, 1 << 16))
+            {
+                StartCoroutine(Wallrun(WrType.r));
+                curtype = WrType.r;
+
+            }
+        }
+        else
+        {
+            StopCoroutine(Wallrun(curtype));
+            switch (curtype)
+            {
+                case WrType.r:
+                    PlayAnim(AnimationStates.ExitWRR);
+                    break;
+                case WrType.l:
+                    PlayAnim(AnimationStates.ExitWRL);
+                    break;
+            }
+        }
+
+        if (!isGrounded && state != States.wallrun)
+            rb.AddRelativeForce(Vector3.down * fallSpeed * Time.deltaTime);
+
+        VisualDebugger.Log(4, "State", state);
     }
 
     private void FixedUpdate()
@@ -153,4 +252,58 @@ public class RBMovementController : MonoBehaviour
         //    amtJump++;
     }
 
+    IEnumerator Wallrun(WrType t)
+    {
+        switch (t)
+        {
+            case WrType.r:
+                PlayAnim(AnimationStates.EnterWRR);
+                break;
+            case WrType.l:
+                PlayAnim(AnimationStates.EnterWRL);
+                break;
+        }
+        wallrunStartFireOnce = false;
+        rb.AddForce(rb.transform.forward * wallrunEnterAcceleration, ForceMode.Acceleration);
+        yield return new WaitForSeconds(wallruntime);
+        wallrunStartFireOnce = true;
+        canWallrunFlag = false;
+
+        switch (t)
+        {
+            case WrType.r:
+                rb.AddForce(rb.transform.right * wallrunExitAcceletation * 0.01f, ForceMode.Impulse);
+                PlayAnim(AnimationStates.ExitWRR);
+                break;
+            case WrType.l:
+                rb.AddForce(-rb.transform.right * wallrunExitAcceletation * 0.01f, ForceMode.Impulse);
+                PlayAnim(AnimationStates.ExitWRL);
+                break;
+        }
+    }
+
+    void PlayAnim(AnimationStates state)
+    {
+        switch (state)
+        {
+            case AnimationStates.EnterWRR:
+                cameraAnimator.Play("StartWallrunRight");
+                break;
+            case AnimationStates.EnterWRL:
+                cameraAnimator.Play("StartWallrunLeft");
+                break;
+            case AnimationStates.WRR:
+                cameraAnimator.Play("WallrunRight");
+                break;
+            case AnimationStates.WRL:
+                cameraAnimator.Play("WallRunLeft");
+                break;
+            case AnimationStates.ExitWRR:
+                cameraAnimator.Play("ExitWallrunRight");
+                break;
+            case AnimationStates.ExitWRL:
+                cameraAnimator.Play("ExitWallrunLeft");
+                break;
+        }
+    }
 }
