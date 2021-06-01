@@ -7,6 +7,7 @@ using UnityEngine;
 using Assets.Git.Scripts.Gameplay;
 using System.Collections;
 using UnityEngine.UI;
+using Assets.Git.Scripts.Misc;
 
 namespace Assets.Git.Scripts.Menu
 {

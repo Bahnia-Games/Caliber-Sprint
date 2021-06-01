@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using Assets.Git.Scripts.Gameplay;
+using Assets.Git.Scripts.Misc;
 
 namespace Assets.Git.Scripts.Menu
 {
