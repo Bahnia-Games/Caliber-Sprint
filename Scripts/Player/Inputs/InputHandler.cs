@@ -4,6 +4,9 @@ using System;
 
 namespace Assets.Git.Scripts.Player.Inputs
 {
+    /// <summary>
+    /// To set the controls, do not access the variables directly, instead access the SetControl method
+    /// </summary>
     public class InputHandler // controls are saved into playerprefs
     {
         /// <summary>
@@ -11,7 +14,6 @@ namespace Assets.Git.Scripts.Player.Inputs
         /// ## Movement ##
         /// Jump
         /// Crouch/slide (named crouch)
-        /// Jump
         /// Fire grapple
         /// 
         /// ## Weapons ## (Equip will always be alpha 1-9)
@@ -136,6 +138,40 @@ namespace Assets.Git.Scripts.Player.Inputs
             UnEquipKC = KeyCode.E;
             //QuickMeleeKC = KeyCode.; /* (not implimented) */
             ThrowGrenadeKC = KeyCode.Q;
+        }
+
+        internal static void SetControl(Inputs control, KeyCode key)
+        {
+            switch (control)
+            {
+                case Inputs.Jump:
+                    JumpKC = key;
+                    break;
+                case Inputs.Crouch:
+                    CrouchKC = key;
+                    break;
+                case Inputs.FireGrapple:
+                    FireGrappleKC = key;
+                    break;
+                case Inputs.Fire:
+                    FireKC = key;
+                    break;
+                case Inputs.Aim:
+                    AimKC = key;
+                    break;
+                case Inputs.QuickSwitch:
+                    QuickSwitchKC = key;
+                    break;
+                case Inputs.UnEquip:
+                    UnEquipKC = key;
+                    break;
+                case Inputs.QuickMelee:
+                    QuickMeleeKC = key;
+                    break;
+                case Inputs.ThrowGrenade:
+                    ThrowGrenadeKC = key;
+                    break;
+            }
         }
     }
 }
