@@ -1,6 +1,7 @@
-﻿using Assets.Git.Scripts.Misc;
+﻿using System;
+using Assets.Git.Scripts.Misc;
 using UnityEngine;
-using System;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Git.Scripts.Player.Inputs
 {
@@ -43,6 +44,7 @@ namespace Assets.Git.Scripts.Player.Inputs
         public enum Status
         {
             ok,
+            noparse,
             notfound
         }
 
@@ -56,13 +58,25 @@ namespace Assets.Git.Scripts.Player.Inputs
         public static KeyCode QuickMeleeKC;
         public static KeyCode ThrowGrenadeKC;
 
+        static bool IHFO = true;
 
-        static InputHandler() => MasterMiscController.ApplicationQuitRequest += Save; // shouldnt need references...
 
-        internal static void Save(object unused, QuitEventArgs e)
+        static InputHandler() 
         {
-            if (e.quitReason == QuitEventArgs.QuitReason.error)
-                return;
+            if (IHFO) // subscription
+            {
+                MasterMiscController.ApplicationQuitRequest += Save;
+                SceneManager.activeSceneChanged += SceneChanged;
+                IHFO = false;
+            }
+        }
+
+        private static void SceneChanged(Scene c, Scene n) => IHFO = true;
+        internal static void Save(object unused = null, QuitEventArgs e = null)
+        {
+            if (e != null)
+                if (e.quitReason == QuitEventArgs.QuitReason.error)
+                    return;
             SaveManager.AddData(Inputs.Jump.ToString(), JumpKC.ToString());
             SaveManager.AddData(Inputs.Crouch.ToString(), CrouchKC.ToString());
             SaveManager.AddData(Inputs.FireGrapple.ToString(), FireGrappleKC.ToString());
@@ -72,57 +86,94 @@ namespace Assets.Git.Scripts.Player.Inputs
             SaveManager.AddData(Inputs.UnEquip.ToString(), UnEquipKC.ToString());
             SaveManager.AddData(Inputs.QuickMelee.ToString(), QuickMeleeKC.ToString());
             SaveManager.AddData(Inputs.ThrowGrenade.ToString(), ThrowGrenadeKC.ToString());
+            SaveManager.Save();
         }
 
+        /// <summary>
+        /// This should really only be called once... i think...
+        /// </summary>
+        /// <returns></returns>
         internal static Status Load()
         {
-            (object data, SaveManager.GetStatus status) jData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Jump.ToString());
+            (object data, SaveManager.GetStatus status) jData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Jump.ToString()); // serves as a model
+            Debug.Log("Loading keybinds... "/*jData: " + jData.data.ToString()*/);
+            //JumpKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)jData.data);
             if (jData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            JumpKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)jData.data);
-
+            if (Enum.TryParse<KeyCode>((string)jData.data, out KeyCode jr)) // ignore cases
+                JumpKC = jr;
+            else
+            { LoadFail("Jump"); return Status.noparse; }
+            // :(
+                
             (object data, SaveManager.GetStatus status) cData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Crouch.ToString());
             if (cData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            CrouchKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)cData.data);
+            if (Enum.TryParse<KeyCode>((string)cData.data, true, out KeyCode cr))
+                CrouchKC = cr;
+            else
+            { LoadFail("Crouch"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) fgData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.FireGrapple.ToString());
             if (fgData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            FireGrappleKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)fgData.data);
+            if (Enum.TryParse<KeyCode>((string)fgData.data, true, out KeyCode fgr))
+                FireGrappleKC = fgr;
+            else
+            { LoadFail("Fire Grapple"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) fData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Fire.ToString());
             if (fgData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            FireKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)fData.data);
+            if (Enum.TryParse<KeyCode>((string)fData.data, true, out KeyCode fr))
+                FireKC = fr;
+            else
+            { LoadFail("Fire"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) aData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Aim.ToString());
             if (aData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            AimKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)aData.data);
+            if (Enum.TryParse<KeyCode>((string)aData.data, true, out KeyCode ar))
+                AimKC = ar;
+            else
+            { LoadFail("Aim"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) qsData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickSwitch.ToString());
             if (qsData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            QuickSwitchKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)qsData.data);
+            if (Enum.TryParse<KeyCode>((string)qsData.data, true, out KeyCode qsr))
+                QuickSwitchKC = qsr;
+            else
+            { LoadFail("Quick Switch"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) uData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.UnEquip.ToString());
             if (uData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            UnEquipKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)uData.data);
+            if (Enum.TryParse<KeyCode>((string)uData.data, true, out KeyCode ur))
+                UnEquipKC = ur;
+            else
+            { LoadFail("Unequip"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) qmData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickMelee.ToString());
             if (qmData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            QuickMeleeKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)qmData.data);
+            if (Enum.TryParse<KeyCode>((string)qmData.data, true, out KeyCode qmr))
+                QuickMeleeKC = qmr;
+            else
+            { LoadFail("QuickMelee"); return Status.noparse; }
 
             (object data, SaveManager.GetStatus status) gData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.ThrowGrenade.ToString());
             if (gData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
-            ThrowGrenadeKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)qmData.data);
+            if (Enum.TryParse<KeyCode>((string)gData.data, true, out KeyCode gr))
+                ThrowGrenadeKC = gr;
+            else
+            { LoadFail("Grenade"); return Status.noparse; }
 
             return Status.ok;
         }
+
+        private static void LoadFail(string KeyName) => Debug.LogError("Unable to find control for key " + KeyName);
 
         /// <summary>
         /// This here should only be called by Master Misc Controller, and nothing else.
@@ -138,6 +189,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             UnEquipKC = KeyCode.E;
             //QuickMeleeKC = KeyCode.; /* (not implimented) */
             ThrowGrenadeKC = KeyCode.Q;
+            Save();
         }
 
         internal static void SetControl(Inputs control, KeyCode key)

@@ -18,7 +18,8 @@ public class VisualDebugger : MonoBehaviour
             {
                 string _name = "debug slot (" + i + ")";
                 GameObject _go = GameObject.Find(_name);
-                debugSlot[i - 1] = _go.GetComponent<Transform>();
+                if (_go != null)
+                    debugSlot[i - 1] = _go.GetComponent<Transform>();
             }
         }
     }
@@ -43,7 +44,7 @@ public class VisualDebugger : MonoBehaviour
     {
         if (visualDebuggerEnabled)
             debugText[index - 1].text = variableName + ": " + data.ToString();
-        else if (!visualDebuggerEnabled) ;
+        //else if (!visualDebuggerEnabled)
             //Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
         
     }

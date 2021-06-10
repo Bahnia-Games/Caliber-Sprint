@@ -7,7 +7,7 @@ namespace Assets.Git.Scripts
     /// <summary>
     /// This is for playerprefs
     /// </summary>
-    public class SaveManager : MonoBehaviour
+    public class SaveManager
     {
         
         public enum DataType

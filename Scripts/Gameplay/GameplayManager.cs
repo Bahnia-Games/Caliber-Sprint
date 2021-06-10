@@ -55,8 +55,6 @@ namespace Assets.Git.Scripts.Gameplay
         /// (hidden achievements for endings)
         /// bool | unlabeled criteria | unlabaled criteria
         /// </summary>
-
-        private (object[] data, SaveManager.GetStatus[] getStatus) loadedSaveData;
         public static PlayerData playerData { get; private set; }
 
         private GameplaySaveManager gsm;

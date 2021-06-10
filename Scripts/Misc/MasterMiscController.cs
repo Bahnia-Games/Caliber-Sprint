@@ -66,19 +66,36 @@ namespace Assets.Git.Scripts.Misc
             // multiplayer maps
         }
 
-        private void Start()
+        private void Awake()
         {
             VisualDebugger.visualDebuggerEnabled = visualDebugEnabled;
+        }
+
+        private void Start()
+        {
+            if ((int)SaveManager.Load(SaveManager.DataType.dint, "LGO").data == 0) // game has never been launched, 1 = launched
+            {
+                Debug.Log("Game is launching for the first time. Assigning default settings...");
+                SaveManager.AddData("LGO", 1);
+                InputHandler.AssignDefaults();
+                InputHandler.Save();
+            }
             EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
             gameplayManager = new GameplayManager();
             ApplicationQuitRequest += OnApplicationRequestQuit;
 
             // load control scheme
-            if (InputHandler.Load() == InputHandler.Status.ok)
+            InputHandler.Status status = InputHandler.Load();
+            if (status == InputHandler.Status.ok)
                 Debug.Log("Found control scheme.");
-            else
+            else if (status == InputHandler.Status.notfound)
             {
                 Debug.LogWarning("Control scheme not found, falling back to defaults...");
+                InputHandler.AssignDefaults();
+            }
+            else if (status == InputHandler.Status.noparse)
+            {
+                Debug.LogWarning("Control scheme could not be parsed correctly, falling back to defaults...");
                 InputHandler.AssignDefaults();
             }
         }

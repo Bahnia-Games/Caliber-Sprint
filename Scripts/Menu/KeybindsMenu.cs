@@ -27,6 +27,16 @@ namespace Assets.Git.Scripts.Menu
         private InputHandler.Inputs currentControl;
         private void Start()
         {
+            SetText(SetJumpButton, InputHandler.Inputs.Jump);
+            SetText(SetCrouchButton, InputHandler.Inputs.Crouch);
+            SetText(SetFireGrappleButton, InputHandler.Inputs.FireGrapple);
+            SetText(SetFireButton, InputHandler.Inputs.Fire);
+            SetText(SetAimButton, InputHandler.Inputs.Aim);
+            SetText(SetQuickSwitchButton, InputHandler.Inputs.QuickSwitch);
+            SetText(SetUnEquipButton, InputHandler.Inputs.UnEquip);
+            SetText(SetQuickMeleeButton, InputHandler.Inputs.QuickMelee);
+            SetText(SetThrowGrenadeButton, InputHandler.Inputs.ThrowGrenade);
+
             SetJumpButton.GetComponentInChildren<TMP_Text>().text = InputHandler.JumpKC.ToString();
             SetJumpButton.onClick.AddListener(delegate
             {
@@ -102,12 +112,14 @@ namespace Assets.Git.Scripts.Menu
         private IEnumerator AllowSet(Button button, InputHandler.Inputs control)
         {
             checkinFlag = true;
-            TMP_Text txt = button.GetComponentInChildren<TMP_Text>();
+            TextMeshProUGUI txt = button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = "Press any key.";
             yield return new WaitForSeconds(controlSetTime);
             checkinFlag = false;
             txt.text = control.ToString();
         }
+
+        private void SetText(Button button, InputHandler.Inputs control) => button.gameObject.GetComponentInChildren<TMP_Text>().text = control.ToString();
 
     }
 }

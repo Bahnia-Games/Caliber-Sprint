@@ -186,7 +186,6 @@ namespace Assets.Git.Scripts.Menu
                     break;
                 case 3:
                     mmc.LoadScene(MasterMiscController.Scenes.artcover2, true);
-
                     break;
                 case 4:
                     mmc.LoadScene(MasterMiscController.Scenes.ShaderTest, true);

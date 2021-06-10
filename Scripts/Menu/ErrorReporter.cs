@@ -4,6 +4,7 @@ using Assets.Git.Scripts.Misc;
 
 namespace Assets.Git.Scripts.Menu
 {
+    #pragma warning disable CS0649
     public class ErrorReporter : MonoBehaviour // attatch to script holder object
     {
         [SerializeField] private GameObject errorPopupGO;

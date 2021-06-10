@@ -39,12 +39,12 @@ namespace Assets.Git.Scripts.Gameplay
 
         public GameplaySaveManager(string dataPath, string hashPath)
         {
-            Debug.Log("Initializing a GameplaySaveManager instance with the data path: " + dataPath + " , and hash path : " + hashPath);
+            //Debug.Log("Initializing a GameplaySaveManager instance with the data path: " + dataPath + " , and hash path : " + hashPath);
             this.dataPath = dataPath;
             this.hashPath = hashPath;
         }
 
-        public (PlayerData data, DataState) Load()
+        public (PlayerData, DataState) Load()
         {
             try
             {
