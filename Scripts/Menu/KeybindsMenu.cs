@@ -111,6 +111,7 @@ namespace Assets.Git.Scripts.Menu
 
         private IEnumerator AllowSet(Button button, InputHandler.Inputs control)
         {
+            //Debug.Log("Awaiting keypress...");
             checkinFlag = true;
             TextMeshProUGUI txt = button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = "Press any key.";
@@ -119,7 +120,11 @@ namespace Assets.Git.Scripts.Menu
             txt.text = control.ToString();
         }
 
-        private void SetText(Button button, InputHandler.Inputs control) => button.gameObject.GetComponentInChildren<TMP_Text>().text = control.ToString();
+        private IEnumerator SetText(Button button, InputHandler.Inputs control) 
+        {
+            yield return new WaitForEndOfFrame(); // this is dumb but like a delay here is v important
+            button.gameObject.GetComponentInChildren<TMP_Text>().text = control.ToString();
+        }
 
     }
 }
