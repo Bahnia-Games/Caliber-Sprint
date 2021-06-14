@@ -21,11 +21,6 @@ namespace Assets.Git.Scripts.Gameplay
 
         //public string dataPath;
         //internal string hashPath;
-        private enum State { 
-            save,
-            load,
-            none
-        }
 
         public enum DataState
         {
@@ -34,8 +29,6 @@ namespace Assets.Git.Scripts.Gameplay
             corrupt,
             busy
         }
-
-        private State state = State.none;
 
         public GameplaySaveManager(string dataPath, string hashPath)
         {
@@ -48,35 +41,26 @@ namespace Assets.Git.Scripts.Gameplay
         {
             try
             {
-                if (state != State.save || state == State.none)
-                {                    
-                    if (!File.Exists(dataPath) || !File.Exists(hashPath))
-                        return (null, DataState.notfound);
+                if (!File.Exists(dataPath) || !File.Exists(hashPath))
+                    return (null, DataState.notfound);
 
-                    state = State.load;
-                    FileStream dataStream = new FileStream(dataPath, FileMode.Open);
-                    PlayerData data = (PlayerData)binaryFromatter.Deserialize(dataStream);
-                    string computeHash;
-                    using (SHA1 hasher = SHA1.Create())
-                        computeHash = BitConverter.ToString(hasher.ComputeHash(dataStream));
-                    dataStream.Close();
+                FileStream dataStream = new FileStream(dataPath, FileMode.Open);
+                PlayerData data = (PlayerData)binaryFromatter.Deserialize(dataStream);
+                string computeHash;
+                using (SHA1 hasher = SHA1.Create())
+                    computeHash = BitConverter.ToString(hasher.ComputeHash(dataStream));
+                dataStream.Close();
 
-                    string readHash;
-                    using (BinaryReader reader = new BinaryReader(File.Open(hashPath, FileMode.Open)))
-                        readHash = BitConverter.ToString(reader.ReadBytes(20));
+                string readHash;
+                using (BinaryReader reader = new BinaryReader(File.Open(hashPath, FileMode.Open)))
+                    readHash = BitConverter.ToString(reader.ReadBytes(20));
 
-                    if (readHash == computeHash)
-                        return (data, DataState.ok);
-                    else
-                    {
-                        Debug.LogError("Checksum invalid (is the checksum or save corrupted?) @GameplaySaveManager.cs PlayerData Load()");
-                        return (null, DataState.corrupt);
-                    }
-                }
+                if (readHash == computeHash)
+                    return (data, DataState.ok);
                 else
                 {
-                    Debug.LogError("Cannot load because savemanager is in another state. @GameplaySaveManager.cs PlayerData Load()");
-                    return (null, DataState.busy);
+                    Debug.LogError("Checksum invalid (is the checksum or save corrupted?) @GameplaySaveManager.cs PlayerData Load()");
+                    return (null, DataState.corrupt);
                 }
             } catch (FileNotFoundException ex)
             {
@@ -97,29 +81,21 @@ namespace Assets.Git.Scripts.Gameplay
         {
             try
             {
-                if (state != State.load || state == State.none)
-                {
-                    state = State.save;
-                    if (File.Exists(dataPath))
-                        File.Delete(dataPath);
-                    if (File.Exists(hashPath))
-                        File.Delete(hashPath);
+                if (File.Exists(dataPath))
+                    File.Delete(dataPath);
+                if (File.Exists(hashPath))
+                    File.Delete(hashPath);
 
-                    FileStream dataStream = new FileStream(dataPath, FileMode.Create);
-                    binaryFromatter.Serialize(dataStream, data);
-                    using (SHA1 hasher = SHA1.Create())
-                    {
-                        using (BinaryWriter writer = new BinaryWriter(File.Open(hashPath, FileMode.Create)))
-                            writer.Write(hasher.ComputeHash(dataStream));
-                    }
-
-                    dataStream.Close();
-                    Debug.Log("Successfully saved @GameplaySaveManager.cs Save()");
-                }
-                else
+                FileStream dataStream = new FileStream(dataPath, FileMode.Create);
+                binaryFromatter.Serialize(dataStream, data);
+                using (SHA1 hasher = SHA1.Create())
                 {
-                    Debug.LogError("Cannot save because savemanager is in another state. @GameplaySaveManager.cs Save()");
+                    using (BinaryWriter writer = new BinaryWriter(File.Open(hashPath, FileMode.Create)))
+                        writer.Write(hasher.ComputeHash(dataStream));
                 }
+
+                dataStream.Close();
+                Debug.Log("Successfully saved @GameplaySaveManager.cs Save()");
             } catch (Exception ex)
             {
                 if (!secondAttempt)

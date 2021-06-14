@@ -1,12 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Assets.Git.Scripts;
 using Assets.Git.Scripts.Gameplay;
 using System;
-using Assets.Git.Scripts.Misc;
 using Assets.Git.Scripts.Player.Inputs;
 
 namespace Assets.Git.Scripts.Misc
@@ -73,6 +69,21 @@ namespace Assets.Git.Scripts.Misc
 
         private void Start()
         {
+            #region general loading
+
+            gameplayManager = new GameplayManager();
+            ApplicationQuitRequest += OnApplicationRequestQuit;
+
+            #endregion
+
+            #region scene initialization
+
+            EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
+
+            #endregion
+
+            #region load and handle control scheme
+
             if ((int)SaveManager.Load(SaveManager.DataType.dint, "LGO").data == 0) // game has never been launched, 1 = launched
             {
                 Debug.Log("Game is launching for the first time. Assigning default settings...");
@@ -80,11 +91,7 @@ namespace Assets.Git.Scripts.Misc
                 InputHandler.AssignDefaults();
                 InputHandler.Save();
             }
-            EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
-            gameplayManager = new GameplayManager();
-            ApplicationQuitRequest += OnApplicationRequestQuit;
 
-            // load control scheme
             InputHandler.Status status = InputHandler.Load();
             if (status == InputHandler.Status.ok)
                 Debug.Log("Found control scheme.");
@@ -98,9 +105,10 @@ namespace Assets.Git.Scripts.Misc
                 Debug.LogWarning("Control scheme could not be parsed correctly, falling back to defaults...");
                 InputHandler.AssignDefaults();
             }
+
+            #endregion
         }
         private void OnEnable() => SceneManager.sceneLoaded += SetAduio;
-
 
         public void LoadScene(Scenes sceneName, bool useLoading = false)
         {
@@ -146,6 +154,8 @@ namespace Assets.Git.Scripts.Misc
             }
         }
 
+        #region application quit handler
+
         public static event EventHandler<QuitEventArgs> ApplicationQuitRequest;
         public void InvokeApplicationQuitRequest(object sender, QuitEventArgs args) => ApplicationQuitRequest.Invoke(sender, args);
         private void OnApplicationRequestQuit(object sender, QuitEventArgs args)
@@ -161,5 +171,7 @@ namespace Assets.Git.Scripts.Misc
             Debug.LogWarning("Quitting...");
             Application.Quit();
         }
+
+        #endregion
     }
 }

@@ -91,6 +91,7 @@ namespace Assets.Git.Scripts.Player.Inputs
 
         /// <summary>
         /// This should really only be called once... i think...
+        /// VERY IMPORTANT: keybinds only load at the end of a frame.
         /// </summary>
         /// <returns></returns>
         internal static Status Load()
