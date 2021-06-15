@@ -29,7 +29,10 @@ namespace Assets.Git.Scripts.Menu
                 masterVolumeSlider.value = 1;
         }
 
-        public void SetMasterVolume(float volume)
+        /// <summary>
+        /// Should only be called by buttons (NO REFERENCES)
+        /// </summary>
+        internal void SetMasterVolume(float volume)
         {
             currentMasterVolume = volume;
             float _val = volume * 100;
@@ -37,7 +40,7 @@ namespace Assets.Git.Scripts.Menu
             masterVolumePercentageText.text = _volume + "%";
         }
 
-        public void OnSaveClicked()
+        internal void OnSaveClicked()
         {
             SaveManager.AddData("masterAudio", currentMasterVolume);
             SaveManager.Save();

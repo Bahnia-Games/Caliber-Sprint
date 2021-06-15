@@ -25,6 +25,9 @@ public class MainMenu : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Should only be called by buttons. (NO REFERENCES)
+    /// </summary>
     public void Save() => SaveManager.Save();
 
     public void QuitGame()
