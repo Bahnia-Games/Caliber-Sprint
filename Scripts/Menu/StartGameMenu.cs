@@ -31,7 +31,9 @@ namespace Assets.Git.Scripts.Menu
             if (GameplayManager.playerData == null)
                 continueGameButton.interactable = false;
         }
-
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
         public void NewGameOnClick() => StartCoroutine(_NewGameOnClick());
 
         private IEnumerator _NewGameOnClick()
@@ -46,10 +48,12 @@ namespace Assets.Git.Scripts.Menu
 
             masterMiscController.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
         }
-
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
         public void LoadGameOnClick()
         {
-            
+            throw new NotImplementedException(); // i need to add this later
         }
     }
 }

@@ -30,90 +30,133 @@ namespace Assets.Git.Scripts.Menu
         private InputHandler.Inputs currentControl;
         private void Start()
         {
-            checkinCoroutineAllowSet = StartCoroutine(Init());
+            StartCoroutine(Init());
+
+            #region delegates
+
             SetJumpButton.GetComponentInChildren<TMP_Text>().text = InputHandler.JumpKC.ToString();
             SetJumpButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.Jump;
-                checkinTextLabel = BtToUI(SetJumpButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetJumpButton, InputHandler.JumpKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.Jump;
+                    checkinTextLabel = BtToUI(SetJumpButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetJumpButton, InputHandler.JumpKC));
+                }
             });
 
             SetCrouchButton.GetComponentInChildren<TMP_Text>().text = InputHandler.CrouchKC.ToString();
             SetCrouchButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.Crouch;
-                checkinTextLabel = BtToUI(SetCrouchButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetCrouchButton, InputHandler.CrouchKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.Crouch;
+                    checkinTextLabel = BtToUI(SetCrouchButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetCrouchButton, InputHandler.CrouchKC));
+                }
             });
 
             SetFireGrappleButton.GetComponentInChildren<TMP_Text>().text = InputHandler.FireGrappleKC.ToString();
             SetFireGrappleButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.FireGrapple;
-                checkinTextLabel = BtToUI(SetFireGrappleButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetFireGrappleButton, InputHandler.FireGrappleKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.FireGrapple;
+                    checkinTextLabel = BtToUI(SetFireGrappleButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetFireGrappleButton, InputHandler.FireGrappleKC));
+                }
             });
 
             SetFireButton.GetComponentInChildren<TMP_Text>().text = InputHandler.FireKC.ToString();
             SetFireButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.Fire;
-                checkinTextLabel = BtToUI(SetFireButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetAimButton, InputHandler.FireKC));
+                if (checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.Fire;
+                    checkinTextLabel = BtToUI(SetFireButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetAimButton, InputHandler.FireKC));
+                }
             });
 
             SetAimButton.GetComponentInChildren<TMP_Text>().text = InputHandler.AimKC.ToString();
             SetAimButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.Aim;
-                checkinTextLabel = BtToUI(SetAimButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetAimButton, InputHandler.AimKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.Aim;
+                    checkinTextLabel = BtToUI(SetAimButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetAimButton, InputHandler.AimKC));
+                }
             });
 
             SetQuickSwitchButton.GetComponentInChildren<TMP_Text>().text = InputHandler.QuickSwitchKC.ToString();
             SetQuickSwitchButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.QuickSwitch;
-                checkinTextLabel = BtToUI(SetQuickSwitchButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetQuickSwitchButton, InputHandler.QuickSwitchKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.QuickSwitch;
+                    checkinTextLabel = BtToUI(SetQuickSwitchButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetQuickSwitchButton, InputHandler.QuickSwitchKC));
+                }
             });
 
             SetUnEquipButton.GetComponentInChildren<TMP_Text>().text = InputHandler.UnEquipKC.ToString();
             SetUnEquipButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.UnEquip;
-                checkinTextLabel = BtToUI(SetUnEquipButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetUnEquipButton, InputHandler.UnEquipKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.UnEquip;
+                    checkinTextLabel = BtToUI(SetUnEquipButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetUnEquipButton, InputHandler.UnEquipKC));
+                }
             });
 
             SetQuickMeleeButton.GetComponentInChildren<TMP_Text>().text = InputHandler.QuickMeleeKC.ToString();
             SetQuickMeleeButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.QuickMelee;
-                checkinTextLabel = BtToUI(SetQuickMeleeButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetQuickMeleeButton, InputHandler.QuickMeleeKC));
+                if (!checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.QuickMelee;
+                    checkinTextLabel = BtToUI(SetQuickMeleeButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetQuickMeleeButton, InputHandler.QuickMeleeKC));
+                }
             });
 
             SetThrowGrenadeButton.GetComponentInChildren<TMP_Text>().text = InputHandler.ThrowGrenadeKC.ToString();
             SetThrowGrenadeButton.onClick.AddListener(delegate
             {
-                currentControl = InputHandler.Inputs.ThrowGrenade;
-                checkinTextLabel = BtToUI(SetThrowGrenadeButton);
-                checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetThrowGrenadeButton, InputHandler.ThrowGrenadeKC));
+                if (checkinFlag)
+                {
+                    currentControl = InputHandler.Inputs.ThrowGrenade;
+                    checkinTextLabel = BtToUI(SetThrowGrenadeButton);
+                    checkinCoroutineAllowSet = StartCoroutine(AllowSet(SetThrowGrenadeButton, InputHandler.ThrowGrenadeKC));
+                }
             });
+
+            #endregion
         }
 
-        private void Update() // not breaking
+        private void Update()
         {
             if (checkinFlag)
                 foreach (KeyCode cKey in Enum.GetValues(typeof(KeyCode)))
                     if (Input.GetKey(cKey))
                     {
-                        InputHandler.SetControl(currentControl, cKey);
-                        checkInKey = cKey;
-                        StopCoroutine(checkinCoroutineAllowSet);
-                        FinalizeAllowSet(checkinTextLabel);
+                        bool switchFlag  = false;
+                        switch (currentControl) // switch into controls that allow mouse buttons 1 and 0
+                        {
+                            case InputHandler.Inputs.Aim:
+                                switchFlag = true;
+                                CheckIn(cKey);
+                                break;
+                            case InputHandler.Inputs.Fire:
+                                switchFlag = true;
+                                CheckIn(cKey);
+                                break;
+                        }
+                        if (!switchFlag)
+                            if (cKey != KeyCode.Mouse0 || cKey != KeyCode.Mouse1) // do not allow mouse 1 or 0
+                                CheckIn(cKey); 
                         break;
                     }
                     else
@@ -141,24 +184,38 @@ namespace Assets.Git.Scripts.Menu
             TextMeshProUGUI txt = button.gameObject.GetComponentInChildren<TextMeshProUGUI>();
             txt.text = "Press any key.";
             yield return new WaitForSeconds(controlSetTime);
-            checkinFlag = false;
             FinalizeAllowSet(txt);
-            checkinCoroutineAllowSet = null;
         }
 
         private void FinalizeAllowSet(TextMeshProUGUI txt)
         {
+            checkinFlag = false;
+            checkinCoroutineAllowSet = null;
             if (checkInKey == KeyCode.None)
                 txt.text = "nul";
             else
                 txt.text = checkInKey.ToString();
         }
 
-        private TextMeshProUGUI BtToUI(Button b) { return b.GetComponent<TextMeshProUGUI>(); }
+        private void CheckIn(KeyCode key)
+        {
+            InputHandler.SetControl(currentControl, key);
+            checkInKey = key;
+            StopCoroutine(checkinCoroutineAllowSet);
+            FinalizeAllowSet(checkinTextLabel);
+        }
+
+        private TextMeshProUGUI BtToUI(Button b) { return b.GetComponentInChildren<TextMeshProUGUI>(); }
 
         private void SetText(Button button, KeyCode control) => button.gameObject.GetComponentInChildren<TMP_Text>().text = control.ToString();
-
-        internal void OnSaveClicked() => InputHandler.Save();
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
+        public void OnSaveClicked() => InputHandler.Save();
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
+        public void AssignDefaults() { InputHandler.AssignDefaults(); StartCoroutine(Init()); }
 
     }
 }

@@ -30,17 +30,19 @@ namespace Assets.Git.Scripts.Menu
         }
 
         /// <summary>
-        /// Should only be called by buttons (NO REFERENCES)
+        /// Do not call. Button delegate only (NO REFERENCES)
         /// </summary>
-        internal void SetMasterVolume(float volume)
+        public void SetMasterVolume(float volume)
         {
             currentMasterVolume = volume;
             float _val = volume * 100;
             int _volume = Int32.Parse(_val.ToString().Split('.')[0]);
             masterVolumePercentageText.text = _volume + "%";
         }
-
-        internal void OnSaveClicked()
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
+        public void OnSaveClicked()
         {
             SaveManager.AddData("masterAudio", currentMasterVolume);
             SaveManager.Save();

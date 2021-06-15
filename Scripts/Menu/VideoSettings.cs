@@ -64,14 +64,12 @@ namespace Assets.Git.Scripts.Menu
 
         private void Start()
         {
-            // this fucking SUCKS but i cant do anything about it atm
             qualityPresetsDD = dropdowns[0];
             textureQualityDD = dropdowns[1];
             anisotrophicTextureQualityDD = dropdowns[2];
             vsyncDD = dropdowns[3];
             realtimeReflectionsDD = dropdowns[4];
 
-            // makes me sick
             qualityPresetsDD.onValueChanged.AddListener(delegate {
                 HandleInputData(TargetSetting.qualityPreset, qualityPresetsDD.value);
                 AssignGraphicsQuality();
@@ -134,7 +132,9 @@ namespace Assets.Git.Scripts.Menu
                     break;
             }
         }
-
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
         public void SaveOnClick()
         {
             AssignPlayerPrefs();

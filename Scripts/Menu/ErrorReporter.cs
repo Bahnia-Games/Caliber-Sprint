@@ -41,7 +41,9 @@ namespace Assets.Git.Scripts.Menu
                     break;
             }
         }
-
+        /// <summary>
+        /// Do not call. Button delegate only (NO REFERENCES)
+        /// </summary>
         public void ErrorButtonOnClick()
         {
             switch (currentActionType)

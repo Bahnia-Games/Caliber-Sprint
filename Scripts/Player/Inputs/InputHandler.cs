@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace Assets.Git.Scripts.Player.Inputs
 {
     /// <summary>
-    /// To set the controls, do not access the variables directly, instead access the SetControl method
+    /// To set the controls, access the SetControl method
     /// </summary>
     public class InputHandler // controls are saved into playerprefs
     {
@@ -48,18 +48,17 @@ namespace Assets.Git.Scripts.Player.Inputs
             notfound
         }
 
-        public static KeyCode JumpKC;
-        public static KeyCode CrouchKC;
-        public static KeyCode FireGrappleKC;
-        public static KeyCode FireKC;
-        public static KeyCode AimKC;
-        public static KeyCode QuickSwitchKC;
-        public static KeyCode UnEquipKC;
-        public static KeyCode QuickMeleeKC;
-        public static KeyCode ThrowGrenadeKC;
+        public static KeyCode JumpKC { get; private set; }
+        public static KeyCode CrouchKC { get; private set; }
+        public static KeyCode FireGrappleKC { get; private set; }
+        public static KeyCode FireKC { get; private set; }
+        public static KeyCode AimKC { get; private set; }
+        public static KeyCode QuickSwitchKC { get; private set; }
+        public static KeyCode UnEquipKC { get; private set; }
+        public static KeyCode QuickMeleeKC { get; private set; }
+        public static KeyCode ThrowGrenadeKC { get; private set; }
 
         static bool IHFO = true;
-
 
         static InputHandler() 
         {

@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// Should only be called by buttons. (NO REFERENCES)
+    /// Do not call. Button delegate only (NO REFERENCES)
     /// </summary>
     public void Save() => SaveManager.Save();
 
