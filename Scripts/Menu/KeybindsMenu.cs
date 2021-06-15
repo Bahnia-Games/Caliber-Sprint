@@ -113,6 +113,7 @@ namespace Assets.Git.Scripts.Menu
                         InputHandler.SetControl(currentControl, cKey);
                         checkInKey = cKey;
                         StopCoroutine(checkinCoroutineAllowSet);
+                        FinalizeAllowSet(checkinTextLabel);
                         break;
                     }
                     else
