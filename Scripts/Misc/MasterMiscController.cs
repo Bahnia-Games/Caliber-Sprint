@@ -79,6 +79,7 @@ namespace Assets.Git.Scripts.Misc
             #region scene initialization
 
             EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
+            Player.Audio.AudioHandler.Init();
 
             #endregion
 
