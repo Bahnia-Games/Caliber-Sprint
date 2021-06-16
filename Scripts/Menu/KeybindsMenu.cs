@@ -10,6 +10,10 @@ namespace Assets.Git.Scripts.Menu
 #pragma warning disable CS0642
     public class KeybindsMenu : MonoBehaviour
     {
+        /// Future considerations:
+        /// Making sure only 1 key per control (pain in the ass to code)
+        /// Certain controls cant use certain buttons        
+        
         [SerializeField] private int controlSetTime;
 
         [SerializeField] private Button SetJumpButton;
@@ -142,21 +146,7 @@ namespace Assets.Git.Scripts.Menu
                 foreach (KeyCode cKey in Enum.GetValues(typeof(KeyCode)))
                     if (Input.GetKey(cKey))
                     {
-                        bool switchFlag  = false;
-                        switch (currentControl) // switch into controls that allow mouse buttons 1 and 0
-                        {
-                            case InputHandler.Inputs.Aim:
-                                switchFlag = true;
-                                CheckIn(cKey);
-                                break;
-                            case InputHandler.Inputs.Fire:
-                                switchFlag = true;
-                                CheckIn(cKey);
-                                break;
-                        }
-                        if (!switchFlag)
-                            if (cKey != KeyCode.Mouse0 || cKey != KeyCode.Mouse1) // do not allow mouse 1 or 0
-                                CheckIn(cKey); 
+                        CheckIn(cKey);
                         break;
                     }
                     else
@@ -176,6 +166,7 @@ namespace Assets.Git.Scripts.Menu
             SetText(SetUnEquipButton, InputHandler.UnEquipKC);
             SetText(SetQuickMeleeButton, InputHandler.QuickMeleeKC);
             SetText(SetThrowGrenadeButton, InputHandler.ThrowGrenadeKC);
+            
         }
 
         private IEnumerator AllowSet(Button button, KeyCode control)
@@ -207,7 +198,7 @@ namespace Assets.Git.Scripts.Menu
 
         private TextMeshProUGUI BtToUI(Button b) { return b.GetComponentInChildren<TextMeshProUGUI>(); }
 
-        private void SetText(Button button, KeyCode control) => button.gameObject.GetComponentInChildren<TMP_Text>().text = control.ToString();
+        private void SetText(Button button, KeyCode control) => button.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = control.ToString(); // WHY WONT THIS FUCKING WORK>>>>??????
         /// <summary>
         /// Do not call. Button delegate only (NO REFERENCES)
         /// </summary>

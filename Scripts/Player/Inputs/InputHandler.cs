@@ -185,9 +185,9 @@ namespace Assets.Git.Scripts.Player.Inputs
             FireGrappleKC = KeyCode.F;
             FireKC = KeyCode.Mouse0;
             AimKC = KeyCode.Mouse1;
-            //QuickSwitchKC = KeyCode.; /* (not implimented) */
+            QuickSwitchKC = KeyCode.None; /* (not implimented) */
             UnEquipKC = KeyCode.E;
-            //QuickMeleeKC = KeyCode.; /* (not implimented) */
+            QuickMeleeKC = KeyCode.None; /* (not implimented) */
             ThrowGrenadeKC = KeyCode.Q;
             Save();
         }
