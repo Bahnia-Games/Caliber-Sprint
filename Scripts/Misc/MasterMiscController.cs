@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using Assets.Git.Scripts.Gameplay;
 using System;
 using Assets.Git.Scripts.Player.Inputs;
+using Assets.Git.Scripts.Player.Audio;
 
 namespace Assets.Git.Scripts.Misc
 {
@@ -79,7 +80,7 @@ namespace Assets.Git.Scripts.Misc
             #region scene initialization
 
             EnvironmentController.environmentSoundType = EnvironmentController.SoundType.closed;
-            Player.Audio.AudioHandler.Init();
+            AudioHandler.Init();
 
             #endregion
 
@@ -142,18 +143,7 @@ namespace Assets.Git.Scripts.Misc
                 yield return new WaitForEndOfFrame();
         }
 
-        private void SetAduio(Scene unused, LoadSceneMode _unused)
-        {
-            (object data, SaveManager.GetStatus status) audio = SaveManager.Load(SaveManager.DataType.dfloat, "masterAudio");
-            if (audio.status == SaveManager.GetStatus.success)
-            {
-            }
-            else
-            {
-                masterAudio = 1.0f; AudioListener.volume = masterAudio;
-                Debug.LogWarning("Data for master audio could not be found, defaulting to 100% @MasterMiscController SetAudio()");
-            }
-        }
+        private void SetAduio(Scene unused, LoadSceneMode _unused) { AudioHandler.Init(); AudioHandler.Refresh(); }
 
         #region application quit handler
 

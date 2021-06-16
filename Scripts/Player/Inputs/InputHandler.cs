@@ -95,7 +95,7 @@ namespace Assets.Git.Scripts.Player.Inputs
         /// <returns></returns>
         internal static Status Load()
         {
-            (object data, SaveManager.GetStatus status) jData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Jump.ToString()); // serves as a model
+            var jData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Jump.ToString()); // serves as a model
             Debug.Log("Loading keybinds... "/*jData: " + jData.data.ToString()*/);
             //JumpKC = (KeyCode)Enum.Parse(typeof(KeyCode), (string)jData.data);
             if (jData.status == SaveManager.GetStatus.notfound)
@@ -106,7 +106,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             { LoadFail("Jump"); return Status.noparse; }
             // :(
                 
-            (object data, SaveManager.GetStatus status) cData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Crouch.ToString());
+            var cData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Crouch.ToString());
             if (cData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)cData.data, true, out KeyCode cr))
@@ -114,7 +114,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Crouch"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) fgData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.FireGrapple.ToString());
+            var fgData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.FireGrapple.ToString());
             if (fgData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)fgData.data, true, out KeyCode fgr))
@@ -122,7 +122,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Fire Grapple"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) fData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Fire.ToString());
+            var fData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Fire.ToString());
             if (fgData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)fData.data, true, out KeyCode fr))
@@ -130,7 +130,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Fire"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) aData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Aim.ToString());
+            var aData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.Aim.ToString());
             if (aData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)aData.data, true, out KeyCode ar))
@@ -138,7 +138,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Aim"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) qsData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickSwitch.ToString());
+            var qsData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickSwitch.ToString());
             if (qsData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)qsData.data, true, out KeyCode qsr))
@@ -146,7 +146,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Quick Switch"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) uData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.UnEquip.ToString());
+            var uData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.UnEquip.ToString());
             if (uData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)uData.data, true, out KeyCode ur))
@@ -154,7 +154,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("Unequip"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) qmData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickMelee.ToString());
+            var qmData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.QuickMelee.ToString());
             if (qmData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)qmData.data, true, out KeyCode qmr))
@@ -162,7 +162,7 @@ namespace Assets.Git.Scripts.Player.Inputs
             else
             { LoadFail("QuickMelee"); return Status.noparse; }
 
-            (object data, SaveManager.GetStatus status) gData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.ThrowGrenade.ToString());
+            var gData = SaveManager.Load(SaveManager.DataType.dstring, Inputs.ThrowGrenade.ToString());
             if (gData.status == SaveManager.GetStatus.notfound)
                 return Status.notfound;
             if (Enum.TryParse<KeyCode>((string)gData.data, true, out KeyCode gr))

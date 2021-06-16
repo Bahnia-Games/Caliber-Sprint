@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using Assets.Git.Scripts;
+﻿using UnityEngine;
 
 namespace Assets.Git.Scripts.Player.Audio
 {
@@ -18,6 +16,7 @@ namespace Assets.Git.Scripts.Player.Audio
                 MasterVolume = 1;
             }
         }
+        internal static void Refresh() => AudioListener.volume = MasterVolume;
         internal static void SaveVolume() { SaveManager.AddData("masterAudio", MasterVolume); SaveManager.Save(); }
         internal static void SetVolume(float v) { MasterVolume = v; AudioListener.volume = MasterVolume; }
     }
