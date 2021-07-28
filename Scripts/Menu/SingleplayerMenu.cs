@@ -28,9 +28,9 @@ namespace Assets.Git.Scripts.Menu
         /// 0: Test scene 1
         /// 1: Chloe Firing Range
         /// 2: art cover 1
-        /// 3: art cover  1
-        /// 4: shader test 1
-        /// 5: nul
+        /// 3: art cover 2
+        /// 4: art cover 3
+        /// 5: shader test 1
         /// 6: nul
         /// 7: nul
         /// 8: nul
@@ -188,6 +188,9 @@ namespace Assets.Git.Scripts.Menu
                     mmc.LoadScene(MasterMiscController.Scenes.artcover2, true);
                     break;
                 case 4:
+                    mmc.LoadScene(MasterMiscController.Scenes.artcover3, true);
+                    break;
+                case 5:
                     mmc.LoadScene(MasterMiscController.Scenes.ShaderTest, true);
                     break;
             }

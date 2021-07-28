@@ -49,6 +49,7 @@ namespace Assets.Git.Scripts.Misc
             // artwork scenes
             artcover,
             artcover2,
+            artcover3,
 
             // test scenes
 
