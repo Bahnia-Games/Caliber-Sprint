@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿// stale
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Git.Scripts
 {
-    public class RBMovementController : MonoBehaviour
+    public class OldRBMovementController : MonoBehaviour
     {
         //disable warnings
         #pragma warning disable CS0108, CS0104
@@ -69,6 +70,9 @@ namespace Assets.Git.Scripts
 
         bool canWallrunFlag;
         bool wallrunStartFireOnce = true;
+        private WrType curtype;
+
+        Coroutine wallrunInst;
 
         public enum States
         {
@@ -183,9 +187,28 @@ namespace Assets.Git.Scripts
             /// checks:
             /// jump amount <= 2 jumps
 
-            if (Input.GetKeyDown(jumpKey) && amtJump <= 2)
+            bool normalJump = true;
+            if (state == States.wallrun && Input.GetKeyDown(jumpKey) && amtJump < 2) // bug watch
             {
+                normalJump = false;
+                switch (curtype)
+                {
+                    case WrType.l:
+                        rb.AddForce((Vector3.up + new Vector3(0, 0, 0)) * jumpForce, ForceMode.Force); // left wallrun exit offset
+                        Debug.Log("fired cur");
+                        break;
+                    case WrType.r:
+                        rb.AddForce((Vector3.up + new Vector3(0, 0, 0)) * jumpForce, ForceMode.Force); // right wallrun exit offset
+                        Debug.Log("fired cur");
+                        break;
+                }
+            }
 
+            if (Input.GetKeyDown(jumpKey) && amtJump < 2 && normalJump)
+            {
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Force);
+                amtJump++;
+                Debug.Log("fired nor");
             }
 
             if (Input.GetKey(crouchKey) && isGrounded)
@@ -209,7 +232,8 @@ namespace Assets.Git.Scripts
                 slideCoolTimer -= Time.deltaTime;
             }
 
-            WrType curtype = WrType.r;
+            bool wrFlag = false;
+            curtype = WrType.r;
             if ((Physics.CheckSphere(wallCheckL.position, wallRunCheckRad, 1 << 16) || Physics.CheckSphere(wallCheckR.position, wallRunCheckRad, 1 << 16)) && !isGrounded && canWallrunFlag) // check left/right wallrun
             {
                 amtJump = 0;
@@ -217,19 +241,21 @@ namespace Assets.Git.Scripts
                 rb.useGravity = false;
                 if (wallrunStartFireOnce && Physics.CheckSphere(wallCheckR.position, wallRunCheckRad, 1 << 16))
                 {
-                    StartCoroutine(Wallrun(WrType.l));
+                    wallrunInst = StartCoroutine(Wallrun(WrType.l));
                     curtype = WrType.l;
+                    wrFlag = true;
                 }
                 if (wallrunStartFireOnce && Physics.CheckSphere(wallCheckL.position, wallRunCheckRad, 1 << 16))
                 {
-                    StartCoroutine(Wallrun(WrType.r));
+                    wallrunInst = StartCoroutine(Wallrun(WrType.r));
                     curtype = WrType.r;
-
+                    wrFlag = true;
                 }
             }
-            else
+            else if (wrFlag)
             {
-                StopCoroutine(Wallrun(curtype));
+                Debug.Log("hey");
+                StopCoroutine(wallrunInst);
                 switch (curtype)
                 {
                     case WrType.r:

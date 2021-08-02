@@ -1,22 +1,23 @@
+// stale
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class WeaponManager : MonoBehaviour // this was made in the dark days, before i knew what an enum was...
+public class OldWeaponManager : MonoBehaviour // this was made in the dark days, before i knew what an enum was...
 {
 #pragma warning disable CS1030
 
-    public Animator animator;
+    /*public Animator animator;
     public PlayerAnimationController playerAnimationController;
-    private GunController gunController;
+    private OldGunController gunController;
     private float weaponDeployTime;
     private string weaponEquipClipName;
 
     private int selectedWeapon;
     private bool isAnyEquip;
 
-    private GunController thisWeaponController;
+    private OldGunController thisWeaponController;
     private GrenadeController thisGrenadeController;
     private Grapplev2 thisGrappleController;
 
@@ -84,7 +85,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
 
         if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha1))
         {
-            thisWeaponController = thisWeapon.GetComponent<GunController>();
+            thisWeaponController = thisWeapon.GetComponent<OldGunController>();
             SelectWeapon(0);
         } else
         {
@@ -96,7 +97,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
         #region weapon 2 (2, ID 1)
         if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha2))
         {
-            thisWeaponController = thisWeapon2.GetComponent<GunController>();
+            thisWeaponController = thisWeapon2.GetComponent<OldGunController>();
             SelectWeapon(1);
         } else
         {
@@ -108,7 +109,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
 
         if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha3))
         {
-            thisWeaponController = thisWeapon3.GetComponent<GunController>();
+            thisWeaponController = thisWeapon3.GetComponent<OldGunController>();
             SelectWeapon(2);
         }
 
@@ -118,7 +119,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
 
         if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha4))
         {
-            thisWeaponController = thisWeapon4.GetComponent<GunController>();
+            thisWeaponController = thisWeapon4.GetComponent<OldGunController>();
             SelectWeapon(3);
         }
 
@@ -128,7 +129,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
 
         if (!isAnyEquip && Input.GetKeyDown(KeyCode.Alpha5))
         {
-            thisWeaponController = thisWeapon5.GetComponent<GunController>();
+            thisWeaponController = thisWeapon5.GetComponent<OldGunController>();
             SelectWeapon(4);
         }
 
@@ -139,7 +140,7 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
         if (Input.GetKeyDown(KeyCode.E) && isAnyEquip)
         {
             isAnyEquip = false;
-            StartCoroutine(thisWeaponController.Deploy(false));
+            //StartCoroutine(thisWeaponController.Deploy(false));
         }
 
         #endregion
@@ -170,8 +171,8 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
             thisWeapon5.SetActive(true);
         // and so on, continue support
 
-        weaponDeployTime = thisWeaponController.weaponDeployTime;
-        weaponEquipClipName = thisWeaponController.DEPLOY;
+        //weaponDeployTime = thisWeaponController.weaponDeployTime;
+        //weaponEquipClipName = thisWeaponController.DEPLOY;
 
         playerAnimationController.PlayAnim(weaponEquipClipName);
     }
@@ -182,8 +183,9 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
         if (isAnyEquip)
         {
             hasWeapon = true;
-            StartCoroutine(thisWeaponController.Deploy(false));
-            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+            //StartCoroutine(thisWeaponController.Deploy(false));
+            //yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+            yield return null;
         }
         else
             hasWeapon = false;
@@ -197,13 +199,14 @@ public class WeaponManager : MonoBehaviour // this was made in the dark days, be
             //#warning this dont work v
             //StartCoroutine(thisWeaponController.Deploy(true)); // as expected this doesnt work, see above method
             SelectWeapon(selectedWeapon);
-            yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+            //yield return new WaitForSeconds(thisWeaponController.weaponDeployTime);
+            yield return null;
         }
 
         StartCoroutine(thisGrenadeController.HoldGrenade(false));
         yield return new WaitForSeconds(thisGrenadeController.grenadeEquipTime);
         thisGrenade.SetActive(false);
-    }
+    }*/
         
 
 }
