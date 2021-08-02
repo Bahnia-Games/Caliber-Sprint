@@ -58,7 +58,7 @@ namespace Assets.Git.Scripts.Gameplay
         public static PlayerData playerData { get; private set; }
 
         private GameplaySaveManager gsm;
-        private ErrorReporter errorReporter;
+        internal ErrorReporter errorReporter { get; private set; }
 
         private string dataPath;
         private string hashPath;

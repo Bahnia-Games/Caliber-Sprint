@@ -5,12 +5,14 @@ using Assets.Git.Scripts.Misc;
 namespace Assets.Git.Scripts.Menu
 {
     #pragma warning disable CS0649
-    public class ErrorReporter : MonoBehaviour // attatch to script holder object
+    public class ErrorReporter : MonoBehaviour // attatch to mmc
     {
         [SerializeField] private GameObject errorPopupGO;
         [SerializeField] private TMP_Text errorTitle;
         [SerializeField] private TMP_Text errorText;
         [SerializeField] private TMP_Text buttonUGUI;
+
+        private static bool inGameFlag = false;
 
         private ActionType currentActionType;
 
@@ -21,12 +23,16 @@ namespace Assets.Git.Scripts.Menu
             saveAndQuit
         }
 
-        public void ReportError(string title, string message = "", ActionType actionType = ActionType.ok)
+        public void ReportError(string title, string message = "", ActionType actionType = ActionType.ok, bool inGame = false)
         {
             errorPopupGO.SetActive(true);
             errorTitle.text = title;
             errorText.text = message;
             currentActionType = actionType;
+
+            inGameFlag = inGame;
+            if (inGameFlag)
+            { Time.timeScale = 0; Cursor.lockState = CursorLockMode.None; }
 
             switch (actionType)
             {
@@ -50,6 +56,8 @@ namespace Assets.Git.Scripts.Menu
             {
                 case ActionType.ok:
                     errorPopupGO.SetActive(false);
+                    if (inGameFlag)
+                    { Time.timeScale = 1; Cursor.lockState = CursorLockMode.Locked; }
                     break;
                 case ActionType.quit:
                     errorPopupGO.SetActive(false);
