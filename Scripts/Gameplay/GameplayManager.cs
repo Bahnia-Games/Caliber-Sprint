@@ -72,8 +72,6 @@ namespace Assets.Git.Scripts.Gameplay
             gsm = new GameplaySaveManager(dataPath, hashPath);
             playerData = new PlayerData();
             ReadData();
-
-            
         }
         public void OnDestroy() => WriteData();
 
@@ -117,7 +115,7 @@ namespace Assets.Git.Scripts.Gameplay
         public void ReadData() 
         {
             Debug.Log("Attempting to read data @GameplayManager.cs ReadData()");
-            (PlayerData data, GameplaySaveManager.DataState state) loadData = gsm.Load();
+            var loadData = gsm.Load();
             if (loadData.state == GameplaySaveManager.DataState.ok)
                 playerData = loadData.data;
             if (loadData.state == GameplaySaveManager.DataState.corrupt)

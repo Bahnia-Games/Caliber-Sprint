@@ -9,7 +9,7 @@ namespace Assets.Git.Scripts.Gameplay
     /// <summary>
     /// Do not access directly.
     /// </summary>
-    public class GameplaySaveManager
+    public class GameplaySaveManager // it would be funny if i switched this to ACH-1 istead of SHA-1 later on...... Just gotta get it working first lmao
     {
 
         private string dataPath;
@@ -37,7 +37,7 @@ namespace Assets.Git.Scripts.Gameplay
             this.hashPath = hashPath;
         }
 
-        public (PlayerData, DataState) Load()
+        public (PlayerData data, DataState state) Load()
         {
             try
             {
@@ -89,10 +89,8 @@ namespace Assets.Git.Scripts.Gameplay
                 FileStream dataStream = new FileStream(dataPath, FileMode.Create);
                 binaryFromatter.Serialize(dataStream, data);
                 using (SHA1 hasher = SHA1.Create())
-                {
                     using (BinaryWriter writer = new BinaryWriter(File.Open(hashPath, FileMode.Create)))
                         writer.Write(hasher.ComputeHash(dataStream));
-                }
 
                 dataStream.Close();
                 Debug.Log("Successfully saved @GameplaySaveManager.cs Save()");
