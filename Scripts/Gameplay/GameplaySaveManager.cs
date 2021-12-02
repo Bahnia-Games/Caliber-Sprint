@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
+//using System.Security.Cryptography;
+using ACH_1_Demonstrator;
 using UnityEngine;
 
 namespace Assets.Git.Scripts.Gameplay
@@ -47,7 +48,7 @@ namespace Assets.Git.Scripts.Gameplay
                 FileStream dataStream = new FileStream(dataPath, FileMode.Open);
                 PlayerData data = (PlayerData)binaryFromatter.Deserialize(dataStream);
                 string computeHash;
-                using (SHA1 hasher = SHA1.Create())
+                using (ACH1 hasher = new ACH1(ACH1.InitType.stream))
                     computeHash = BitConverter.ToString(hasher.ComputeHash(dataStream));
                 dataStream.Close();
 
@@ -88,7 +89,7 @@ namespace Assets.Git.Scripts.Gameplay
 
                 FileStream dataStream = new FileStream(dataPath, FileMode.Create);
                 binaryFromatter.Serialize(dataStream, data);
-                using (SHA1 hasher = SHA1.Create())
+                using (ACH1 hasher = new ACH1(ACH1.InitType.stream))
                     using (BinaryWriter writer = new BinaryWriter(File.Open(hashPath, FileMode.Create)))
                         writer.Write(hasher.ComputeHash(dataStream));
 
