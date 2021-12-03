@@ -200,7 +200,10 @@ namespace ACH_1_Demonstrator
                             targetLength = toRead;
                         else
                             targetLength = readCount;
-                        Array.Copy((byte[])input, targetIndex, block ??= new byte[targetLength], 0, readCount - (readCount - targetLength));
+                        //Array.Copy((byte[])input, targetIndex, block ??= new byte[targetLength], 0, readCount - (readCount - targetLength));
+                        if (block == null)
+                            block = new byte[targetLength];
+                        Array.Copy((byte[])input, targetIndex, block, 0, readCount - (readCount - targetLength));
                         computeFlag = !(block.Length < readCount);
                         break;
                     case InitType.text:
@@ -211,7 +214,10 @@ namespace ACH_1_Demonstrator
                             targetLength = toRead;
                         else
                             targetLength = readCount;
-                        Array.Copy(inputBytes, targetIndex, block ??= new byte[targetLength], 0, readCount - (readCount - targetLength));
+                        if (block == null)
+                            block = new byte[targetLength];
+                        //Array.Copy(inputBytes, targetIndex, block ??= new byte[targetLength], 0, readCount - (readCount - targetLength));
+                        Array.Copy(inputBytes, targetIndex, block, 0, readCount - (readCount - targetLength));
                         computeFlag = !(block.Length < readCount);
                         break;
                     case InitType.stream: // seqsr not orking properly
@@ -627,7 +633,10 @@ namespace ACH_1_Demonstrator
                 fs.Position = this.readCount * computeIteration;
                 int fileLength = (int)new FileInfo((string)input).Length;
                 int count = Math.Min(fileLength - (computeIteration * this.readCount), this.readCount);
-                readCount = fs.Read(readBytes ??= new byte[count], 0, count);
+                if (readBytes == null)
+                    readBytes = new byte[count];
+                //readCount = fs.Read(readBytes ??= new byte[count], 0, count);
+                readCount = fs.Read(readBytes, 0, count);
             }
             return readCount ?? 0;
         }
@@ -642,13 +651,19 @@ namespace ACH_1_Demonstrator
             {
                 ((FileStream)input).Position = computeIteration * this.readCount;
                 int residue = (int)(((FileStream)input).Length - ((FileStream)input).Position);
-                readCount = ((FileStream)input).Read(readBytes ??= new byte[this.readCount], 0, (int)Mathf.Min(residue, this.readCount));
+                if (readBytes == null)
+                    readBytes = new byte[this.readCount];
+                //readCount = ((FileStream)input).Read(readBytes ??= new byte[this.readCount], 0, (int)Mathf.Min(residue, this.readCount));
+                readCount = ((FileStream)input).Read(readBytes, 0, (int)Mathf.Min(residue, this.readCount));
             }
             else if (inputType == typeof(MemoryStream))
             {
                 ((MemoryStream)input).Position = computeIteration * this.readCount;
                 int residue = (int)(((MemoryStream)input).Length - ((MemoryStream)input).Position);
-                readCount = ((MemoryStream)input).Read(readBytes ??= new byte[this.readCount], 0, (int)Mathf.Min(residue, this.readCount));
+                if (readBytes == null)
+                    readBytes = new byte[this.readCount];
+                //readCount = ((MemoryStream)input).Read(readBytes ??= new byte[this.readCount], 0, (int)Mathf.Min(residue, this.readCount));
+                readCount = ((MemoryStream)input).Read(readBytes, 0, (int)Mathf.Min(residue, this.readCount));
             }
             else
                 throw new ArgumentException($"Parameter input has an invalid type {input.GetType()}.");
