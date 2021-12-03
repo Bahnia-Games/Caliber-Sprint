@@ -21,6 +21,14 @@ namespace Assets.Git.Scripts.Misc
 
         public GameplayManager gameplayManager; // per scene. make sure none already preexist
 
+        [Header("Rich Presence")]
+        [SerializeField] internal MasterDRPController masterDRPController;
+        [SerializeField] private string initialState = null;
+        [SerializeField] private string initialDetail = null;
+        /// <summary>
+        /// This CANNOT be a property, so do NOT update this reference.
+        /// </summary>
+
         [Header("Misc")]
         [SerializeField] private bool visualDebugEnabled = false;
         public enum Scenes
@@ -108,6 +116,21 @@ namespace Assets.Git.Scripts.Misc
                 Debug.LogWarning("Control scheme could not be parsed correctly, falling back to defaults...");
                 InputHandler.AssignDefaults();
             }
+
+            #endregion
+
+            #region Discord Rich Presence and Multiplayer controller
+
+            MasterDRPController tdrp;
+            if (TryGetComponent<MasterDRPController>(out tdrp))
+                masterDRPController = tdrp;
+            else
+                masterDRPController = gameObject.AddComponent<MasterDRPController>();
+            masterDRPController.Initialize(new Discord.Activity
+            {
+                State = initialState,
+                Details = initialDetail
+            });
 
             #endregion
         }
