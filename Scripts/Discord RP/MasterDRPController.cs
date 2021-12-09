@@ -16,7 +16,9 @@ public class MasterDRPController : MonoBehaviour
 
     //private MasterMiscController mmc;
     //public MasterDRPController(MasterMiscController mmc) => this.mmc = mmc;
-    void Start()
+    void Awake() => OnRequestUse();
+    private void Start() => OnRequestUse();
+    private void OnRequestUse()
     {
         MasterDiscord = new D.Discord(token, 0);
         MasterActivityManager = MasterDiscord.GetActivityManager();
