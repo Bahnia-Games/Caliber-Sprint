@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// stale
 public class Projectile : MonoBehaviour
 {
     public string projectileType;
