@@ -119,19 +119,19 @@ namespace Assets.Git.Scripts
 
         private void Awake()
         {
-            VisualDebugger.InitLog(1);
-            VisualDebugger.InitLog(2);
-            VisualDebugger.InitLog(3);
-            VisualDebugger.InitLog(4);
+            //VisualDebugger.InitLog(1);
+            //VisualDebugger.InitLog(2);
+            //VisualDebugger.InitLog(3);
+            //VisualDebugger.InitLog(4);
         }
 
         // Update is called once per frame
         void Update()
         {
             state = States.idle;
-            VisualDebugger.Log(1, "Amt Jump", amtJump);
-            VisualDebugger.Log(2, "Is Grounded", isGrounded);
-            VisualDebugger.Log(3, "Speed", rb.velocity);
+            //VisualDebugger.Log(1, "Amt Jump", amtJump);
+            //VisualDebugger.Log(2, "Is Grounded", isGrounded);
+            //VisualDebugger.Log(3, "Speed", rb.velocity);
 
             movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
 

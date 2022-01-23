@@ -16,7 +16,7 @@ public class VisualDebugger : MonoBehaviour
         {
             for (int i = 1; i <= 12; i++)
             {
-                string _name = "debug slot (" + i + ")";
+                string _name = $"debug slot ({i})";
                 GameObject _go = GameObject.Find(_name);
                 if (_go != null)
                     debugSlot[i - 1] = _go.GetComponent<Transform>();
@@ -36,16 +36,17 @@ public class VisualDebugger : MonoBehaviour
             {
                 Debug.LogError(ex);
             }
-        } else if (!visualDebuggerEnabled)
+        }
+        else if (!visualDebuggerEnabled)
             Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
     }
 
     public static void Log(int index, string variableName, object data)
     {
         if (visualDebuggerEnabled)
-            debugText[index - 1].text = variableName + ": " + data.ToString();
+            debugText[index - 1].text = $"{variableName}: {data.ToString() ?? "null"}";
         //else if (!visualDebuggerEnabled)
-            //Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
-        
+        //Debug.LogWarning("Unable to assign variable to visual debugger, it is currently disabled on this scene.");
+
     }
 }

@@ -13,7 +13,7 @@ namespace Assets.Git.Scripts.Player
 
         private void Start() => initialPos = transform.localPosition;
 
-        public void Update()
+        public void Update() // broken atm, no idea why
         {
             float mx = -Input.GetAxis("Mouse X") * swayAmount;
             float my = -Input.GetAxis("Mouse Y") * swayAmount;

@@ -68,7 +68,12 @@ namespace Assets.Git.Scripts.Gameplay
             dataPath = Application.persistentDataPath + "/main.csplayerdata";
             hashPath = Application.persistentDataPath + "/main.hshe";
 
-            errorReporter = GetComponent<ErrorReporter>();
+            ErrorReporter reporter = new ErrorReporter();
+            if (TryGetComponent<ErrorReporter>(out reporter))
+                errorReporter = reporter;
+            else
+                throw new MissingComponentException("Error! No error reporter attatched to Misc Script Holder (or no valid Master Misc Controller object). Please attatch one.");
+
             gsm = new GameplaySaveManager(dataPath, hashPath);
             playerData = new PlayerData();
             ReadData();
@@ -121,10 +126,10 @@ namespace Assets.Git.Scripts.Gameplay
             if (loadData.state == GameplaySaveManager.DataState.corrupt)
             {
                 DeleteSave();
-                errorReporter.ReportError("Corrupt save", "GameplayManager could not read save. Please create a new game.", ErrorReporter.ActionType.ok);
+                errorReporter.ReportError("Corrupt save", "GameplayManager could not read save. Please create a new game.", ErrorReporter.ActionType.ok, true);
             }
             if (loadData.state == GameplaySaveManager.DataState.notfound)
-                errorReporter.ReportError("Save not found", "Game save data could not be located on this machine.", ErrorReporter.ActionType.ok);
+                errorReporter.ReportError("Save not found", "Game save data could not be located on this machine.", ErrorReporter.ActionType.ok, true);
             if (loadData.state == GameplaySaveManager.DataState.busy)
                 errorReporter.ReportError("Save manager fail", "SaveManager is currently busy. Please try to load game again (if the error persists, please see [placeholder].", ErrorReporter.ActionType.ok);
 

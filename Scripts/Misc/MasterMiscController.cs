@@ -25,6 +25,7 @@ namespace Assets.Git.Scripts.Misc
         [SerializeField] internal MasterDRPController masterDRPController;
         [SerializeField] private string initialState = null;
         [SerializeField] private string initialDetail = null;
+        [SerializeField] private bool useDRP = true;
         /// <summary>
         /// This CANNOT be a property, so do NOT update this reference.
         /// </summary>
@@ -122,15 +123,18 @@ namespace Assets.Git.Scripts.Misc
             #region Discord Rich Presence and Multiplayer controller
 
             MasterDRPController tdrp;
-            if (TryGetComponent<MasterDRPController>(out tdrp))
-                masterDRPController = tdrp;
-            else
-                masterDRPController = gameObject.AddComponent<MasterDRPController>();
-            masterDRPController.Initialize(new Discord.Activity
+            if (useDRP)
             {
-                State = initialState,
-                Details = initialDetail
-            });
+                if (TryGetComponent<MasterDRPController>(out tdrp))
+                    masterDRPController = tdrp;
+                else
+                    masterDRPController = gameObject.AddComponent<MasterDRPController>();
+                masterDRPController.Initialize(new Discord.Activity
+                {
+                    State = initialState,
+                    Details = initialDetail
+                });
+            }
 
             #endregion
         }
